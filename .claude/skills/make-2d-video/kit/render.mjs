@@ -96,8 +96,8 @@ async function contactSheet(browser, items, outFile, cols = 4, cellW = 480) {
   await page.setContent(html); await page.screenshot({ path: outFile, fullPage: true }); await page.close();
 }
 async function renderStills() {
-  const browser = await chromium.launch(LAUNCH); const styles = args.styles ? String(args.styles).split(',') : [args.style || null];
   if (args.ids && !args.sheet) throw new Error('--ids can only be used with --sheet');
+  const browser = await chromium.launch(LAUNCH); const styles = args.styles ? String(args.styles).split(',') : [args.style || null];
   const dir = path.join(BUILD, args.styles ? 'styles' : args.sheet ? (args.ids ? 'sheets/selected' : 'sheets') : 'stills'); fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(dir, { recursive: true });
   const all = [];
   for (const st of styles) {
