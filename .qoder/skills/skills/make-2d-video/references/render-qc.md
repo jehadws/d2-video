@@ -17,6 +17,13 @@ python audio/mix.py --project projects/my-video        # builds music + SFX, mix
 - **Final QC:** `ffprobe` duration ≈ the shots.json duration, audio present, then make a contact sheet of the final file with ffmpeg (`-vf fps=1/10,scale=320:-1,tile=6x5`) and look at it.
 
 
+## Efficient batch review
+
+- Run a full `--sheet` once for the initial inventory and once for final project-wide QC.
+- During scene construction, pass only newly created or modified shot IDs: `node render.mjs --project projects/<slug> --sheet --ids shot_001,shot_002 --scale 0.5`.
+- Selected sheets are written to `build/sheets/selected/`; that selected-output folder is refreshed on each selected run. The normal `build/sheets/` full-project output is kept separate.
+- This changes review scope only. It does not alter scene rendering, frame resolution, timing, color grading, bloom, transitions, or final export.
+
 ## QC checklist (run on every contact sheet)
 - [ ] No `MISSING SHOT` or red `ERROR` frames, and the console printed no shot errors.
 - [ ] Each picture matches its `line`, and the key action lands on the key word.
