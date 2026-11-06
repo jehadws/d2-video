@@ -15,9 +15,9 @@ metadata:
 Work inside `aitrends-2d-studio/` on the active project (`projects/<slug>`; if several exist, ask which one). Shared references are in `../make-2d-video/references/` relative to this skill's base directory. Read `engine-api.md`, `style-bible.md` and `render-qc.md` before writing or fixing scenes.
 
 ## 1. Build or repair shots (batches of 8–12)
-- List what's missing: `node render.mjs --project projects/<slug> --sheet --scale 0.4`. The console lists MISSING shots and shot errors, and `build/sheets/sheet_XX.png` shows one still per shot.
+- Initial inventory: run `node render.mjs --project projects/<slug> --sheet --scale 0.4` once. This lists missing shots and creates a complete contact sheet.
 - Write `scenes/sets/*.js` and `scenes/shots/NN_name.js` (`registerShot(id, …)` for each shot id). Study `examples/reaction-time/scenes/` for working patterns.
-- After each batch, re-run the sheet and **open every sheet PNG** against the QC checklist in `render-qc.md`. Fix and repeat until there are no MISSING or ERROR frames and every shot passes.
+- After each batch, render only its changed shots: `node render.mjs --project projects/<slug> --sheet --ids shot_001,shot_002 --scale 0.4`. Replace the example IDs with the exact IDs from `story/shots.json`; review the sheets under `build/sheets/selected/`. Omit `--ids` only for the initial inventory or final full-project review. Fix and repeat until the changed shots pass.
 - To check motion, use `--stills t1,t2,t3` (several moments of one shot) or `--from A --to B --scale 0.5` (writes `build/preview.mp4`).
 
 ## 2. Preview checkpoint
