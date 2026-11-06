@@ -7,7 +7,7 @@ Every frame is drawn by code and rendered frame by frame. No image or video AI i
 ## What you can say
 - "Make a 2D video from this voiceover": runs the whole pipeline.
 - `/new-video`: set up a video, timestamp the narration, plan the shots.
-- `/video-styles`: see your own shots in 5 looks (Cinematic Dusk, Midnight Blue, Golden Hour, Neon Noir, Soft Storybook), pick one or design your own.
+- `/video-styles`: see your own shots in 6 looks (Cinematic Dusk, Midnight Blue, Golden Hour, Neon Noir, Soft Storybook, Vibrant Cinematic), pick one or design your own.
 - `/render-video`: build and check the scenes, preview, render the final video.
 - `/video-sound`: music moods, sound effects, ambience, final mix.
 
