@@ -88,6 +88,7 @@ async function renderStills() {
   const wantsIds = args.ids !== undefined;
   if (wantsIds && !args.sheet) throw new Error('--ids can only be used together with --sheet');
   if (wantsIds && args.styles) throw new Error('--ids cannot be combined with --styles');
+  if (wantsIds && (args.ids === true || !String(args.ids).trim())) throw new Error('Pass shot IDs after --ids, for example: --sheet --ids s001,s002');
   const requestedIds = wantsIds ? String(args.ids).split(',').map(id => id.trim()).filter(Boolean) : null;
   if (wantsIds && (!requestedIds.length || requestedIds.length !== new Set(requestedIds).size)) {
     throw new Error('--ids requires a non-empty, comma-separated list of unique shot IDs');
