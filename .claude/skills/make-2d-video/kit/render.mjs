@@ -4,7 +4,7 @@
 //   node render.mjs --project P --sheet                               one still per shot -> build/sheets/*.png
 //   node render.mjs --project P --stills 3.5,12,40                    stills at times -> build/stills
 //   node render.mjs --project P --styles dusk,midnight,golden,neon --at 3.5,12,40   style comparison grid
-// Options: --workers N  --scale K  --style ID  --debug  --format png|jpeg  --crf 18  --gl auto|gpu|swiftshader  --out FILE
+// Options: --profile  --workers N  --scale K  --style ID  --debug  --format png|jpeg  --crf 18  --gl auto|gpu|swiftshader  --out FILE
 import http from 'node:http';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -36,7 +36,7 @@ const CFG = JSON.parse(fs.readFileSync(path.join(PROJECT, 'config.json'), 'utf8'
 const FPS = CFG.fps || 24;
 
 async function openPlayer(browser, style) {
-  const qs = new URLSearchParams(); if (args.scale) qs.set('scale', args.scale); if (style || args.style) qs.set('style', style || args.style); if (args.debug) qs.set('debug', '1');
+  const qs = new URLSearchParams(); if (args.scale) qs.set('scale', args.scale); if (style || args.style) qs.set('style', style || args.style); if (args.debug) qs.set('debug', '1'); if (args.profile) qs.set('profile', '1');
   const page = await browser.newPage({ viewport: { width: 640, height: 360 } });
   page.on('pageerror', e => console.log('[pageerror]', e.message));
   page.on('console', m => { const t = m.text(); if (/ERROR|missing/i.test(t)) console.log('[page]', t); });
@@ -46,48 +46,92 @@ async function openPlayer(browser, style) {
   const [w, h] = await page.evaluate('window.OUT'); await page.setViewportSize({ width: w, height: h });
   return page;
 }
-const shot = async (page, f, stats) => {
-  let started = performance.now();
+const shot = async (page, f) => {
   await page.evaluate(i => window.renderFrame(i), f);
-  if (stats) stats.drawMs += performance.now() - started;
-  started = performance.now();
-  const image = await page.screenshot({ type: FORMAT, ...(FORMAT === 'jpeg' ? { quality: 94 } : {}) });
-  if (stats) stats.captureMs += performance.now() - started;
-  return image;
+  return page.screenshot({ type: FORMAT, ...(FORMAT === 'jpeg' ? { quality: 94 } : {}) });
 };
 const fmtT = s => `${Math.floor(s / 60)}m${String(Math.round(s % 60)).padStart(2, '0')}s`;
 
 async function renderVideo() {
+  const startedAt = Date.now();
   const b0 = await chromium.launch(LAUNCH); const p0 = await openPlayer(b0);
   const total = await p0.evaluate('window.TOTAL_FRAMES'), fps = FPS;
+  const resolution = await p0.evaluate('window.OUT');
   const missing = (await p0.evaluate('window.SHOT_LIST')).filter(s => !s.ok); if (missing.length) console.log(`WARNING: ${missing.length} shots have no scene file yet: ${missing.slice(0, 12).map(s => s.id).join(', ')}${missing.length > 12 ? ' …' : ''}`);
   await b0.close();
   const f0 = Math.max(0, Math.round((+args.from || 0) * fps)), f1 = Math.min(total, args.to ? Math.round(+args.to * fps) : total);
   const W = Math.max(1, Math.min(+(args.workers || Math.max(1, Math.min(8, Math.floor(os.cpus().length / 2)))), Math.ceil((f1 - f0) / 24)));
   const partsDir = path.join(BUILD, 'parts'); fs.rmSync(partsDir, { recursive: true, force: true }); fs.mkdirSync(partsDir, { recursive: true });
-  const chunk = Math.ceil((f1 - f0) / W); let done = 0; const t0 = Date.now(); const errs = new Set(); const totals = { drawMs: 0, captureMs: 0, pipeWaitMs: 0, workerMs: 0 };
-  console.log(`Rendering frames ${f0}-${f1} (${((f1 - f0) / fps).toFixed(1)} s) with ${W} worker(s)…`);
+  const chunk = Math.ceil((f1 - f0) / W); let done = 0; const t0 = Date.now(); const errs = new Set();
+  const totals = { evaluateMs: 0, captureMs: 0, pipeWaitMs: 0, workerMs: 0, renderFrameMs: 0, sceneDrawMs: 0, gradeMs: 0, bloomExtractMs: 0, bloomBlurMs: 0, bloomCompositeMs: 0, ffmpegUserSeconds: 0, ffmpegSystemSeconds: 0, ffmpegRealSeconds: 0 };
+  const workers = [];
+  console.log(`Rendering frames ${f0}-${f1} (${((f1 - f0) / fps).toFixed(1)} s) with ${W} worker(s)…${args.profile ? ' [profiling]' : ''}`);
   const work = async (k) => {
     const a = f0 + k * chunk, b = Math.min(f1, a + chunk); if (a >= b) return null;
-    const workerStarted = performance.now(); const stats = { drawMs: 0, captureMs: 0, pipeWaitMs: 0 }; const browser = await chromium.launch(LAUNCH); const page = await openPlayer(browser);
+    const workerStarted = performance.now();
+    const stats = { evaluateMs: 0, captureMs: 0, pipeWaitMs: 0 };
+    const browser = await chromium.launch(LAUNCH); const page = await openPlayer(browser);
     const out = path.join(partsDir, `part_${String(k).padStart(3, '0')}.mp4`);
-    const ff = spawn('ffmpeg', ['-y', '-v', 'error', '-f', 'image2pipe', '-framerate', String(fps), '-i', '-', '-c:v', 'libx264', '-preset', args.preset || 'medium', '-crf', String(args.crf || 18), '-pix_fmt', 'yuv420p', '-r', String(fps), out], { stdio: ['pipe', 'inherit', 'inherit'] });
+    const ffArgs = ['-y', ...(args.profile ? ['-hide_banner', '-v', 'info', '-benchmark'] : ['-v', 'error']), '-f', 'image2pipe', '-framerate', String(fps), '-i', '-', '-c:v', 'libx264', '-preset', args.preset || 'medium', '-crf', String(args.crf || 18), '-pix_fmt', 'yuv420p', '-r', String(fps), out];
+    const ff = spawn('ffmpeg', ffArgs, { stdio: ['pipe', 'inherit', args.profile ? 'pipe' : 'inherit'] });
+    let ffStderr = '';
+    if (args.profile) ff.stderr.on('data', chunk => { ffStderr = (ffStderr + chunk.toString()).slice(-24000); });
     for (let f = a; f < b; f++) {
-      const img = await shot(page, f, stats); if (!ff.stdin.write(img)) { const waitStarted = performance.now(); await new Promise(r => ff.stdin.once('drain', r)); stats.pipeWaitMs += performance.now() - waitStarted; } done++;
+      const frameStarted = args.profile ? performance.now() : 0;
+      await page.evaluate(i => window.renderFrame(i), f);
+      if (args.profile) stats.evaluateMs += performance.now() - frameStarted;
+      const captureStarted = args.profile ? performance.now() : 0;
+      const image = await page.screenshot({ type: FORMAT, ...(FORMAT === 'jpeg' ? { quality: 94 } : {}) });
+      if (args.profile) stats.captureMs += performance.now() - captureStarted;
+      if (!ff.stdin.write(image)) {
+        const waitStarted = args.profile ? performance.now() : 0;
+        await new Promise((resolve, reject) => { ff.stdin.once('drain', resolve); ff.stdin.once('error', reject); });
+        if (args.profile) stats.pipeWaitMs += performance.now() - waitStarted;
+      }
+      done++;
       if (done % 48 === 0) { const el = (Date.now() - t0) / 1000, eta = (el / done) * (f1 - f0 - done); process.stdout.write(`  ${done}/${f1 - f0} frames  ${(done / el).toFixed(2)} fps  elapsed ${fmtT(el)}  eta ${fmtT(eta)}\n`); }
     }
     (await page.evaluate('window.ERRORS')).forEach(e => errs.add(e));
-    ff.stdin.end(); await new Promise((resolve, reject) => { ff.once('error', reject); ff.once('close', code => code === 0 ? resolve() : reject(new Error(`ffmpeg worker ${k} exited with code ${code}`))); });
-    await browser.close(); totals.drawMs += stats.drawMs; totals.captureMs += stats.captureMs; totals.pipeWaitMs += stats.pipeWaitMs; totals.workerMs += performance.now() - workerStarted; return out;
+    const browserProfile = args.profile ? await page.evaluate('window.__RENDER_PROFILE') : null;
+    ff.stdin.end();
+    await new Promise((resolve, reject) => {
+      ff.once('error', reject);
+      ff.once('close', code => code === 0 ? resolve() : reject(new Error(`ffmpeg worker ${k} exited with code ${code}: ${ffStderr.slice(-3000)}`)));
+    });
+    await browser.close();
+    const bench = ffStderr.match(/bench: utime=([0-9.]+)s stime=([0-9.]+)s rtime=([0-9.]+)s/);
+    const worker = { index: k, frames: b - a, ...stats, browser: browserProfile, ffmpeg: bench ? { userSeconds: +bench[1], systemSeconds: +bench[2], realSeconds: +bench[3] } : null, workerWallMs: performance.now() - workerStarted };
+    workers.push(worker);
+    totals.evaluateMs += stats.evaluateMs; totals.captureMs += stats.captureMs; totals.pipeWaitMs += stats.pipeWaitMs; totals.workerMs += worker.workerWallMs;
+    if (browserProfile) for (const key of ['renderFrameMs','sceneDrawMs','gradeMs','bloomExtractMs','bloomBlurMs','bloomCompositeMs']) totals[key] += browserProfile[key] || 0;
+    if (bench) { totals.ffmpegUserSeconds += +bench[1]; totals.ffmpegSystemSeconds += +bench[2]; totals.ffmpegRealSeconds += +bench[3]; }
+    return out;
   };
   const parts = (await Promise.all([...Array(W)].map((_, k) => work(k)))).filter(Boolean);
-  const seconds = n => `${(n / 1000).toFixed(1)}s`;
-  console.log(`\nRender profile (summed across workers): frame draw ${seconds(totals.drawMs)} | screenshot capture ${seconds(totals.captureMs)} | pipe backpressure ${seconds(totals.pipeWaitMs)} | worker wall-time sum ${seconds(totals.workerMs)}`);
   const list = path.join(partsDir, 'list.txt'); fs.writeFileSync(list, parts.map(p => `file '${p.replace(/\\/g, '/').replace(/'/g, "'\\''")}'`).join('\n'));
   const out = path.resolve(args.out || path.join(BUILD, args.from || args.to ? 'preview.mp4' : 'video_silent.mp4'));
   await new Promise((res, rej) => spawn('ffmpeg', ['-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', '-movflags', '+faststart', out], { stdio: 'inherit' }).on('close', c => (c ? rej(new Error('concat failed')) : res())));
   if (errs.size) { console.log(`\n${errs.size} shot error(s):`); [...errs].slice(0, 40).forEach(e => console.log('  ' + e)); }
-  console.log(`\nDone: ${out}  (${fmtT((Date.now() - t0) / 1000)})`);
+  const wallMs = Date.now() - startedAt;
+  if (args.profile) {
+    const ms = n => +(n || 0).toFixed(1);
+    const report = { generatedAt: new Date().toISOString(), frames: f1 - f0, fps, resolution, workers: W, wallMs, stages: {
+      browserRenderFrameMs: ms(totals.renderFrameMs), sceneDrawMs: ms(totals.sceneDrawMs), gradeMs: ms(totals.gradeMs),
+      bloomExtractMs: ms(totals.bloomExtractMs), bloomBlurMs: ms(totals.bloomBlurMs), bloomCompositeMs: ms(totals.bloomCompositeMs),
+      playwrightEvaluateMs: ms(totals.evaluateMs), screenshotCaptureMs: ms(totals.captureMs), pipeBackpressureMs: ms(totals.pipeWaitMs),
+      ffmpegUserCpuSeconds: ms(totals.ffmpegUserSeconds), ffmpegSystemCpuSeconds: ms(totals.ffmpegSystemSeconds), ffmpegRealSecondsSummed: ms(totals.ffmpegRealSeconds),
+      workerWallMsSummed: ms(totals.workerMs)
+    }, workers };
+    fs.writeFileSync(path.join(BUILD, 'profile.json'), JSON.stringify(report, null, 2));
+    const sec = n => (n / 1000).toFixed(1) + 's';
+    console.log(`\nProfiling report: ${path.join(BUILD, 'profile.json')}`);
+    console.log(`  Browser renderFrame ${sec(totals.renderFrameMs)} | scene draw ${sec(totals.sceneDrawMs)} | grade ${sec(totals.gradeMs)}`);
+    console.log(`  Bloom extract ${sec(totals.bloomExtractMs)} | blur ${sec(totals.bloomBlurMs)} | composite ${sec(totals.bloomCompositeMs)}`);
+    console.log(`  Playwright evaluate ${sec(totals.evaluateMs)} | screenshot ${sec(totals.captureMs)} | pipe wait ${sec(totals.pipeWaitMs)}`);
+    console.log(`  FFmpeg CPU user ${totals.ffmpegUserSeconds.toFixed(1)}s + system ${totals.ffmpegSystemSeconds.toFixed(1)}s | FFmpeg real-time sum ${totals.ffmpegRealSeconds.toFixed(1)}s`);
+    console.log(`  Worker wall-time sum ${sec(totals.workerMs)} | end-to-end wall ${sec(wallMs)}`);
+  }
+  console.log(`\nDone: ${out}  (${fmtT(wallMs / 1000)})`);
 }
 // grid of labelled images, laid out by the browser (works on every OS)
 async function contactSheet(browser, items, outFile, cols = 4, cellW = 480) {
