@@ -24,7 +24,7 @@ export const STYLES = {
     grade: { contrast: 1.15, sat: 1.18, lift: [0.015, -0.005, 0.035], gamma: [1.02, 0.99, 0.96], gain: [1.08, 1.02, 0.94], vignette: 0.62, grain: 0.045, bloom: 0.26
       bloomThreshold: 190,
       bloomKnee: 30,
-      bloomRadius: 6, },
+      bloomRadius: 6},
     moods: {},
   },
   midnight: {
@@ -33,7 +33,7 @@ export const STYLES = {
     grade: { contrast: 1.06, sat: 0.8, lift: [0.0, 0.025, 0.09], gamma: [0.92, 0.98, 1.08], gain: [0.84, 0.95, 1.15], vignette: 0.65, grain: 0.06, bloom: 0.26
       bloomThreshold: 190,
       bloomKnee: 30,
-      bloomRadius: 6, },
+      bloomRadius: 6},
     moods: { dusk: { sky: ['#141a3a', '#2c3470', '#5a5aa0', '#c08aa0'], key: '#d8dcff', rim: '#b8c8ff', wall: '#2a2c4a', floor: '#1e2036' }, golden: { rim: '#ffd6a8' }, interiorWarm: { wall: '#3a3448', sky: ['#5a5a90', '#c09ab0'] } },
   },
   golden: {
@@ -42,7 +42,7 @@ export const STYLES = {
     grade: { contrast: 1.04, sat: 1.18, lift: [0.035, 0.015, 0.0], gamma: [1.1, 1.04, 0.94], gain: [1.05, 1.02, 0.94], vignette: 0.45, grain: 0.045, bloom: 0.26
       bloomThreshold: 190,
       bloomKnee: 30,
-      bloomRadius: 6,5 },
+      bloomRadius: 6 },
     moods: { night: { sky: ['#14183a', '#2e2c5a', '#6a4a6a'], rim: '#ffcf9a' }, dusk: { sky: ['#4a3a6a', '#d0786a', '#f2a46a', '#fbd8a0'] } },
   },
   neon: {
@@ -51,7 +51,7 @@ export const STYLES = {
     grade: { contrast: 1.15, sat: 1.4, lift: [0.01, 0.0, 0.04], gamma: [1.0, 0.9, 1.06], gain: [1.12, 0.86, 1.18], vignette: 0.7, grain: 0.06, bloom: 0.26
       bloomThreshold: 190,
       bloomKnee: 30,
-      bloomRadius: 6, },
+      bloomRadius: 6},
     moods: { dusk: { sky: ['#120a2a', '#3a1a5a', '#a03a8a', '#ff7a9a'], rim: '#ff6ac8', key: '#ff8ad0', practical: '#5ff2e8' }, night: { sky: ['#06061a', '#140f3a', '#2a1a5a'], rim: '#5ff2e8', practical: '#ff4fa3' }, interiorWarm: { rim: '#ff7ab8', practical: '#5ff2e8', wall: '#2a1e3a' }, day: { rim: '#7ff0ff' } },
   },
   storybook: {
@@ -60,7 +60,7 @@ export const STYLES = {
     grade: { contrast: 0.92, sat: 0.92, lift: [0.07, 0.055, 0.085], gamma: [1.12, 1.1, 1.06], gain: [1.06, 1.03, 0.98], vignette: 0.3, grain: 0.07, bloom: 0.26
       bloomThreshold: 190,
       bloomKnee: 30,
-      bloomRadius: 6, },
+      bloomRadius: 6},
     moods: { night: { sky: ['#2a2f5a', '#4a4f80', '#6a6aa0'], wall: '#3e4266' }, dusk: { sky: ['#6a5a90', '#c08aa8', '#f2b0a0', '#fbe0b8'] } },
   },
   cinematic: {
@@ -80,8 +80,7 @@ export const STYLES = {
       bloom: 0.26,
       bloomThreshold: 190,
       bloomKnee: 30,
-      bloomRadius: 6,
-    },
+      bloomRadius: 6},
     moods: {
       day: { sky: ['#647da8', '#c4a0a0', '#f5c78d'], ambient: '#46516d', key: '#ffe0ae', rim: '#fff0d6', wall: '#555064', floor: '#393543', practical: '#ffd58a', fog: '#c9b4a8' },
       golden: { sky: ['#55446f', '#d77d58', '#f6b96f'], ambient: '#382936', key: '#ffd078', rim: '#ffca86', wall: '#493039', floor: '#30242b', dark: '#1b141d', practical: '#ffe0a0', fog: '#d99b78' },
