@@ -69,23 +69,50 @@ async function renderVideo() {
   const work = async (k) => {
     const a = f0 + k * chunk, b = Math.min(f1, a + chunk); if (a >= b) return null;
     const workerStarted = performance.now();
-    const stats = { evaluateMs: 0, captureMs: 0, pipeWaitMs: 0 };
+    const stats = { evaluateMs: 0, captureMs: 0, pipeWaitMs: 0, screenshotBytes: 0, captureSamplesMs: [] };
     const browser = await chromium.launch(LAUNCH); const page = await openPlayer(browser);
     const out = path.join(partsDir, `part_${String(k).padStart(3, '0')}.mp4`);
     const ffArgs = ['-y', ...(args.profile ? ['-hide_banner', '-v', 'info', '-benchmark'] : ['-v', 'error']), '-f', 'image2pipe', '-framerate', String(fps), '-i', '-', '-c:v', 'libx264', '-preset', args.preset || 'medium', '-crf', String(args.crf || 18), '-pix_fmt', 'yuv420p', '-r', String(fps), out];
     const ff = spawn('ffmpeg', ffArgs, { stdio: ['pipe', 'inherit', args.profile ? 'pipe' : 'inherit'] });
     let ffStderr = '';
     if (args.profile) ff.stderr.on('data', chunk => { ffStderr = (ffStderr + chunk.toString()).slice(-24000); });
+    // Keep one listener per stream. Registering an error listener for every
+    // drain wait leaves it behind after drain and triggers MaxListeners warnings.
+    let stdinError = null;
+    let drainWaiter = null;
+    ff.stdin.on('error', err => {
+      stdinError = err;
+      if (drainWaiter) { drainWaiter.reject(err); drainWaiter = null; }
+    });
+    ff.stdin.on('drain', () => {
+      if (drainWaiter) { drainWaiter.resolve(); drainWaiter = null; }
+    });
+    ff.stdin.on('close', () => {
+      if (drainWaiter) {
+        drainWaiter.reject(stdinError || new Error(`ffmpeg worker ${k} stdin closed before drain`));
+        drainWaiter = null;
+      }
+    });
+    const waitForDrain = () => {
+      if (stdinError) return Promise.reject(stdinError);
+      if (ff.stdin.destroyed) return Promise.reject(new Error(`ffmpeg worker ${k} stdin is closed`));
+      return new Promise((resolve, reject) => { drainWaiter = { resolve, reject }; });
+    };
     for (let f = a; f < b; f++) {
       const frameStarted = args.profile ? performance.now() : 0;
       await page.evaluate(i => window.renderFrame(i), f);
       if (args.profile) stats.evaluateMs += performance.now() - frameStarted;
       const captureStarted = args.profile ? performance.now() : 0;
       const image = await page.screenshot({ type: FORMAT, ...(FORMAT === 'jpeg' ? { quality: 94 } : {}) });
-      if (args.profile) stats.captureMs += performance.now() - captureStarted;
+      if (args.profile) {
+        const captureMs = performance.now() - captureStarted;
+        stats.captureMs += captureMs;
+        stats.captureSamplesMs.push(captureMs);
+        stats.screenshotBytes += image.length;
+      }
       if (!ff.stdin.write(image)) {
         const waitStarted = args.profile ? performance.now() : 0;
-        await new Promise((resolve, reject) => { ff.stdin.once('drain', resolve); ff.stdin.once('error', reject); });
+        await waitForDrain();
         if (args.profile) stats.pipeWaitMs += performance.now() - waitStarted;
       }
       done++;
@@ -100,7 +127,14 @@ async function renderVideo() {
     });
     await browser.close();
     const bench = ffStderr.match(/bench: utime=([0-9.]+)s stime=([0-9.]+)s rtime=([0-9.]+)s/);
-    const worker = { index: k, frames: b - a, ...stats, browser: browserProfile, ffmpeg: bench ? { userSeconds: +bench[1], systemSeconds: +bench[2], realSeconds: +bench[3] } : null, workerWallMs: performance.now() - workerStarted };
+    const captureSorted = [...stats.captureSamplesMs].sort((x, y) => x - y);
+    const percentile = p => captureSorted.length ? +captureSorted[Math.min(captureSorted.length - 1, Math.ceil(captureSorted.length * p) - 1)].toFixed(2) : 0;
+    const captureProfile = args.profile ? {
+      avgMs: stats.captureSamplesMs.length ? +(stats.captureMs / stats.captureSamplesMs.length).toFixed(2) : 0,
+      p50Ms: percentile(0.50), p95Ms: percentile(0.95), maxMs: captureSorted.length ? +captureSorted[captureSorted.length - 1].toFixed(2) : 0,
+      avgImageBytes: stats.captureSamplesMs.length ? Math.round(stats.screenshotBytes / stats.captureSamplesMs.length) : 0
+    } : null;
+    const worker = { index: k, frames: b - a, ...stats, captureProfile, captureSamplesMs: undefined, browser: browserProfile, ffmpeg: bench ? { userSeconds: +bench[1], systemSeconds: +bench[2], realSeconds: +bench[3] } : null, workerWallMs: performance.now() - workerStarted };
     workers.push(worker);
     totals.evaluateMs += stats.evaluateMs; totals.captureMs += stats.captureMs; totals.pipeWaitMs += stats.pipeWaitMs; totals.workerMs += worker.workerWallMs;
     if (browserProfile) for (const key of ['renderFrameMs','sceneDrawMs','gradeMs','bloomExtractMs','bloomBlurMs','bloomCompositeMs']) totals[key] += browserProfile[key] || 0;
@@ -119,6 +153,8 @@ async function renderVideo() {
       browserRenderFrameMs: ms(totals.renderFrameMs), sceneDrawMs: ms(totals.sceneDrawMs), gradeMs: ms(totals.gradeMs),
       bloomExtractMs: ms(totals.bloomExtractMs), bloomBlurMs: ms(totals.bloomBlurMs), bloomCompositeMs: ms(totals.bloomCompositeMs),
       playwrightEvaluateMs: ms(totals.evaluateMs), screenshotCaptureMs: ms(totals.captureMs), pipeBackpressureMs: ms(totals.pipeWaitMs),
+      screenshotBytes: workers.reduce((sum, w) => sum + (w.screenshotBytes || 0), 0),
+      screenshotAvgMs: workers.length ? ms(workers.reduce((sum, w) => sum + (w.captureMs || 0), 0) / Math.max(1, workers.reduce((sum, w) => sum + w.frames, 0))) : 0,
       ffmpegUserCpuSeconds: ms(totals.ffmpegUserSeconds), ffmpegSystemCpuSeconds: ms(totals.ffmpegSystemSeconds), ffmpegRealSecondsSummed: ms(totals.ffmpegRealSeconds),
       workerWallMsSummed: ms(totals.workerMs)
     }, workers };
