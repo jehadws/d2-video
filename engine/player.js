@@ -101,7 +101,17 @@ function applyBloom(W, H, grade) {
   mg.drawImage(bloomBlur, 0, 0, W, H);
   mg.restore();
 }
-function shotIndexAt(t) { const S = E.shots; for (let i = 0; i < S.length; i++) if (t < S[i].end) return i; return S.length - 1; }
+function shotIndexAt(t) {
+  const S = E.shots;
+  // Find the first shot whose end is after t. Shot plans are ordered by timeline.
+  let lo = 0, hi = S.length;
+  while (lo < hi) {
+    const mid = (lo + hi) >>> 1;
+    if (t < S[mid].end) hi = mid;
+    else lo = mid + 1;
+  }
+  return Math.min(lo, S.length - 1);
+}
 const cache3D = new Map();
 function state3D(shot, def, info) {
   if (cache3D.has(shot.id)) return cache3D.get(shot.id);
