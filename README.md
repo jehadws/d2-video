@@ -29,6 +29,18 @@ Whisper downloads its speech model on the first transcription. Roughly 1 GB of d
 ## Render times
 A small 2-core cloud machine renders 720p at about 2 frames per second (a 47-second video takes ~11 minutes). 1080p takes about 2× longer and 4K about 8×. A modern desktop is 3–5× faster. Long videos at 4K are best rendered overnight.
 
+## Rendering profile
+
+To profile the rendering pipeline without changing normal render settings, add `--profile`:
+
+```bash
+node render.mjs --project projects/<slug> --from 0 --to 30 --profile
+```
+
+The run writes `build/profile.json` and reports scene drawing, total browser frame rendering, color grading, bloom extraction/blur/compositing, Playwright evaluation, screenshot capture, FFmpeg pipe backpressure, and FFmpeg CPU/elapsed time. Worker stage totals are summed across parallel workers; compare them with end-to-end wall time rather than adding them together. FFmpeg real time includes time waiting for input, while user + system CPU time is a better indicator of encoding work.
+
+Profiling is opt-in. Without `--profile`, browser timing instrumentation and FFmpeg benchmark logging are disabled.
+
 ## Contents
 - `skills/make-2d-video/`: the full pipeline, style bible and references, plus the studio kit (`kit/`: renderer, animation engine, transcription tools, sound synthesis and a reference example project).
 - `skills/new-video`, `skills/video-styles`, `skills/render-video`, `skills/video-sound`: stage commands.
