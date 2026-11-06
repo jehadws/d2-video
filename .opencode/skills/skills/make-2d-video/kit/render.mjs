@@ -46,7 +46,15 @@ async function openPlayer(browser, style) {
   const [w, h] = await page.evaluate('window.OUT'); await page.setViewportSize({ width: w, height: h });
   return page;
 }
-const shot = (page, f) => page.evaluate(i => window.renderFrame(i), f).then(() => page.screenshot({ type: FORMAT, ...(FORMAT === 'jpeg' ? { quality: 94 } : {}) }));
+const shot = async (page, f, stats) => {
+  let started = performance.now();
+  await page.evaluate(i => window.renderFrame(i), f);
+  if (stats) stats.drawMs += performance.now() - started;
+  started = performance.now();
+  const image = await page.screenshot({ type: FORMAT, ...(FORMAT === 'jpeg' ? { quality: 94 } : {}) });
+  if (stats) stats.captureMs += performance.now() - started;
+  return image;
+};
 const fmtT = s => `${Math.floor(s / 60)}m${String(Math.round(s % 60)).padStart(2, '0')}s`;
 
 async function renderVideo() {
@@ -57,21 +65,24 @@ async function renderVideo() {
   const f0 = Math.max(0, Math.round((+args.from || 0) * fps)), f1 = Math.min(total, args.to ? Math.round(+args.to * fps) : total);
   const W = Math.max(1, Math.min(+(args.workers || Math.max(1, Math.min(8, Math.floor(os.cpus().length / 2)))), Math.ceil((f1 - f0) / 24)));
   const partsDir = path.join(BUILD, 'parts'); fs.rmSync(partsDir, { recursive: true, force: true }); fs.mkdirSync(partsDir, { recursive: true });
-  const chunk = Math.ceil((f1 - f0) / W); let done = 0; const t0 = Date.now(); const errs = new Set();
+  const chunk = Math.ceil((f1 - f0) / W); let done = 0; const t0 = Date.now(); const errs = new Set(); const totals = { drawMs: 0, captureMs: 0, pipeWaitMs: 0, workerMs: 0 };
   console.log(`Rendering frames ${f0}-${f1} (${((f1 - f0) / fps).toFixed(1)} s) with ${W} worker(s)…`);
   const work = async (k) => {
     const a = f0 + k * chunk, b = Math.min(f1, a + chunk); if (a >= b) return null;
-    const browser = await chromium.launch(LAUNCH); const page = await openPlayer(browser);
+    const workerStarted = performance.now(); const stats = { drawMs: 0, captureMs: 0, pipeWaitMs: 0 }; const browser = await chromium.launch(LAUNCH); const page = await openPlayer(browser);
     const out = path.join(partsDir, `part_${String(k).padStart(3, '0')}.mp4`);
     const ff = spawn('ffmpeg', ['-y', '-v', 'error', '-f', 'image2pipe', '-framerate', String(fps), '-i', '-', '-c:v', 'libx264', '-preset', args.preset || 'medium', '-crf', String(args.crf || 18), '-pix_fmt', 'yuv420p', '-r', String(fps), out], { stdio: ['pipe', 'inherit', 'inherit'] });
     for (let f = a; f < b; f++) {
-      const img = await shot(page, f); if (!ff.stdin.write(img)) await new Promise(r => ff.stdin.once('drain', r)); done++;
+      const img = await shot(page, f, stats); if (!ff.stdin.write(img)) { const waitStarted = performance.now(); await new Promise(r => ff.stdin.once('drain', r)); stats.pipeWaitMs += performance.now() - waitStarted; } done++;
       if (done % 48 === 0) { const el = (Date.now() - t0) / 1000, eta = (el / done) * (f1 - f0 - done); process.stdout.write(`  ${done}/${f1 - f0} frames  ${(done / el).toFixed(2)} fps  elapsed ${fmtT(el)}  eta ${fmtT(eta)}\n`); }
     }
     (await page.evaluate('window.ERRORS')).forEach(e => errs.add(e));
-    ff.stdin.end(); await new Promise(r => ff.on('close', r)); await browser.close(); return out;
+    ff.stdin.end(); await new Promise((resolve, reject) => { ff.once('error', reject); ff.once('close', code => code === 0 ? resolve() : reject(new Error(`ffmpeg worker ${k} exited with code ${code}`))); });
+    await browser.close(); totals.drawMs += stats.drawMs; totals.captureMs += stats.captureMs; totals.pipeWaitMs += stats.pipeWaitMs; totals.workerMs += performance.now() - workerStarted; return out;
   };
   const parts = (await Promise.all([...Array(W)].map((_, k) => work(k)))).filter(Boolean);
+  const seconds = n => `${(n / 1000).toFixed(1)}s`;
+  console.log(`\nRender profile (summed across workers): frame draw ${seconds(totals.drawMs)} | screenshot capture ${seconds(totals.captureMs)} | pipe backpressure ${seconds(totals.pipeWaitMs)} | worker wall-time sum ${seconds(totals.workerMs)}`);
   const list = path.join(partsDir, 'list.txt'); fs.writeFileSync(list, parts.map(p => `file '${p.replace(/\\/g, '/').replace(/'/g, "'\\''")}'`).join('\n'));
   const out = path.resolve(args.out || path.join(BUILD, args.from || args.to ? 'preview.mp4' : 'video_silent.mp4'));
   await new Promise((res, rej) => spawn('ffmpeg', ['-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', '-movflags', '+faststart', out], { stdio: 'inherit' }).on('close', c => (c ? rej(new Error('concat failed')) : res())));
@@ -86,19 +97,26 @@ async function contactSheet(browser, items, outFile, cols = 4, cellW = 480) {
 }
 async function renderStills() {
   const browser = await chromium.launch(LAUNCH); const styles = args.styles ? String(args.styles).split(',') : [args.style || null];
-  const dir = path.join(BUILD, args.styles ? 'styles' : args.sheet ? 'sheets' : 'stills'); fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(dir, { recursive: true });
+  if (args.ids && !args.sheet) throw new Error('--ids can only be used with --sheet');
+  const dir = path.join(BUILD, args.styles ? 'styles' : args.sheet ? (args.ids ? 'sheets/selected' : 'sheets') : 'stills'); fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(dir, { recursive: true });
   const all = [];
   for (const st of styles) {
     const page = await openPlayer(browser, st); const fps = FPS;
     let targets;
-    if (args.sheet) targets = (await page.evaluate('window.SHOT_LIST')).map(s => ({ t: s.start + (s.end - s.start) * 0.45, label: `${s.id}  ${s.start.toFixed(1)}s${s.ok ? '' : '  (MISSING)'}` }));
+    if (args.sheet) {
+      const shotList = await page.evaluate('window.SHOT_LIST');
+      const requested = args.ids ? new Set(String(args.ids).split(',').map(id => id.trim()).filter(Boolean)) : null;
+      const selected = requested ? shotList.filter(s => requested.has(s.id)) : shotList;
+      if (requested) { const found = new Set(selected.map(s => s.id)); const unknown = [...requested].filter(id => !found.has(id)); if (unknown.length) throw new Error(`Unknown shot id(s): ${unknown.join(', ')}`); }
+      targets = selected.map(s => ({ t: s.start + (s.end - s.start) * 0.45, label: `${s.id}  ${s.start.toFixed(1)}s${s.ok ? '' : '  (MISSING)'}` }));
+    }
     else targets = String(args.stills || args.at || '1').split(',').map(Number).map(t => ({ t, label: `${t}s` }));
     for (const tg of targets) { const img = await shot(page, Math.round(tg.t * fps)); const name = `${st ? st + '_' : ''}${tg.label.split(' ')[0].replace(/[^\w.]/g, '')}_${tg.t.toFixed(2)}.${FORMAT}`; fs.writeFileSync(path.join(dir, name), img); all.push({ img, label: `${st ? `[${st}] ` : ''}${tg.label}`, st }); }
     (await page.evaluate('window.ERRORS')).forEach(e => console.log('  shot error:', e)); await page.close();
   }
   if (args.styles) { const n = all.length / styles.length; await contactSheet(browser, all, path.join(dir, 'style_grid.png'), n, 420); }
   else { const per = 24; for (let i = 0; i < all.length; i += per) await contactSheet(browser, all.slice(i, i + per), path.join(dir, `sheet_${String(i / per + 1).padStart(2, '0')}.png`), 4, 440); }
-  await browser.close(); console.log(`Wrote ${all.length} stills + contact sheet(s) to ${dir}`);
+  await browser.close(); console.log(`Wrote ${all.length} stills + contact sheet(s) to ${dir}${args.ids ? ' (selected shot IDs only)' : ''}`);
 }
 try { if (args.sheet || args.stills || args.styles) await renderStills(); else await renderVideo(); }
 catch (e) { console.error('RENDER FAILED:', e.message); process.exitCode = 1; }
