@@ -21,36 +21,51 @@ export const STYLES = {
   dusk: {
     name: 'Cinematic Dusk', desc: 'Cinematic color direction: rich amber/burnt orange warm scenes, deep navy night scenes, chiaroscuro contrast.',
     ink: '#f8f7f2', inkFar: '#cbd3df', feature: '#172033', rimWidth: 4.8, ui: UI,
-    grade: { contrast: 1.15, sat: 1.18, lift: [0.015, -0.005, 0.035], gamma: [1.02, 0.99, 0.96], gain: [1.08, 1.02, 0.94], vignette: 0.62, grain: 0.045, bloom: 0.65 },
+    grade: { contrast: 1.15, sat: 1.18, lift: [0.015, -0.005, 0.035], gamma: [1.02, 0.99, 0.96], gain: [1.08, 1.02, 0.94], vignette: 0.62, grain: 0.045, bloom: 0.26
+      bloomThreshold: 190,
+      bloomKnee: 30,
+      bloomRadius: 6, },
     moods: {},
   },
   midnight: {
     name: 'Midnight Blue', desc: 'Cold navy world, blue-white rim light, sodium-orange practical lights, rain-friendly, higher contrast.',
     ink: '#f8f7f2', inkFar: '#cbd3df', feature: '#172033', rimWidth: 4, ui: { ...UI, accent: '#ff8a5c', gold: '#ffc66e' },
-    grade: { contrast: 1.06, sat: 0.8, lift: [0.0, 0.025, 0.09], gamma: [0.92, 0.98, 1.08], gain: [0.84, 0.95, 1.15], vignette: 0.65, grain: 0.06, bloom: 0.7 },
+    grade: { contrast: 1.06, sat: 0.8, lift: [0.0, 0.025, 0.09], gamma: [0.92, 0.98, 1.08], gain: [0.84, 0.95, 1.15], vignette: 0.65, grain: 0.06, bloom: 0.26
+      bloomThreshold: 190,
+      bloomKnee: 30,
+      bloomRadius: 6, },
     moods: { dusk: { sky: ['#141a3a', '#2c3470', '#5a5aa0', '#c08aa0'], key: '#d8dcff', rim: '#b8c8ff', wall: '#2a2c4a', floor: '#1e2036' }, golden: { rim: '#ffd6a8' }, interiorWarm: { wall: '#3a3448', sky: ['#5a5a90', '#c09ab0'] } },
   },
   golden: {
     name: 'Golden Hour', desc: 'Warm orange-and-teal daylight, big sun glows, brighter mid-tones, warm cream rim light.',
     ink: '#f8f7f2', inkFar: '#cbd3df', feature: '#172033', rimWidth: 4.5, ui: { ...UI, card: 'rgba(30,26,40,.92)', accent: '#ff7a4a' },
-    grade: { contrast: 1.04, sat: 1.18, lift: [0.035, 0.015, 0.0], gamma: [1.1, 1.04, 0.94], gain: [1.12, 1.02, 0.8], vignette: 0.45, grain: 0.045, bloom: 0.75 },
+    grade: { contrast: 1.04, sat: 1.18, lift: [0.035, 0.015, 0.0], gamma: [1.1, 1.04, 0.94], gain: [1.05, 1.02, 0.94], vignette: 0.45, grain: 0.045, bloom: 0.26
+      bloomThreshold: 190,
+      bloomKnee: 30,
+      bloomRadius: 6,5 },
     moods: { night: { sky: ['#14183a', '#2e2c5a', '#6a4a6a'], rim: '#ffcf9a' }, dusk: { sky: ['#4a3a6a', '#d0786a', '#f2a46a', '#fbd8a0'] } },
   },
   neon: {
     name: 'Neon Noir', desc: 'Deep blacks, magenta + teal two-tone rim lights, glowing signage, strong bloom, cool shadows.',
     ink: '#f8f7f2', inkFar: '#cbd3df', feature: '#172033', rimWidth: 4, ui: { ...UI, card: 'rgba(14,10,28,.94)', cardLine: 'rgba(200,120,255,.3)', text: '#c9a8ff', accent: '#ff4fa3', gold: '#5ff2e8', blueprint: '#7fe8ff' },
-    grade: { contrast: 1.15, sat: 1.4, lift: [0.01, 0.0, 0.04], gamma: [1.0, 0.9, 1.06], gain: [1.12, 0.86, 1.18], vignette: 0.7, grain: 0.06, bloom: 0.9 },
+    grade: { contrast: 1.15, sat: 1.4, lift: [0.01, 0.0, 0.04], gamma: [1.0, 0.9, 1.06], gain: [1.12, 0.86, 1.18], vignette: 0.7, grain: 0.06, bloom: 0.26
+      bloomThreshold: 190,
+      bloomKnee: 30,
+      bloomRadius: 6, },
     moods: { dusk: { sky: ['#120a2a', '#3a1a5a', '#a03a8a', '#ff7a9a'], rim: '#ff6ac8', key: '#ff8ad0', practical: '#5ff2e8' }, night: { sky: ['#06061a', '#140f3a', '#2a1a5a'], rim: '#5ff2e8', practical: '#ff4fa3' }, interiorWarm: { rim: '#ff7ab8', practical: '#5ff2e8', wall: '#2a1e3a' }, day: { rim: '#7ff0ff' } },
   },
   storybook: {
     name: 'Soft Storybook', desc: 'Lighter pastel palette, lower contrast, lavender shadows, gentle paper grain — friendlier, family tone.',
     ink: '#f8f7f2', inkFar: '#cbd3df', feature: '#172033', rimWidth: 5, ui: { ...UI, card: 'rgba(40,36,60,.9)', accent: '#ff8a7a', gold: '#ffd98a' },
-    grade: { contrast: 0.92, sat: 0.92, lift: [0.07, 0.055, 0.085], gamma: [1.12, 1.1, 1.06], gain: [1.06, 1.03, 0.98], vignette: 0.3, grain: 0.07, bloom: 0.45 },
+    grade: { contrast: 0.92, sat: 0.92, lift: [0.07, 0.055, 0.085], gamma: [1.12, 1.1, 1.06], gain: [1.06, 1.03, 0.98], vignette: 0.3, grain: 0.07, bloom: 0.26
+      bloomThreshold: 190,
+      bloomKnee: 30,
+      bloomRadius: 6, },
     moods: { night: { sky: ['#2a2f5a', '#4a4f80', '#6a6aa0'], wall: '#3e4266' }, dusk: { sky: ['#6a5a90', '#c08aa8', '#f2b0a0', '#fbe0b8'] } },
   },
   cinematic: {
     name: 'Vibrant Cinematic',
-    rimGlow: 18,
+    rimGlow: 7,
     desc: 'Rich amber highlights, cool navy shadows, saturated but controlled color, and stronger subject separation.',
     ink: '#f8f7f2', inkFar: '#cbd3df', feature: '#172033', rimWidth: 4.5,
     ui: { ...UI, card: 'rgba(12,20,36,.96)', cardLine: 'rgba(155,190,235,.3)', text: '#d5e1f5', sub: '#91a5c5', accent: '#ff7957', gold: '#ffd078', blueprint: '#8bcfff' },
@@ -59,10 +74,13 @@ export const STYLES = {
       sat: 1.16,
       lift: [0.006, 0.012, 0.028],
       gamma: [1.04, 1.0, 0.97],
-      gain: [1.10, 1.04, 0.96],
+      gain: [1.04, 1.01, 0.98],
       vignette: 0.46,
       grain: 0.035,
-      bloom: 0.68,
+      bloom: 0.26,
+      bloomThreshold: 190,
+      bloomKnee: 30,
+      bloomRadius: 6,
     },
     moods: {
       day: { sky: ['#647da8', '#c4a0a0', '#f5c78d'], ambient: '#46516d', key: '#ffe0ae', rim: '#fff0d6', wall: '#555064', floor: '#393543', practical: '#ffd58a', fog: '#c9b4a8' },
