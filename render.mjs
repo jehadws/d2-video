@@ -121,14 +121,15 @@ async function renderStills() {
           } else {
             targets = shotList;
           }
-          targets = targets.map(s => ({ t: s.start + (s.end - s.start) * 0.45, label: `${s.id}  ${s.start.toFixed(1)}s${s.ok ? '' : '  (MISSING)'}` }));
+          targets = targets.map(s => ({ id: s.id, t: s.start + (s.end - s.start) * 0.45, label: `${s.id}  ${s.start.toFixed(1)}s${s.ok ? '' : '  (MISSING)'}` }));
         } else {
           targets = String(args.stills || args.at || '1').split(',').map(Number).map(t => ({ t, label: `${t}s` }));
         }
 
         for (const tg of targets) {
           const img = await shot(page, Math.round(tg.t * fps));
-          const name = `${st ? st + '_' : ''}${tg.label.split(' ')[0].replace(/[^\\w.]/g, '')}_${tg.t.toFixed(2)}.${FORMAT}`;
+          const targetName = tg.id ? String(tg.id).replace(/[^a-zA-Z0-9._-]/g, '') : tg.label.split(' ')[0].replace(/[^a-zA-Z0-9._-]/g, '');
+          const name = `${st ? st + '_' : ''}${targetName}_${tg.t.toFixed(2)}.${FORMAT}`;
           fs.writeFileSync(path.join(dir, name), img);
           all.push({ img, label: `${st ? `[${st}] ` : ''}${tg.label}`, st });
         }
