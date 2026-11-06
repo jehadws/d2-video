@@ -5,6 +5,10 @@ import { STYLES } from './styles.js';
 import { captions } from './ui2d.js';
 
 const q = new URLSearchParams(location.search);
+const PROFILE = q.has('profile');
+const profileStats = { frames: 0, renderFrameMs: 0, sceneDrawMs: 0, gradeMs: 0, bloomExtractMs: 0, bloomBlurMs: 0, bloomCompositeMs: 0 };
+function profileAdd(key, started) { if (PROFILE) profileStats[key] += performance.now() - started; }
+if (PROFILE) window.__RENDER_PROFILE = profileStats;
 const PROJ = '/project';
 const RES = { '720p': 720, '1080p': 1080, '1440p': 1440, '2160p': 2160, '4k': 2160 };
 let main, mg, bufA, bufB, bloomSource, bloomBlur, bloomSourceCtx, bloomBlurCtx, glCanvas, grainTiles = [], three = null;
@@ -57,19 +61,23 @@ function buildLUT() {
   LUT = [0, 1, 2].map(c => { const a = new Uint8ClampedArray(256); for (let i = 0; i < 256; i++) { let x = i / 255; x = clamp((x - 0.5) * con + 0.5); x = clamp(gain[c] * (x + lift[c] * (1 - x))); x = Math.pow(x, 1 / gam[c]); a[i] = Math.round(x * 255); } return a; });
 }
 function applyGrade(W, H) {
-  if (!LUT) return; const img = mg.getImageData(0, 0, W, H), d = img.data, [R, G, B] = LUT, s = SAT;
+  if (!LUT) return;
+  const profileStarted = PROFILE ? performance.now() : 0;
+  const img = mg.getImageData(0, 0, W, H), d = img.data, [R, G, B] = LUT, s = SAT;
   for (let i = 0; i < d.length; i += 4) {
     let r = R[d[i]], g = G[d[i + 1]], b = B[d[i + 2]];
     if (s !== 1) { const l = 0.2126 * r + 0.7152 * g + 0.0722 * b; r = l + (r - l) * s; g = l + (g - l) * s; b = l + (b - l) * s; }
     d[i] = r; d[i + 1] = g; d[i + 2] = b;
   }
   mg.putImageData(img, 0, 0);
+  profileAdd('gradeMs', profileStarted);
 }
 // Highlight-only bloom: extract bright pixels at quarter resolution, blur, then screen-blend.
 function applyBloom(W, H, grade) {
   const strength = grade.bloom ?? 0;
   if (strength <= 0 || !bloomSourceCtx || !bloomBlurCtx) return;
   const bw = bloomSource.width, bh = bloomSource.height;
+  const extractStarted = PROFILE ? performance.now() : 0;
   bloomSourceCtx.setTransform(1, 0, 0, 1, 0, 0);
   bloomSourceCtx.globalAlpha = 1;
   bloomSourceCtx.globalCompositeOperation = 'source-over';
@@ -87,6 +95,8 @@ function applyBloom(W, H, grade) {
     d[i + 3] = Math.round(d[i + 3] * contribution);
   }
   bloomSourceCtx.putImageData(image, 0, 0);
+  profileAdd('bloomExtractMs', extractStarted);
+  const blurStarted = PROFILE ? performance.now() : 0;
   bloomBlurCtx.setTransform(1, 0, 0, 1, 0, 0);
   bloomBlurCtx.globalAlpha = 1;
   bloomBlurCtx.globalCompositeOperation = 'source-over';
@@ -94,12 +104,15 @@ function applyBloom(W, H, grade) {
   bloomBlurCtx.filter = `blur(${Math.max(1, grade.bloomRadius ?? 10)}px)`;
   bloomBlurCtx.drawImage(bloomSource, 0, 0);
   bloomBlurCtx.filter = 'none';
+  profileAdd('bloomBlurMs', blurStarted);
+  const compositeStarted = PROFILE ? performance.now() : 0;
   mg.save();
   mg.setTransform(1, 0, 0, 1, 0, 0);
   mg.globalCompositeOperation = 'screen';
   mg.globalAlpha = clamp(strength, 0, 1.25);
   mg.drawImage(bloomBlur, 0, 0, W, H);
   mg.restore();
+  profileAdd('bloomCompositeMs', compositeStarted);
 }
 function shotIndexAt(t) {
   const S = E.shots;
@@ -136,13 +149,19 @@ const BARS = () => ({ none: 0, wide: V(60, 0), scope: V(138, 170), thin: V(30, 6
 const barVal = (s) => (typeof (s?.bars ?? E.cfg.bars) === 'number' ? (s.bars ?? E.cfg.bars) : BARS()[s?.bars ?? E.cfg.bars ?? V('wide', 'none')] ?? 0);
 
 window.renderFrame = function (f) {
+  const frameStarted = PROFILE ? performance.now() : 0;
   const t = f / E.fps, i = shotIndexAt(t), shot = E.shots[i], lt = t - shot.start;
+  let sceneStarted = PROFILE ? performance.now() : 0;
   drawShot(bufA, shot, lt);
+  profileAdd('sceneDrawMs', sceneStarted);
   const tr = shot.in || { type: 'cut' }, tdur = tr.dur ?? (tr.type === 'whip' ? 0.35 : 0.5);
   const W = main.width, H = main.height; mg.setTransform(1, 0, 0, 1, 0, 0); mg.globalAlpha = 1; mg.globalCompositeOperation = 'source-over';
   const grade = E.style.grade; mg.filter = grade.filter && grade.filter !== 'none' ? grade.filter : 'none';
   if (tr.type !== 'cut' && i > 0 && lt < tdur) {
-    const prev = E.shots[i - 1], k = ease.inOut(lt / tdur); drawShot(bufB, prev, t - prev.start);
+    const prev = E.shots[i - 1], k = ease.inOut(lt / tdur);
+    sceneStarted = PROFILE ? performance.now() : 0;
+    drawShot(bufB, prev, t - prev.start);
+    profileAdd('sceneDrawMs', sceneStarted);
     if (tr.type === 'fade') { mg.drawImage(bufB, 0, 0); mg.globalAlpha = k; mg.drawImage(bufA, 0, 0); }
     else if (tr.type === 'dip' || tr.type === 'dipWhite') { const c = tr.type === 'dip' ? '#000' : '#fff'; mg.drawImage(k < 0.5 ? bufB : bufA, 0, 0); mg.filter = 'none'; mg.globalAlpha = k < 0.5 ? k * 2 : (1 - k) * 2; mg.fillStyle = c; mg.fillRect(0, 0, W, H); }
     else if (tr.type === 'flash') { mg.drawImage(bufA, 0, 0); mg.filter = 'none'; mg.globalAlpha = (1 - lt / tdur) ** 2; mg.fillStyle = '#fff'; mg.fillRect(0, 0, W, H); }
@@ -164,5 +183,6 @@ window.renderFrame = function (f) {
   if (fade > 0) { mg.fillStyle = `rgba(0,0,0,${clamp(fade)})`; mg.fillRect(0, 0, E.W, E.H); }
   if (q.has('debug')) { mg.fillStyle = 'rgba(0,0,0,.6)'; mg.fillRect(0, E.H - 54, E.W, 54); text(mg, `${shot.id}  ${t.toFixed(2)}s  (${lt.toFixed(2)}/${(shot.end - shot.start).toFixed(2)})  ${(shot.line || '').slice(0, 70)}`, 20, E.H - 27, { size: 26, color: '#fff', font: FONTS.ui, weight: 800, align: 'left' }); }
   mg.setTransform(1, 0, 0, 1, 0, 0);
+  if (PROFILE) { profileStats.frames++; profileAdd('renderFrameMs', frameStarted); }
 };
 boot().catch(e => { window.BOOT_ERROR = e.message + '\n' + e.stack; console.log('BOOT ERROR', e.message); });
