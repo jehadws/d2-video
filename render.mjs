@@ -85,20 +85,71 @@ async function contactSheet(browser, items, outFile, cols = 4, cellW = 480) {
   await page.setContent(html); await page.screenshot({ path: outFile, fullPage: true }); await page.close();
 }
 async function renderStills() {
-  const browser = await chromium.launch(LAUNCH); const styles = args.styles ? String(args.styles).split(',') : [args.style || null];
-  const dir = path.join(BUILD, args.styles ? 'styles' : args.sheet ? 'sheets' : 'stills'); fs.rmSync(dir, { recursive: true, force: true }); fs.mkdirSync(dir, { recursive: true });
-  const all = [];
-  for (const st of styles) {
-    const page = await openPlayer(browser, st); const fps = FPS;
-    let targets;
-    if (args.sheet) targets = (await page.evaluate('window.SHOT_LIST')).map(s => ({ t: s.start + (s.end - s.start) * 0.45, label: `${s.id}  ${s.start.toFixed(1)}s${s.ok ? '' : '  (MISSING)'}` }));
-    else targets = String(args.stills || args.at || '1').split(',').map(Number).map(t => ({ t, label: `${t}s` }));
-    for (const tg of targets) { const img = await shot(page, Math.round(tg.t * fps)); const name = `${st ? st + '_' : ''}${tg.label.split(' ')[0].replace(/[^\w.]/g, '')}_${tg.t.toFixed(2)}.${FORMAT}`; fs.writeFileSync(path.join(dir, name), img); all.push({ img, label: `${st ? `[${st}] ` : ''}${tg.label}`, st }); }
-    (await page.evaluate('window.ERRORS')).forEach(e => console.log('  shot error:', e)); await page.close();
+  const wantsIds = args.ids !== undefined;
+  if (wantsIds && !args.sheet) throw new Error('--ids can only be used together with --sheet');
+  if (wantsIds && args.styles) throw new Error('--ids cannot be combined with --styles');
+  const requestedIds = wantsIds ? String(args.ids).split(',').map(id => id.trim()).filter(Boolean) : null;
+  if (wantsIds && (!requestedIds.length || requestedIds.length !== new Set(requestedIds).size)) {
+    throw new Error('--ids requires a non-empty, comma-separated list of unique shot IDs');
   }
-  if (args.styles) { const n = all.length / styles.length; await contactSheet(browser, all, path.join(dir, 'style_grid.png'), n, 420); }
-  else { const per = 24; for (let i = 0; i < all.length; i += per) await contactSheet(browser, all.slice(i, i + per), path.join(dir, `sheet_${String(i / per + 1).padStart(2, '0')}.png`), 4, 440); }
-  await browser.close(); console.log(`Wrote ${all.length} stills + contact sheet(s) to ${dir}`);
+
+  const styles = args.styles ? String(args.styles).split(',') : [args.style || null];
+  // Incremental sheets are isolated: never delete build/sheets during a selected render.
+  const dir = path.join(BUILD, args.styles ? 'styles' : args.sheet ? (wantsIds ? 'sheets/selected' : 'sheets') : 'stills');
+  fs.rmSync(dir, { recursive: true, force: true });
+  fs.mkdirSync(dir, { recursive: true });
+
+  const browser = await chromium.launch(LAUNCH);
+  const all = [];
+  try {
+    for (const st of styles) {
+      let page;
+      try {
+        page = await openPlayer(browser, st);
+        const fps = FPS;
+        let targets;
+        if (args.sheet) {
+          const shotList = await page.evaluate('window.SHOT_LIST');
+          if (requestedIds) {
+            const byId = new Map(shotList.map(s => [s.id, s]));
+            const unknown = requestedIds.filter(id => !byId.has(id));
+            if (unknown.length) {
+              throw new Error(`Unknown shot ID(s): ${unknown.join(', ')}. Use the exact id field from the project's shot list.`);
+            }
+            targets = requestedIds.map(id => byId.get(id));
+          } else {
+            targets = shotList;
+          }
+          targets = targets.map(s => ({ t: s.start + (s.end - s.start) * 0.45, label: `${s.id}  ${s.start.toFixed(1)}s${s.ok ? '' : '  (MISSING)'}` }));
+        } else {
+          targets = String(args.stills || args.at || '1').split(',').map(Number).map(t => ({ t, label: `${t}s` }));
+        }
+
+        for (const tg of targets) {
+          const img = await shot(page, Math.round(tg.t * fps));
+          const name = `${st ? st + '_' : ''}${tg.label.split(' ')[0].replace(/[^\\w.]/g, '')}_${tg.t.toFixed(2)}.${FORMAT}`;
+          fs.writeFileSync(path.join(dir, name), img);
+          all.push({ img, label: `${st ? `[${st}] ` : ''}${tg.label}`, st });
+        }
+        (await page.evaluate('window.ERRORS')).forEach(e => console.log('  shot error:', e));
+      } finally {
+        if (page) await page.close().catch(() => {});
+      }
+    }
+
+    if (args.styles) {
+      const n = all.length / styles.length;
+      await contactSheet(browser, all, path.join(dir, 'style_grid.png'), n, 420);
+    } else {
+      const per = 24;
+      for (let i = 0; i < all.length; i += per) {
+        await contactSheet(browser, all.slice(i, i + per), path.join(dir, `sheet_${String(i / per + 1).padStart(2, '0')}.png`), 4, 440);
+      }
+    }
+  } finally {
+    await browser.close().catch(() => {});
+  }
+  console.log(`Wrote ${all.length} stills + contact sheet(s) to ${dir}`);
 }
 try { if (args.sheet || args.stills || args.styles) await renderStills(); else await renderVideo(); }
 catch (e) { console.error('RENDER FAILED:', e.message); process.exitCode = 1; }
