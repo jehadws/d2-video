@@ -204,7 +204,14 @@ export function drawFigure(g, o) {
 function body(g, o, p, s, f, of, ink, far, rim, flat) {
   const tf = (dx = 0, dy = 0) => { g.translate(o.x + dx, o.y + dy); g.scale(f * s, s); if (o.rot) { g.translate(p.hip[0], p.hip[1]); g.rotate(o.rot); g.translate(-p.hip[0], -p.hip[1]); } };
   if (flat) { g.save(); tf(); parts(g, o, p, { ...of, _sil: flat }, flat, flat, 'sil'); g.restore(); return; }
-  if (rim) { g.save(); tf(rim.dir[0] * rim.w, rim.dir[1] * rim.w); parts(g, o, p, { ...of, _sil: rim.color }, rim.color, rim.color, 'sil', 1.6); g.restore(); }
+  if (rim) {
+    g.save();
+    tf(rim.dir[0] * rim.w, rim.dir[1] * rim.w);
+    const rimGlow = (rim.glow ?? S().rimGlow ?? 0) * E.PX;
+    if (rimGlow > 0) { g.shadowColor = rim.color; g.shadowBlur = rimGlow; }
+    parts(g, o, p, { ...of, _sil: rim.color }, rim.color, rim.color, 'sil', 1.6);
+    g.restore();
+  }
   g.save(); tf(); parts(g, o, p, of, o.dim ? mix(ink, far, 0.6) : ink, far, 'main'); g.restore();
 }
 function parts(g, o, p, of, ink, far, pass, grow = 0) {
