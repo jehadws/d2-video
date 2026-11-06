@@ -7,7 +7,7 @@ import { captions } from './ui2d.js';
 const q = new URLSearchParams(location.search);
 const PROJ = '/project';
 const RES = { '720p': 720, '1080p': 1080, '1440p': 1440, '2160p': 2160, '4k': 2160 };
-let main, mg, bufA, bufB, glCanvas, grainTiles = [], three = null;
+let main, mg, bufA, bufB, bloomSource, bloomBlur, bloomSourceCtx, bloomBlurCtx, glCanvas, grainTiles = [], three = null;
 const errors = (window.ERRORS = []);
 const mk = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
 
@@ -32,6 +32,11 @@ async function boot() {
   main = document.getElementById('main'); main.width = outW; main.height = outH; mg = main.getContext('2d', { willReadFrequently: true });
   buildLUT();
   bufA = mk(outW, outH); bufB = mk(outW, outH);
+  // Quarter-resolution highlight buffers keep bloom inexpensive at 1080p–4K.
+  const bloomW = Math.max(1, Math.ceil(outW / 4)), bloomH = Math.max(1, Math.ceil(outH / 4));
+  bloomSource = mk(bloomW, bloomH); bloomBlur = mk(bloomW, bloomH);
+  bloomSourceCtx = bloomSource.getContext('2d', { willReadFrequently: true });
+  bloomBlurCtx = bloomBlur.getContext('2d');
   const gw = Math.ceil(outW / 2), gh = Math.ceil(outH / 2);
   for (let k = 0; k < 4; k++) { const c = mk(gw, gh), x = c.getContext('2d'), id = x.createImageData(gw, gh); let s = 1234 + k * 999; for (let i = 0; i < id.data.length; i += 4) { s = (s * 1664525 + 1013904223) >>> 0; const v = s >>> 24; id.data[i] = id.data[i + 1] = id.data[i + 2] = v; id.data[i + 3] = 255; } x.putImageData(id, 0, 0); grainTiles.push(c); }
   const list = await (await fetch(`/__manifest`)).json();
@@ -59,6 +64,42 @@ function applyGrade(W, H) {
     d[i] = r; d[i + 1] = g; d[i + 2] = b;
   }
   mg.putImageData(img, 0, 0);
+}
+// Highlight-only bloom: extract bright pixels at quarter resolution, blur, then screen-blend.
+function applyBloom(W, H, grade) {
+  const strength = grade.bloom ?? 0;
+  if (strength <= 0 || !bloomSourceCtx || !bloomBlurCtx) return;
+  const bw = bloomSource.width, bh = bloomSource.height;
+  bloomSourceCtx.setTransform(1, 0, 0, 1, 0, 0);
+  bloomSourceCtx.globalAlpha = 1;
+  bloomSourceCtx.globalCompositeOperation = 'source-over';
+  bloomSourceCtx.filter = 'none';
+  bloomSourceCtx.clearRect(0, 0, bw, bh);
+  bloomSourceCtx.drawImage(main, 0, 0, bw, bh);
+  const threshold = grade.bloomThreshold ?? 166;
+  const knee = Math.max(1, grade.bloomKnee ?? 42);
+  const image = bloomSourceCtx.getImageData(0, 0, bw, bh);
+  const d = image.data;
+  for (let i = 0; i < d.length; i += 4) {
+    const luminance = d[i] * 0.2126 + d[i + 1] * 0.7152 + d[i + 2] * 0.0722;
+    let contribution = clamp((luminance - (threshold - knee)) / (knee * 2));
+    contribution = contribution * contribution * (3 - 2 * contribution);
+    d[i + 3] = Math.round(d[i + 3] * contribution);
+  }
+  bloomSourceCtx.putImageData(image, 0, 0);
+  bloomBlurCtx.setTransform(1, 0, 0, 1, 0, 0);
+  bloomBlurCtx.globalAlpha = 1;
+  bloomBlurCtx.globalCompositeOperation = 'source-over';
+  bloomBlurCtx.clearRect(0, 0, bw, bh);
+  bloomBlurCtx.filter = `blur(${Math.max(1, grade.bloomRadius ?? 10)}px)`;
+  bloomBlurCtx.drawImage(bloomSource, 0, 0);
+  bloomBlurCtx.filter = 'none';
+  mg.save();
+  mg.setTransform(1, 0, 0, 1, 0, 0);
+  mg.globalCompositeOperation = 'screen';
+  mg.globalAlpha = clamp(strength, 0, 1.25);
+  mg.drawImage(bloomBlur, 0, 0, W, H);
+  mg.restore();
 }
 function shotIndexAt(t) { const S = E.shots; for (let i = 0; i < S.length; i++) if (t < S[i].end) return i; return S.length - 1; }
 const cache3D = new Map();
@@ -103,6 +144,7 @@ window.renderFrame = function (f) {
   mg.globalAlpha = 1; mg.filter = 'none'; mg.setTransform(1, 0, 0, 1, 0, 0);
   applyGrade(W, H);
   if (grade.tint) { mg.globalCompositeOperation = grade.tint[1]; mg.fillStyle = alpha(grade.tint[0], grade.tint[2]); mg.fillRect(0, 0, W, H); mg.globalCompositeOperation = 'source-over'; }
+  applyBloom(W, H, grade);
   if (shot.vignette !== false && grade.vignette > 0) { const v = mg.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.35, W / 2, H / 2, Math.max(W, H) * 0.62); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, `rgba(0,0,0,${grade.vignette})`); mg.fillStyle = v; mg.fillRect(0, 0, W, H); }
   if (grade.grain > 0) { mg.save(); mg.globalAlpha = grade.grain; mg.globalCompositeOperation = 'overlay'; mg.drawImage(grainTiles[f % 4], 0, 0, W, H); mg.restore(); }
   mg.setTransform(E.PX, 0, 0, E.PX, 0, 0);

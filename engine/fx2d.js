@@ -43,15 +43,24 @@ export function fog(g, y, h, color, a = 0.35) { g.fillStyle = linGrad(g, 0, y, 0
 export function sun(g, x, y, r, color = '#FFF2D6', glowColor = '#FFD27A', glowR = 5) { glow(g, x, y, r * glowR, glowColor, 0.65); glow(g, x, y, r * 2.2, '#FFE2A8', 0.7); circle(g, x, y, r, color); }
 export function moon(g, x, y, r, color = '#DCE9FF') { glow(g, x, y, r * 4.5, '#66B8D8', 0.25); circle(g, x, y, r, color); }
 export function godRays(g, x, y, o = {}) {
-  const { count = 7, angle = Math.PI / 2, spread = 0.9, len = 1700, color = '#FFD27A', a = 0.12, t = 0, width = 0.08 } = o;
-  g.save(); g.globalCompositeOperation = 'lighter';
-  for (let i = 0; i < count; i++) {
-    const ang = angle - spread / 2 + (spread * (i + 0.5)) / count + Math.sin(t * 0.25 + i * 1.3) * 0.015, w = width * (0.7 + ((i * 37) % 10) / 12);
-    const ex = x + Math.cos(ang) * len, ey = y + Math.sin(ang) * len;
-    g.fillStyle = linGrad(g, x, y, ex, ey, [alpha(color, a * 1.2), alpha(color, a * 0.6), alpha(color, a * 0.15), alpha(color, 0)]);
-    g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(ang - w) * len, y + Math.sin(ang - w) * len); g.lineTo(x + Math.cos(ang + w) * len, y + Math.sin(ang + w) * len); g.closePath(); g.fill();
-  }
-  g.restore();
+  const { count = 7, angle = Math.PI / 2, spread = 0.9, len = 1700, color = '#FFD27A', a = 0.12, t = 0, width = 0.08, soft = true, blur = 26, softA = 0.42 } = o;
+  const draw = (softPass = false) => {
+    g.save(); g.globalCompositeOperation = 'lighter';
+    if (softPass) { g.filter = `blur(${blur}px)`; g.globalAlpha = softA; }
+    for (let i = 0; i < count; i++) {
+      const ang = angle - spread / 2 + (spread * (i + 0.5)) / count + Math.sin(t * 0.25 + i * 1.3) * 0.015;
+      const w = width * (0.7 + ((i * 37) % 10) / 12) * (softPass ? 2.8 : 1);
+      const ex = x + Math.cos(ang) * len, ey = y + Math.sin(ang) * len;
+      g.fillStyle = linGrad(g, x, y, ex, ey, [alpha(color, a * 1.2), alpha(color, a * 0.6), alpha(color, a * 0.15), alpha(color, 0)]);
+      g.beginPath(); g.moveTo(x, y);
+      g.lineTo(x + Math.cos(ang - w) * len, y + Math.sin(ang - w) * len);
+      g.lineTo(x + Math.cos(ang + w) * len, y + Math.sin(ang + w) * len);
+      g.closePath(); g.fill();
+    }
+    g.restore();
+  };
+  if (soft && blur > 0) draw(true);
+  draw(false);
 }
 // cone of light from a lamp / spotlight / window, pointing at angle
 export function lightCone(g, x, y, o = {}) { const { angle = Math.PI / 2, spread = 0.5, len = 750, color = '#FFD27A', a = 0.22 } = o; g.save(); g.globalCompositeOperation = 'lighter'; g.fillStyle = radGrad(g, x, y, 0, len, [alpha(color, a), alpha(color, a * 0.5), alpha(color, 0)]); g.beginPath(); g.moveTo(x, y); g.arc(x, y, len, angle - spread / 2, angle + spread / 2); g.closePath(); g.fill(); g.restore(); }

@@ -48,5 +48,32 @@ export const STYLES = {
     grade: { contrast: 0.92, sat: 0.92, lift: [0.07, 0.055, 0.085], gamma: [1.12, 1.1, 1.06], gain: [1.06, 1.03, 0.98], vignette: 0.3, grain: 0.07, bloom: 0.45 },
     moods: { night: { sky: ['#2a2f5a', '#4a4f80', '#6a6aa0'], wall: '#3e4266' }, dusk: { sky: ['#6a5a90', '#c08aa8', '#f2b0a0', '#fbe0b8'] } },
   },
+  cinematic: {
+    name: 'Vibrant Cinematic',
+    rimGlow: 18,
+    desc: 'Rich amber highlights, cool navy shadows, saturated but controlled color, and stronger subject separation.',
+    ink: '#090d18', inkFar: '#20283b', feature: '#fff5e6', rimWidth: 4.5,
+    ui: { ...UI, card: 'rgba(12,20,36,.96)', cardLine: 'rgba(155,190,235,.3)', text: '#d5e1f5', sub: '#91a5c5', accent: '#ff7957', gold: '#ffd078', blueprint: '#8bcfff' },
+    grade: {
+      contrast: 1.13,
+      sat: 1.16,
+      lift: [0.006, 0.012, 0.028],
+      gamma: [1.04, 1.0, 0.97],
+      gain: [1.10, 1.04, 0.96],
+      vignette: 0.46,
+      grain: 0.035,
+      bloom: 0.68,
+    },
+    moods: {
+      day: { sky: ['#647da8', '#c4a0a0', '#f5c78d'], ambient: '#46516d', key: '#ffe0ae', rim: '#fff0d6', wall: '#555064', floor: '#393543', practical: '#ffd58a', fog: '#c9b4a8' },
+      golden: { sky: ['#55446f', '#d77d58', '#f6b96f'], ambient: '#382936', key: '#ffd078', rim: '#ffca86', wall: '#493039', floor: '#30242b', dark: '#1b141d', practical: '#ffe0a0', fog: '#d99b78' },
+      dusk: { sky: ['#171b38', '#574064', '#c87560', '#f4b978'], ambient: '#29253b', key: '#ffc477', rim: '#ffd09a', wall: '#392c3b', floor: '#29232f', dark: '#17131e', practical: '#ffd18a', fog: '#a97879' },
+      night: { sky: ['#080f24', '#172548', '#34476d'], ambient: '#151e35', key: '#cbdcff', rim: '#91caff', wall: '#202b43', floor: '#151d31', dark: '#0a1020', practical: '#ffb65e', fog: '#344b70' },
+      storm: { sky: ['#0b1228', '#202d4c', '#394968'], ambient: '#18233b', key: '#d9e7ff', rim: '#a9d7ff', wall: '#202b43', floor: '#151d30', dark: '#090f1d', practical: '#ffc36e', fog: '#435a7b' },
+      interiorWarm: { sky: ['#b77a63', '#eaa16f', '#f4c58c'], ambient: '#382832', key: '#ffd18a', rim: '#ffc17a', wall: '#453039', floor: '#2e242a', dark: '#191319', practical: '#ffdc99', fog: '#a97870' },
+      interiorCool: { sky: ['#182343', '#3d527c', '#7783a8'], ambient: '#202941', key: '#c8ddff', rim: '#91caff', wall: '#252c46', floor: '#181f34', dark: '#0c1223', practical: '#a6dfff', fog: '#465b82' },
+      void: { sky: ['#070b16', '#111a2d'], ambient: '#10182b', key: '#fff3df', rim: '#9acfff', wall: '#10182a', floor: '#0b1220', dark: '#060a12', practical: '#ffd078', fog: '#202d49' },
+    },
+  },
 };
 export const STYLE_IDS = Object.keys(STYLES);
