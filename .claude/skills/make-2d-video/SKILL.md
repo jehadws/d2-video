@@ -75,7 +75,7 @@ Open `build/styles/style_grid.png`, then show it with one line per style: **dusk
 ## Stage 6: Build every shot
 Read `references/engine-api.md` and the example scenes in `examples/reaction-time/scenes/` once. Work in batches of 8–12 shots:
 1. Write `scenes/sets/<location>.js` (reusable, anchored to `GY = E.H * V(0.8, 0.68)` and `CX = E.W/2`, with walls, floor and sky extended past the frame) and `scenes/shots/NN_<name>.js` with `registerShot('<id>', {...})` for the ids in shots.json.
-2. Run `node render.mjs --project projects/<slug> --sheet --scale 0.5`. Open every `build/sheets/sheet_XX.png` and check it against the QC checklist in `references/render-qc.md`. Fix any MISSING shots, errors printed by the renderer, and composition problems.
+2. Review only the batch you just created or changed: `node render.mjs --project projects/<slug> --sheet --ids shot_001,shot_002 --scale 0.5`. Open the generated sheets under `build/sheets/selected/` and check them against the QC checklist in `references/render-qc.md`. Replace the example IDs with the exact IDs from `story/shots.json`. For the initial inventory or final complete review, omit `--ids` to render every shot. Fix any MISSING shots, errors printed by the renderer, and composition problems.
 3. Check motion with `--stills t1,t2,t3` or `--from A --to B --scale 0.5` (writes `build/preview.mp4`).
 
 Non-negotiables from the style bible:
