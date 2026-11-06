@@ -25,7 +25,7 @@ export function drops(g, t, o = {}) {
   }
 }
 export function dust(g, t, o = {}) {
-  const { seed = 3, count = 50, color = '#ffe9d2', area = [0, 0, E.W, E.H], size = 2.2, speed = 14, a = 0.5 } = o;
+  const { seed = 3, count = 50, color = '#ffe9d2', area = [0, 0, E.W, E.H], size = 1.8, speed = 14, a = 0.28 } = o;
   const r = rng(seed); g.save(); g.globalCompositeOperation = 'lighter';
   for (let i = 0; i < count; i++) {
     const s = 0.4 + r() * 1.2, ph = r() * 6.28, rad = (0.5 + r()) * size;
@@ -40,10 +40,10 @@ export function stars(g, t = 0, o = {}) { const { seed = 5, count = 140, area = 
 export function fog(g, y, h, color, a = 0.35) { g.fillStyle = linGrad(g, 0, y, 0, y + h, [alpha(color, 0), alpha(color, a), alpha(color, 0)]); g.fillRect(-E.W, y, E.W * 3, h); }
 
 // ---------- light ----------
-export function sun(g, x, y, r, color = '#FFF2D6', glowColor = '#FFD27A', glowR = 5) { glow(g, x, y, r * glowR, glowColor, 0.65); glow(g, x, y, r * 2.2, '#FFE2A8', 0.7); circle(g, x, y, r, color); }
+export function sun(g, x, y, r, color = '#FFF2D6', glowColor = '#FFD27A', glowR = 3) { glow(g, x, y, r * glowR, glowColor, 0.32); glow(g, x, y, r * 1.7, '#FFE2A8', 0.28); circle(g, x, y, r, color); }
 export function moon(g, x, y, r, color = '#DCE9FF') { glow(g, x, y, r * 4.5, '#66B8D8', 0.25); circle(g, x, y, r, color); }
 export function godRays(g, x, y, o = {}) {
-  const { count = 7, angle = Math.PI / 2, spread = 0.9, len = 1700, color = '#FFD27A', a = 0.12, t = 0, width = 0.08, soft = true, blur = 26, softA = 0.42 } = o;
+  const { count = 7, angle = Math.PI / 2, spread = 0.9, len = 1700, color = '#FFD27A', a = 0.065, t = 0, width = 0.055, soft = true, blur = 18, softA = 0.24 } = o;
   const draw = (softPass = false) => {
     g.save(); g.globalCompositeOperation = 'lighter';
     if (softPass) { g.filter = `blur(${blur}px)`; g.globalAlpha = softA; }
@@ -66,7 +66,7 @@ export function godRays(g, x, y, o = {}) {
 export function lightCone(g, x, y, o = {}) { const { angle = Math.PI / 2, spread = 0.5, len = 750, color = '#FFD27A', a = 0.22 } = o; g.save(); g.globalCompositeOperation = 'lighter'; g.fillStyle = radGrad(g, x, y, 0, len, [alpha(color, a), alpha(color, a * 0.5), alpha(color, 0)]); g.beginPath(); g.moveTo(x, y); g.arc(x, y, len, angle - spread / 2, angle + spread / 2); g.closePath(); g.fill(); g.restore(); }
 export function pool(g, x, y, rx, ry, color = '#FFD27A', a = 0.35) { g.save(); g.globalCompositeOperation = 'lighter'; g.translate(x, y); g.scale(1, ry / rx); g.fillStyle = radGrad(g, 0, 0, 0, rx, [alpha(color, a), alpha(color, a * 0.3), alpha(color, 0)]); g.beginPath(); g.arc(0, 0, rx, 0, Math.PI * 2); g.fill(); g.restore(); }
 export function lensStreak(g, x, y, w = E.W, color = '#ffe6cc', a = 0.35, h = 2) { g.save(); g.globalCompositeOperation = 'lighter'; g.fillStyle = linGrad(g, x - w / 2, 0, x + w / 2, 0, [alpha(color, 0), alpha(color, a), alpha(color, 0)]); g.fillRect(x - w / 2, y - h / 2, w, h); g.restore(); }
-export function sparkle(g, x, y, s = 20, color = '#ffffff', a = 0.9) { g.save(); g.globalCompositeOperation = 'lighter'; glow(g, x, y, s * 0.8, color, a * 0.6); seg(g, [[x - s, y], [x + s, y]], s * 0.06, alpha(color, a)); seg(g, [[x, y - s], [x, y + s]], s * 0.06, alpha(color, a)); g.restore(); }
+export function sparkle(g, x, y, s = 20, color = '#ffffff', a = 0.55) { g.save(); g.globalCompositeOperation = 'lighter'; glow(g, x, y, s * 0.8, color, a * 0.6); seg(g, [[x - s, y], [x + s, y]], s * 0.06, alpha(color, a)); seg(g, [[x, y - s], [x, y + s]], s * 0.06, alpha(color, a)); g.restore(); }
 export function lightning(g, o = {}) {
   const { seed = 9, x1 = E.W * 0.6, y1 = 0, x2 = E.W * 0.5, y2 = E.H * 0.6, color = '#dfe8ff', w = 3, branches = 3, a = 1, jag = 60 } = o;
   const r = rng(seed); const path = (ax, ay, bx, by, n, wd, depth) => {
