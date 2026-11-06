@@ -52,7 +52,7 @@ export const STYLES = {
     name: 'Vibrant Cinematic',
     rimGlow: 18,
     desc: 'Rich amber highlights, cool navy shadows, saturated but controlled color, and stronger subject separation.',
-    ink: '#090d18', inkFar: '#20283b', feature: '#fff5e6', rimWidth: 4.5,
+    ink: '#f8f7f2', inkFar: '#cbd3df', feature: '#172033', rimWidth: 4.5,
     ui: { ...UI, card: 'rgba(12,20,36,.96)', cardLine: 'rgba(155,190,235,.3)', text: '#d5e1f5', sub: '#91a5c5', accent: '#ff7957', gold: '#ffd078', blueprint: '#8bcfff' },
     grade: {
       contrast: 1.13,
