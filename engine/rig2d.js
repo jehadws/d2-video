@@ -270,9 +270,17 @@ export function bigFace(g, cx, cy, r, o = {}) {
   const top = of.top || 'none', cc = top === 'labcoat' ? '#ebe7f0' : of.color || ink;
   g.fillStyle = top === 'none' ? ink : cc; g.beginPath(); g.ellipse(0, r * 1.65, r * 1.25, r * 0.85, 0, Math.PI, Math.PI * 2); g.fill();
   if (of.head === 'hood') { const hc = of.headColor || of.color || '#d64a33'; circle(g, side * -r * 0.04, r * 0.06, r * 1.2, shade(hc, -0.15)); g.strokeStyle = alpha(shade(hc, 0.4), 0.7); g.lineWidth = r * 0.05; g.beginPath(); g.arc(-r * 0.05, 0, r * 1.12, Math.PI * 1.1, Math.PI * 1.5); g.stroke(); }
-  // rim crescent on the lit side
-  g.save(); g.beginPath(); g.arc(0, 0, r + r * 0.06, 0, Math.PI * 2); g.arc(side * r * 0.07, r * 0.02, r, 0, Math.PI * 2, true); g.fillStyle = rc; g.fill('evenodd'); g.restore();
-  circle(g, 0, 0, r, ink);
+  // rim crescent on the lit side (chiaroscuro)
+  g.save();
+  g.shadowColor = rc; g.shadowBlur = r * 0.14;
+  g.beginPath(); g.arc(0, 0, r + r * 0.08, 0, Math.PI * 2); g.arc(side * r * 0.09, r * 0.02, r, 0, Math.PI * 2, true); g.fillStyle = rc; g.fill('evenodd');
+  g.restore();
+  const headGrad = g.createLinearGradient(side * -r, 0, side * r, 0);
+  headGrad.addColorStop(0, shade(ink, 0.06));
+  headGrad.addColorStop(0.45, ink);
+  headGrad.addColorStop(1, shade(ink, -0.4));
+  g.fillStyle = headGrad;
+  g.beginPath(); g.arc(0, 0, r, 0, Math.PI * 2); g.fill();
   if (of.head && !['hood', 'none'].includes(of.head)) drawHeadwear(g, { ...of, _ink: ink }, 0, 0, r, 'main');
   face(g, 0, 0, r, { expr: o.expr, talk: o.talk, blink: o.blink, look: o.look, front: true, override: o.face });
   if (of.face === 'glasses') { g.strokeStyle = st.feature; g.lineWidth = r * 0.06; for (const dx of [-0.34, 0.34]) { g.beginPath(); g.arc(dx * r, -r * 0.16, r * 0.26, 0, Math.PI * 2); g.stroke(); } }

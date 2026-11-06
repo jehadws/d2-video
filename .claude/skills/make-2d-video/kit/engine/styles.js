@@ -5,23 +5,23 @@
 // Scenes must take colours from mood()/S() so a style switch re-themes the whole video.
 
 export const BASE_MOODS = {
-  day:          { sky: ['#8fb0d8', '#cfdcea', '#efe3d2'], ambient: '#6f7d96', key: '#fff3dc', rim: '#fff1d6', wall: '#8d8496', floor: '#5f5866', dark: '#2f2a36', practical: '#ffe2a8', grass: '#4f8a55', road: '#5d5a66', fog: '#dfe4f0' },
-  golden:       { sky: ['#6b5a8e', '#e89a6a', '#f9d49c'], ambient: '#4a3a50', key: '#ffcf8f', rim: '#ffc68a', wall: '#5a3a34', floor: '#45302a', dark: '#2a1814', practical: '#ffe7b0', grass: '#4d6b3c', road: '#4a3c40', fog: '#f0c49a' },
-  dusk:         { sky: ['#3d3360', '#8a5a86', '#e8956b', '#f7cf98'], ambient: '#3b2b3d', key: '#ffc68a', rim: '#ffc68a', wall: '#4a3646', floor: '#3d2c38', dark: '#231a27', practical: '#ffd59a', grass: '#3d5a48', road: '#3a3040', fog: '#c08a8a' },
-  night:        { sky: ['#0b1028', '#1d2550', '#3a3570'], ambient: '#1e2444', key: '#c9d4ff', rim: '#a9b8ff', wall: '#262a46', floor: '#1b1e33', dark: '#0f1122', practical: '#ffb860', grass: '#22433a', road: '#24263a', fog: '#3a4270' },
-  storm:        { sky: ['#141a33', '#2a3358', '#3d4670'], ambient: '#232a48', key: '#dfe6ff', rim: '#cfd9ff', wall: '#2b3150', floor: '#1c2238', dark: '#0d1020', practical: '#bcd0ff', grass: '#25483e', road: '#232838', fog: '#4a5580' },
-  interiorWarm: { sky: ['#c98a74', '#f2b585', '#f7cf98'], ambient: '#4a3646', key: '#ffd59a', rim: '#ffcf8f', wall: '#4f3a40', floor: '#3a2a2e', dark: '#21171c', practical: '#ffd28a', grass: '#3d5a48', road: '#3a3040', fog: '#a87a70' },
-  interiorCool: { sky: ['#2a3560', '#5a6aa0'], ambient: '#2a2c48', key: '#cbd6ff', rim: '#b8c6ff', wall: '#2e3150', floor: '#22243a', dark: '#121426', practical: '#9fe0ff', grass: '#22433a', road: '#24263a', fog: '#4a5080' },
-  void:         { sky: ['#0a0e1a', '#121a2e'], ambient: '#151c30', key: '#ffffff', rim: '#8fb8e8', wall: '#121a2e', floor: '#0d1322', dark: '#070a12', practical: '#ffd47e', grass: '#1d3a33', road: '#151a28', fog: '#1d2740' },
+  day:          { sky: ['#263a56', '#4A2930', '#F2A65A', '#FFD27A'], ambient: '#3d2f38', key: '#FFD27A', rim: '#F2A65A', wall: '#4A2930', floor: '#291a22', dark: '#241923', practical: '#FFD27A', grass: '#3f6b40', road: '#383240', fog: '#e0b686' },
+  golden:       { sky: ['#241923', '#4A2930', '#F0643A', '#F2A65A', '#FFD27A'], ambient: '#3d262d', key: '#FFD27A', rim: '#F2A65A', wall: '#4A2930', floor: '#321b22', dark: '#241923', practical: '#FFD27A', grass: '#425e36', road: '#3a2830', fog: '#F2A65A' },
+  dusk:         { sky: ['#181226', '#241923', '#4A2930', '#F0643A', '#F2A65A', '#FFD27A'], ambient: '#30202e', key: '#FFD27A', rim: '#F2A65A', wall: '#3a2230', floor: '#281822', dark: '#1b121c', practical: '#FFD27A', grass: '#2e4236', road: '#2c2030', fog: '#b86852' },
+  night:        { sky: ['#0a0e18', '#101522', '#18223a', '#223254'], ambient: '#141c2e', key: '#DCE9FF', rim: '#66B8D8', wall: '#161e30', floor: '#101522', dark: '#0c101c', practical: '#FFD27A', grass: '#182e2c', road: '#121828', fog: '#1e2c4a' },
+  storm:        { sky: ['#0d1222', '#161e36', '#253052'], ambient: '#192036', key: '#DCE9FF', rim: '#66B8D8', wall: '#1c243c', floor: '#121728', dark: '#0e1220', practical: '#F0643A', grass: '#1d322c', road: '#161a28', fog: '#2a3860' },
+  interiorWarm: { sky: ['#4A2930', '#F0643A', '#F2A65A', '#FFD27A'], ambient: '#3f262e', key: '#FFD27A', rim: '#F2A65A', wall: '#4A2930', floor: '#2b1920', dark: '#241923', practical: '#FFD27A', grass: '#384e3a', road: '#33222a', fog: '#F2A65A' },
+  interiorCool: { sky: ['#101522', '#1c2848', '#384c78'], ambient: '#1c2238', key: '#DCE9FF', rim: '#66B8D8', wall: '#1a2034', floor: '#121626', dark: '#0e1220', practical: '#FFD27A', grass: '#1e322a', road: '#161a28', fog: '#2d3a60' },
+  void:         { sky: ['#080b14', '#101522'], ambient: '#101726', key: '#DCE9FF', rim: '#66B8D8', wall: '#101522', floor: '#0a0e18', dark: '#060910', practical: '#FFD27A', grass: '#122420', road: '#0e1320', fog: '#141f34' },
 };
 
-const UI = { card: 'rgba(18,28,48,.94)', cardLine: 'rgba(150,180,230,.25)', text: '#9fb6d8', sub: '#6f84a6', accent: '#ff6f61', gold: '#ffd47e', cream: '#fff1dc', blueprint: '#8fb8e8', bpBg: '#0b1324', good: '#5fd39a' };
+const UI = { card: 'rgba(16,21,34,.95)', cardLine: 'rgba(102,184,216,.3)', text: '#DCE9FF', sub: '#7a8fae', accent: '#F0643A', gold: '#FFD27A', cream: '#DCE9FF', blueprint: '#66B8D8', bpBg: '#101522', good: '#5fd39a' };
 
 export const STYLES = {
   dusk: {
-    name: 'Cinematic Dusk', desc: 'Reference look: mauve-purple shadows, amber key light, cream rim light, soft grain, 2:1 letterbox.',
-    ink: '#0e0b12', inkFar: '#2b2333', feature: '#f4efe6', rimWidth: 4, ui: UI,
-    grade: { contrast: 1.0, sat: 1.0, lift: [0, 0, 0], gamma: [1, 1, 1], gain: [1, 1, 1], vignette: 0.55, grain: 0.055, bloom: 0.55 },
+    name: 'Cinematic Dusk', desc: 'Cinematic color direction: rich amber/burnt orange warm scenes, deep navy night scenes, chiaroscuro contrast.',
+    ink: '#0e0b12', inkFar: '#241923', feature: '#f4efe6', rimWidth: 4.8, ui: UI,
+    grade: { contrast: 1.15, sat: 1.18, lift: [0.015, -0.005, 0.035], gamma: [1.02, 0.99, 0.96], gain: [1.08, 1.02, 0.94], vignette: 0.62, grain: 0.045, bloom: 0.65 },
     moods: {},
   },
   midnight: {
