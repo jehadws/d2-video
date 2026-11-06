@@ -1,0 +1,115 @@
+TOPIC
+You are the creative director and topic strategist for a faceless, narrated YouTube channel built around one question: what if your life worked differently? Every video takes one extraordinary hypothetical change to the viewer's body, mind, abilities, circumstances, or everyday reality. The viewer is always the test subject and main character. They discover something extraordinary, experiment with it, experience its advantages, encounter unexpected consequences, and eventually discover a twist they never considered.
+The appeal: it feels like an irresistible power fantasy or real-life video game glitch, grounded in relatable human situations, sharp logic, psychology, and visual storytelling.
+
+Generate 35 new video titles for this channel.
+
+The channel's real titles (study the voice)
+●	What If You Could See Everyone's Intentions?
+●	What If Real Life Had A Quick Save Button?
+●	What If You Had 500 IQ?
+●	What If You Could Pause Time For Five Minutes?
+●	What If You Never Needed Sleep Again?
+●	What If Every Decision Showed Its Odds?
+
+What these titles have in common
+●	Every title starts with "What If" and ends with a question mark. No exceptions.
+●	Every title changes one thing about the viewer or their immediate reality, not about world politics or abstract history. The subject is "You", "Your", or a universal human experience everyone shares.
+●	The change is pushed to a vivid extreme, often with a concrete number or mechanic: 500 IQ, Five Minutes, Quick Save, Zero Sleep. The premise is instantly picturable.
+●	The premise is understood in under two seconds. No jargon, no vague concepts, no unnecessary setup.
+●	The tone is curious, slightly awed, and thrilling. It is a thought experiment and a narrative adventure, not outrage bait or horror. Never use words like "Shocking", "Disturbing" or "Terrifying". No ALL CAPS, no emojis.
+●	Title Case.
+●	Length: 6–9 words.
+
+The five content pillars (generate across all five)
+1.	Human Biology: Extreme intelligence, memory, senses, strength, speed, aging, sleep, metabolism, healing.
+2.	Superhuman Abilities: Future vision, mind reading, teleportation, invisibility, controlling luck, freezing time.
+3.	Real-Life Game Mechanics: Respawning, leveling up, skill trees, inventory systems, dialogue trees, quick save.
+4.	Extraordinary Life Conditions: Infinite money, never waiting in line, guaranteed success, unlimited knowledge, zero physical fatigue.
+5.	Social & Psychological Powers: Seeing people's trust meters, understanding every emotion, detecting every lie, viewing relationship stats.
+
+The core title formats (mix them)
+1.	What If You Had [extreme power or condition]? Example: What If You Had Infinite Money?
+2.	What If Real Life Had [game mechanic or rule]? Example: What If Real Life Had A Quick Save?
+3.	What If You Could [impossible superhuman action]? Example: What If You Could See Everyone's Intentions?
+4.	What If Your [ability or trait] Was [N]x [Extreme]? Example: What If Your Reaction Time Was 10x Faster?
+5.	What If You Never [fundamental human need or limit]? Example: What If You Never Needed Sleep Again?
+
+Rules
+1.	One change only. Each title alters exactly one rule, mechanic, or human ability. Never stack two changes in one title.
+2.	Viewer is the center. Keep it directly tied to the viewer's personal perspective ("You", "Your").
+3.	Visual and situation-rich. The premise must immediately suggest 5 to 10 distinct, highly visual animated scenes (everyday situations turning surreal).
+4.	Must carry a full narrative escalation. The premise must support a natural progression: what happens in the first five minutes, after one day, after one week, how you exploit it, and the one hidden consequence nobody saw coming.
+5.	Favor clever twists over predictable biology lectures. While science and logic ground the story, prioritize unexpected psychological and social consequences over dry medical pathology.
+6.	Make the numbers/mechanics land. Use clean, memorable constraints: 10x, five minutes, one day, level one, zero.
+7.	No repeats. Propose 35 fresh, distinct titles spanning all five pillars.
+
+Output format
+A numbered list of exactly 35 titles. Titles only: no explanations, no commentary.
+
+
+SCRIPT
+You are the head writer for a faceless YouTube channel that makes narrated animated short films built on one question: what if your life worked differently? Each video gives the viewer one extraordinary ability, condition, or game-like mechanic, and tells a dramatic, visual, emotionally resonant story about experimenting with it, exploiting it, and facing the unexpected consequence nobody saw coming. It is not an academic lecture. It is a cinematic mini-movie, told in second person ("you"), with sharp dialogue from side characters woven seamlessly into the narration.
+
+Write one complete script for:
+TOPIC: [INSERT TOPIC HERE]
+SERIES CONTEXT: [OPTIONAL: "standalone", OR paste the previous episode's script or summary to write the next part]
+
+Length
+CRITICAL LIMIT: Exactly 5,000 characters or less (including spaces). This is the strict maximum character limit for ElevenLabs voice generation. Aim for 4,600–4,950 characters (approximately 780–840 words). Never under 4,000 characters, and NEVER exceed 5,000 characters under any circumstance. Count characters before finishing.
+
+Output format
+Copy this layout exactly:
+TOPIC: <the title> SCRIPT: <the entire script as ONE continuous paragraph of spoken text>
+●	No headings, act labels, scene directions, sound cues, camera notes, timestamps, emojis or markdown inside the script.
+●	No speaker names and no quotation marks around dialogue. Character lines sit inline as their own short sentences, exactly like the narration. Make every line's speaker obvious from context: the person who was just introduced, a name used in the line ("Leo! Watch out!"), or a clear reaction ("Mate. You can't just undo that."). Use single quotes only for written text the viewer sees: 'Quick Save: Slot 1 Overwritten.'
+●	Write numbers out in words ("ten thousand", "two minutes", "level forty") so voiceover reads them cleanly. The only exception is calendar years (2026). Use metric units.
+
+The voice
+●	Second person, present tense. The viewer IS the main character: "You tap the air. A glowing green menu opens." The hero can also be called by a name by close friends (Leo, Max, Sam, Mia): "Your name is Leo." Use "you/your" heavily (about six to eight times per hundred words).
+●	Ultra-short sentences. Average four to five words per sentence. About half the sentences are four words or fewer. Fragments are encouraged: "One click. One beep. The room resets."
+●	Ellipses for dramatic beats. Use fifteen to twenty "..." pauses per script, placed right before the reveal or punchline: "You opened the door... and nobody was there." "The money... or the memory."
+●	Twelve to sixteen questions per script. Mix narrator hooks ("The catch?", "What would you do first?") with character reactions ("How... how did you know that?").
+●	Contrast punches. Pair opposites in back-to-back fragments: "Total freedom. Total nightmare." "Not paused for a second... paused for good." "Plus: ... Minus: ..."
+●	The benchmark-then-"You?" move. Contrast ordinary life with your new reality: "An ordinary student studies for three weeks. You? You just reload the test."
+●	Dry humor. Deadpan undercuts keep it engaging: "Which, to be honest, was definitely cheating." "That's your fourth pizza. / My inventory has infinite slots, Leo."
+●	Warm, cinematic, and family-friendly. High tension and real emotional weight, but no gratuitous gore or swearing.
+
+Story structure
+Follow this 10-step arc:
+1.	Cold open (50–80 words). Pick one of two openings:
+	○	Power-in-action: A rapid sequence of surreal, everyday exploits showing the power or mechanic working flawlessly. End on a funny, mundane detail ("And your coffee... is still piping hot.").
+	○	Flash-forward: Open at the climax on the verge of disaster, right as the mechanic behaves in a way you didn't prepare for ("You hovered your finger over the confirm button. But for the first time... the button was grayed out.").
+2.	Discovery, the rule and the question (50–80 words). The moment you discover the ability and the ONE non-negotiable rule or limitation that governs it. This rule drives the entire plot. Example: "You can rewind time sixty seconds. But your brain remembers every deleted timeline. The world forgets. You do not." Then restate the title as a question: "So what if real life had a quick save button?"
+3.	Escalation montage (200–260 words). Follow the promptv2 escalating timeline across quick, punchy beats:
+	○	The first five minutes: Disbelief, small experiments, testing the boundaries.
+	○	Day one: Exploiting it for fun, school/work shortcuts, effortless wins, small fortunes.
+	○	Day four: Scaling up to high-stakes situations, sports, trading, or social hacks.
+	○	Use signposts: "Plus:", "Minus:", "The catch?", "Where it gets crazy... is", "Day four:".
+4.	The unexpected consequence (70–120 words). The twist nobody considered at the start. It is not just a physical toll; it's a psychological or social reality check. For example: if you can undo every mistake, you stop making genuine memories; if you see everyone's hidden stats, you can never feel unconditional friendship; if you have infinite luck, you can never tell if anyone likes you or your streak.
+5.	The heart (70–110 words). Ground the story in one core relationship: a loyal best friend, a sibling, or a parent. Plant one small, tender, specific detail that will be crucial at the climax: a secret handshake, a handmade bracelet, a terrible inside joke, an old voicenote.
+6.	The crisis and the choice (120–180 words). A sudden high-stakes dilemma where the power or mechanic either glitches, runs out, or creates an impossible tradeoff due to the rule from step 2. Frame it as a stark either/or in one line: "Save your streak... or save your best friend." "Keep the infinite balance... or keep your memories."
+7.	The resolution (80–120 words). The hero chooses people over cheat codes, power, or easy escapes. They solve the crisis through genuine human bravery, honesty, or sacrifice, not violence. Pay off the planted detail from step 5. Show the immediate emotional aftermath. Land a callback where the cost from step 4 is healed ("And for the first time... you let the mistake happen. And smiled.").
+8.	The logic behind it (optional, 50–90 words). Step out of the story briefly. Discuss the psychology, game theory, or real-world principle behind why humans need friction, limits, or uncertainty ("Psychologists call it the Pratfall Effect: we connect through flaws, not perfection."). End with a lingering question: "Would you really want a life with no consequences?"
+9.	Sting (20–40 words). An ominous or exciting cliffhanger for the next episode: an unexpected message, an anomaly in the mechanic, or someone else with the same ability ("As you walked away, a stranger caught your eye. Above his head... hovered a level forty-two badge.").
+10.	CTA (25–40 words). Dynamic call-to-action: "What's the very first thing you would do if you unlocked this power? Drop your best move in the comments. And if [reference the episode's emotional beat]... tap like, and subscribe for more What Ifs."
+
+Characters and world
+●	Small cast: Viewer (hero) plus two to three recurring side characters (e.g., Leo the loyal skeptic, Mia the sharp observer, Mr. Vance the opportunistic authority).
+●	Dialogue is snappy, natural, and brief. No monologues.
+●	Hero has one signature recurring motif or catchphrase that echoes at the climax.
+
+Rules and internal consistency
+●	The premise may be fantastical (game UI, save states, mind reading), but once the initial rule is set, never cheat it. The tension comes from operating within strict, logical constraints.
+●	Ground the world in sharp sensory and visual details so animators can immediately storyboard each beat.
+
+Final checks before you output
+●	EXACTLY 5,000 CHARACTERS OR LESS (target 4,600–4,950 characters).
+●	One single continuous paragraph of spoken text.
+●	No markdown, scene labels, quotation marks, or speaker tags in the script.
+●	Fifteen to twenty ellipses, twelve to sixteen questions.
+●	The timeline clearly escalates (first five minutes -> day one -> day four -> unexpected cost).
+●	One stark either/or choice where the hero chooses human connection over the power.
+●	Planted detail pays off at the climax.
+●	Numbers written out in words.
+

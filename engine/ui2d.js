@@ -69,11 +69,11 @@ export function lineFigure(g, o = {}) { const { x, y, s = 1, pose = POSES.stand,
 export function bubble(g, x, y, o = {}) { const { w = 120, h = 70, color = '#f4efe6', dots = true, str = null } = o; rr(g, x - w / 2, y - h / 2, w, h, h / 2); g.fillStyle = color; g.fill(); poly(g, [[x - w * 0.25, y + h / 2 - 4], [x - w * 0.38, y + h / 2 + 18], [x - w * 0.08, y + h / 2 - 4]], color); if (dots && !str) for (let i = -1; i <= 1; i++) circle(g, x + i * w * 0.2, y, h * 0.09, S().ink); if (str) text(g, str, x, y + 2, { size: h * 0.42, color: S().ink, font: FONTS.ui, weight: 900 }); }
 // End screen: question + comment bubble + subscribe pill + the whole cast lined up
 export function endScreen(g, t, o = {}) {
-  const { question = 'What would YOU do?', cast = [], moodColors = ['#1b1426', '#2a1a2e', '#4a2a2a'], rim = '#ffb070' } = o; const ui = S().ui;
+  const { question = 'What would YOU do?', cast = [], moodColors = ['#1b1426', '#2a1a2e', '#4a2a2a'], rim = '#ffb070', qy = V(150, 360) } = o; const ui = S().ui;
   g.fillStyle = linGrad(g, 0, 0, 0, E.H, moodColors); g.fillRect(-E.W, -E.H, E.W * 3, E.H * 3);
   glow(g, E.W / 2, E.H * 0.9, E.W * 0.45, '#ff9a5a', 0.3);
   const a1 = ease.out(prog(t, 0.2, 0.8));
-  text(g, question, E.W / 2, V(150, 360), { size: V(64, 66), font: FONTS.serif, weight: 900, italic: true, color: ui.cream, alpha: a1, glow: 18, glowColor: 'rgba(255,170,90,.5)' });
+  text(g, question, E.W / 2, qy, { size: V(64, 66), font: FONTS.serif, weight: 900, italic: true, color: ui.cream, alpha: a1, glow: 18, glowColor: 'rgba(255,170,90,.5)' });
   bubble(g, E.W / 2 - V(260, 170), V(300, 560), { w: V(110, 130), h: V(60, 70) });
   const sp = ease.outBack(prog(t, 0.6, 1.1)); g.save(); g.translate(E.W / 2 + V(60, 60), V(300, 560)); g.scale(sp, sp); rr(g, -150, -38, 300, 76, 38); g.fillStyle = '#e0302a'; g.fill(); g.fillStyle = '#fff'; g.beginPath(); g.moveTo(-104, 12); g.quadraticCurveTo(-104, -18, -92, -18); g.quadraticCurveTo(-80, -18, -80, 12); g.closePath(); g.fill(); circle(g, -92, 17, 5, '#fff'); text(g, 'Subscribe', 18, 2, { size: 34, color: '#fff', font: FONTS.ui, weight: 900 }); g.restore();
   const n = cast.length, gap = Math.min(V(150, 120), (E.W * 0.85) / Math.max(1, n)), y0 = E.H - V(170, 420);
