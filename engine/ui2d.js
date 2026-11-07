@@ -25,7 +25,7 @@ export function badge(g, o = {}) { const { str = '100x', x = E.W - V(90, 70), y 
 // timing / measurement readout e.g. "0.20 s", "NORMAL: 0.25 s"
 export function readout(g, o = {}) {
   const { label = null, value = '0.20 s', x = 200, y = E.H - 200, color = S().ui.gold, size = V(46, 52), a = 1, align = 'left' } = o;
-  const ls = size * 0.42, lw = label ? measure(g, label, ls, FONTS.ui, 900) + 18 : 0, vw = measure(g, value, size, FONTS.ui, 900), tot = lw + vw;
+  const ls = size * 0.42, lw = label ? measure(g, label, ls, FONTS.ui, 900) + size * 0.55 : 0, vw = measure(g, value, size, FONTS.ui, 900), tot = lw + vw;
   let xx = align === 'center' ? x - tot / 2 : align === 'right' ? x - tot : x;
   g.save(); g.globalAlpha *= a;
   if (label) text(g, label, xx, y + size * 0.08, { size: ls, color: alpha(S().ui.cream, 0.8), font: FONTS.ui, weight: 900, align: 'left', spacing: 2 });
@@ -66,7 +66,7 @@ export const bpStroke = () => S().ui.blueprint;
 // line-art stick figure for blueprint/diagram segments
 export function lineFigure(g, o = {}) { const { x, y, s = 1, pose = POSES.stand, color = '#e8f0ff', facing = 1 } = o; const p = pose; g.save(); g.translate(x, y); g.scale(s * facing, s); g.strokeStyle = color; g.lineWidth = 5; g.lineCap = 'round'; g.lineJoin = 'round'; const L = (pts) => { g.beginPath(); g.moveTo(...pts[0]); pts.slice(1).forEach(q => g.lineTo(...q)); g.stroke(); }; L([p.sh, p.hip]); L([p.hip, p.kF, p.fF]); L([p.hip, p.kB, p.fB]); L([p.sh, p.eF, p.hF]); L([p.sh, p.eB, p.hB]); g.beginPath(); g.arc(p.head[0], p.head[1], 22, 0, Math.PI * 2); g.stroke(); g.restore(); }
 // Speech/comment bubble with dots (used on end screens)
-export function bubble(g, x, y, o = {}) { const { w = 120, h = 70, color = '#f4efe6', dots = true, str = null } = o; rr(g, x - w / 2, y - h / 2, w, h, h / 2); g.fillStyle = color; g.fill(); poly(g, [[x - w * 0.25, y + h / 2 - 4], [x - w * 0.38, y + h / 2 + 18], [x - w * 0.08, y + h / 2 - 4]], color); if (dots && !str) for (let i = -1; i <= 1; i++) circle(g, x + i * w * 0.2, y, h * 0.09, S().ink); if (str) text(g, str, x, y + 2, { size: h * 0.42, color: S().ink, font: FONTS.ui, weight: 900 }); }
+export function bubble(g, x, y, o = {}) { const { w = 120, h = 70, color = '#f4efe6', dots = true, str = null } = o; rr(g, x - w / 2, y - h / 2, w, h, h / 2); g.fillStyle = color; g.fill(); poly(g, [[x - w * 0.25, y + h / 2 - 4], [x - w * 0.38, y + h / 2 + 18], [x - w * 0.08, y + h / 2 - 4]], color); const ink = S().feature; if (dots && !str) for (let i = -1; i <= 1; i++) circle(g, x + i * w * 0.2, y, h * 0.09, ink); if (str) text(g, str, x, y + 2, { size: h * 0.42, color: ink, font: FONTS.ui, weight: 900 }); }
 // End screen: question + comment bubble + subscribe pill + the whole cast lined up
 export function endScreen(g, t, o = {}) {
   const { question = 'What would YOU do?', cast = [], moodColors = ['#1b1426', '#2a1a2e', '#4a2a2a'], rim = '#ffb070' } = o; const ui = S().ui;
