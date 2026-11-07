@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "id": "s004",
+  "background": {
+    "color": "#202734"
+  },
+  "camera": {
+    "x": [
+      {
+        "at": 0,
+        "value": -50
+      },
+      {
+        "at": 3,
+        "value": 45,
+        "ease": "inOut"
+      }
+    ],
+    "zoom": [
+      {
+        "at": 0,
+        "value": 1.12
+      },
+      {
+        "at": 3,
+        "value": 1.2,
+        "ease": "inOut"
+      }
+    ]
+  },
+  "layers": [
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 0,
+      "w": 1920,
+      "h": 760,
+      "fill": "#303747"
+    },
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 760,
+      "w": 1920,
+      "h": 320,
+      "fill": "#282C36"
+    },
+    {
+      "type": "line",
+      "x": 0,
+      "y": 930,
+      "x2": 1920,
+      "y2": 930,
+      "width": 4,
+      "color": "#8D8290"
+    },
+    {
+      "type": "hero",
+      "x": 720,
+      "y": 980,
+      "scale": 1.5,
+      "pose": "reach",
+      "expression": "determined"
+    },
+    {
+      "type": "circle",
+      "x": 1120,
+      "y": 635,
+      "radius": 44,
+      "fill": "#C9794D",
+      "animate": {
+        "x": [
+          {
+            "at": 0,
+            "value": 1250
+          },
+          {
+            "at": 1.5,
+            "value": 970,
+            "ease": "inOut"
+          },
+          {
+            "at": 3,
+            "value": 900
+          }
+        ],
+        "y": [
+          {
+            "at": 0,
+            "value": 520
+          },
+          {
+            "at": 1.5,
+            "value": 610,
+            "ease": "inOut"
+          },
+          {
+            "at": 3,
+            "value": 590
+          }
+        ]
+      }
+    },
+    {
+      "type": "circle",
+      "x": 1100,
+      "y": 615,
+      "radius": 12,
+      "fill": "#E6B18A"
+    },
+    {
+      "type": "line",
+      "x": 1250,
+      "y": 520,
+      "x2": 1150,
+      "y2": 560,
+      "width": 5,
+      "color": "#D9C9B5"
+    },
+    {
+      "type": "text",
+      "x": 960,
+      "y": 120,
+      "value": "THE REACH",
+      "size": 38,
+      "color": "#D9D0C5",
+      "weight": 600
+    }
+  ]
+}
