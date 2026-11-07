@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "id": "s002",
+  "background": {
+    "color": "#242936"
+  },
+  "camera": {
+    "x": [
+      {
+        "at": 0,
+        "value": -100
+      },
+      {
+        "at": 3,
+        "value": 30,
+        "ease": "inOut"
+      }
+    ],
+    "zoom": [
+      {
+        "at": 0,
+        "value": 1.06
+      },
+      {
+        "at": 3,
+        "value": 1.13,
+        "ease": "inOut"
+      }
+    ]
+  },
+  "layers": [
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 0,
+      "w": 1920,
+      "h": 1080,
+      "fill": "#343746"
+    },
+    {
+      "type": "rect",
+      "x": 150,
+      "y": 120,
+      "w": 580,
+      "h": 560,
+      "fill": "#596274",
+      "radius": 8
+    },
+    {
+      "type": "rect",
+      "x": 180,
+      "y": 150,
+      "w": 520,
+      "h": 500,
+      "fill": "#A99FA8"
+    },
+    {
+      "type": "line",
+      "x": 440,
+      "y": 150,
+      "x2": 440,
+      "y2": 650,
+      "width": 12,
+      "color": "#454958"
+    },
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 760,
+      "w": 1920,
+      "h": 320,
+      "fill": "#3B3B46"
+    },
+    {
+      "type": "rect",
+      "x": 1100,
+      "y": 780,
+      "w": 420,
+      "h": 22,
+      "fill": "#66505A",
+      "radius": 10
+    },
+    {
+      "type": "hero",
+      "x": 940,
+      "y": 1000,
+      "scale": 1.75,
+      "pose": "phone",
+      "expression": "thinking"
+    },
+    {
+      "type": "rect",
+      "x": 1040,
+      "y": 660,
+      "w": 36,
+      "h": 76,
+      "fill": "#D9D0C5",
+      "radius": 7
+    },
+    {
+      "type": "circle",
+      "x": 1058,
+      "y": 670,
+      "radius": 3,
+      "fill": "#25324A"
+    },
+    {
+      "type": "text",
+      "x": 960,
+      "y": 90,
+      "value": "A SMALL MOMENT",
+      "size": 30,
+      "color": "#D9D0C5",
+      "weight": 600
+    }
+  ]
+}
