@@ -23,8 +23,9 @@ Turn a voiceover (plus an optional script) into a finished MP4 where every frame
 - `references/style-bible.md`: **the look** (characters, sets, light, camera, editing, graphics, 9:16 rules, don'ts). Read it fully before designing any shot. For the recurring protagonist, set `headColor: '#F1E8DC'`, `headShadow: '#D9D0C5'`, and a deep-navy hoodie in the cast outfit; the rig reads these identity colors in both full-body and giant close-up shots.
 - `references/story-breakdown.md`: writing `story/bible.md` and `story/shots.json`, plus pacing rules.
 - `references/engine-api.md`: the scene API, config and shots.json schemas, and the three-kit reference.
+- `references/visual-composition-system.md`: shot framing vocabulary, composition constraints, and DSL-vs-JS decisions. Read before authoring scenes.
 - `references/sound-design.md`: the music plan, SFX library, ambience and levels.
-- `references/render-qc.md`: preview and final render, speed guide, QC checklist, troubleshooting.
+- `references/render-qc.md`: preview and final render, QC checklist, troubleshooting.
 
 Stage commands from this plugin re-run one stage: `/new-video` (stages 1–4), `/video-styles` (5), `/render-video` (6 and 8), `/video-sound` (7). When running end to end, follow this file and load references as each stage needs them.
 
@@ -73,16 +74,19 @@ node render.mjs --project projects/<slug> --styles cinematic,dusk,midnight,golde
 Open `build/styles/style_grid.png`, then show it with one line per style: **dusk** (mauve shadows, amber key, cream rim), **midnight** (cold navy, blue-white rims, sodium practicals), **golden** (warm orange and teal), **neon** (deep blacks, magenta and teal), **storybook** (soft pastel, low contrast). Save the pick in `config.json` → `style`. For tweaks, add a custom entry to `STYLES` in `engine/styles.js` (moods overrides plus the `grade` lift/gamma/gain, sat, contrast, vignette, grain, bloom) and re-render that row.
 
 ## Stage 6: Build every shot
-Read `references/engine-api.md` and the example scenes in `examples/reaction-time/scenes/` once. Prefer the Structured Visual DSL for standard 2D shots: write `scenes/visual/<shot-id>.json`, validate it through the renderer, and use the existing JavaScript registerShot() API only when the shot needs capabilities outside DSL v1. Keep 3D shots and specialized Canvas work in JavaScript. JSON DSL files override a JS shot with the same id, enabling gradual migration. Work in batches of 8–12 shots:
+Read `references/engine-api.md`, `references/visual-composition-system.md`, and the example scenes in `examples/reaction-time/scenes/` once. Prefer the Structured Visual DSL for standard 2D shots: write `scenes/visual/<shot-id>.json`, validate it through the renderer, and use the existing JavaScript `registerShot()` API only when the shot needs capabilities outside DSL v1. Keep 3D shots and specialized Canvas work in JavaScript. JSON DSL files override a JS shot with the same id, enabling gradual migration. Work in batches of 8–12 shots:
+
+Before writing each shot, choose one composition template (establishing wide, medium single, medium two-shot, over-the-shoulder, close-up, insert, character–object interaction, or dramatic reveal). Record the subject, action/state, supporting element, and intended framing in the shot's scene description or planning notes. Do not select a template just to satisfy variety; it must serve the story beat.
+
 1. For standard 2D shots, write `scenes/visual/<shot-id>.json` using DSL v1. Add reusable `scenes/sets/<location>.js` only when a custom environment is needed; use `scenes/shots/NN_<name>.js` with `registerShot('<id>', {...})` for advanced Canvas work and all 3D shots. Keep reusable sets anchored to `GY = E.H * V(0.8, 0.68)` and `CX = E.W/2`, with walls, floor and sky extended past the frame.
-2. Run `node render.mjs --project projects/<slug> --sheet --scale 0.5`. Open every `build/sheets/sheet_XX.png` and check it against the QC checklist in `references/render-qc.md`. Fix any MISSING shots, errors printed by the renderer, and composition problems.
+2. Run `node render.mjs --project projects/<slug> --sheet --scale 0.5`. Open every `build/sheets/sheet_XX.png` and check it against the QC checklist in `references/render-qc.md` and the composition review checklist in `references/visual-composition-system.md`. Fix any MISSING shots, errors printed by the renderer, and composition problems.
 3. Check motion with `--stills t1,t2,t3` or `--from A --to B --scale 0.5` (writes `build/preview.mp4`).
 
 Non-negotiables from the style bible:
 - Rim light on every lit figure.
 - Colours from `mood()`/`S()`.
-- A camera move in every shot.
-- Atmosphere (dust, rain, glows).
+- A motivated camera move in every shot.
+- Atmosphere (dust, rain, glows) only when it supports the scene.
 - Moody value structure.
 - Graphics synced to words with `wordTime()`.
 - `V()` for every aspect-dependent value.
