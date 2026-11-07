@@ -1,5 +1,5 @@
 // Reusable visual assets for the composition lab's advanced JS shots.
-// Keep these drawings deliberately simple so the DSL versions can use equivalent geometry.
+// Keep these drawings deliberately simple so DSL versions can use equivalent geometry.
 import { E, rr, circle, seg, linGrad, glow } from '/engine/core.js';
 
 export const PALETTE = Object.freeze({
@@ -8,14 +8,29 @@ export const PALETTE = Object.freeze({
   glass: '#A7A8A5', ball: '#C9794D', ink: '#202532',
 });
 
+export function drawBedroom(g) {
+  const p = PALETTE;
+  g.fillStyle = linGrad(g, 0, 0, 0, E.H, ['#303443', p.wall, p.wallDeep]);
+  g.fillRect(0, 0, E.W, E.H);
+  g.fillStyle = '#687080'; rr(g, 180, 120, 590, 480, 8); g.fill();
+  g.fillStyle = '#B5AAB0'; rr(g, 205, 145, 540, 430, 4); g.fill();
+  seg(g, [[475, 145], [475, 575]], 12, '#454958);
+  seg(g, [[205, 360], [745, 360]], 12, '#454958);
+  circle(g, 650, 240, 54, p.warm); glow(g, 650, 240, 140, p.warm, 0.12);
+  g.fillStyle = p.floor; g.fillRect(0, 720, E.W, 360);
+  g.fillStyle = '#66505A'; rr(g, 900, 570, 760, 160, 24); g.fill();
+  g.fillStyle = '#B5A9A2'; rr(g, 940, 535, 680, 90, 28); g.fill();
+  g.fillStyle = '#292F3D'; rr(g, 1510, 650, 150, 85, 12); g.fill();
+}
+
 export function drawOffice(g) {
   const p = PALETTE;
   g.fillStyle = linGrad(g, 0, 0, 0, E.H, ['#303846', p.wall, p.wallDeep]);
   g.fillRect(0, 0, E.W, E.H);
   g.fillStyle = '#687687'; rr(g, 150, 110, 660, 480, 8); g.fill();
   g.fillStyle = p.glass; rr(g, 174, 134, 612, 432, 4); g.fill();
-  seg(g, [[480, 134], [480, 566]], 12, '#4A5260);
-  seg(g, [[174, 350], [786, 350]], 12, '#4A5260);
+  seg(g, [[480, 134], [480, 566]], 12, '#4A5260');
+  seg(g, [[174, 350], [786, 350]], 12, '#4A5260');
   g.fillStyle = p.floor; g.fillRect(0, 740, E.W, 340);
   g.fillStyle = p.wood; rr(g, 360, 690, 1180, 34, 8); g.fill();
   g.fillStyle = '#574A46'; g.fillRect(440, 724, 26, 250); g.fillRect(1430, 724, 26, 250);
@@ -38,8 +53,7 @@ export function drawDoor(g, x, y, scale = 1) {
   g.save(); g.translate(x, y); g.scale(scale, scale);
   g.fillStyle = '#292F3D'; rr(g, -58, -170, 116, 170, 5); g.fill();
   g.fillStyle = '#B9855C'; rr(g, -43, -154, 86, 154, 3); g.fill();
-  circle(g, 28, -78, 5, '#E7C99A');
-  g.restore();
+  circle(g, 28, -78, 5, '#E7C99A'); g.restore();
 }
 
 export function drawBall(g, x, y, radius = 34) {
@@ -60,6 +74,5 @@ export function drawPhone(g, x, y, scale = 1) {
   g.save(); g.translate(x, y); g.scale(scale, scale);
   g.fillStyle = '#172033'; rr(g, -22, -42, 44, 84, 7); g.fill();
   g.fillStyle = '#A7B4C4'; rr(g, -17, -32, 34, 62, 3); g.fill();
-  circle(g, 0, 35, 2.5, '#D9D0C5');
-  g.restore();
+  circle(g, 0, 35, 2.5, '#D9D0C5'); g.restore();
 }
