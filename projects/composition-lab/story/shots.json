@@ -1,0 +1,95 @@
+{
+  "title": "Visual Composition Lab",
+  "duration": 24,
+  "shots": [
+    {
+      "id": "s001",
+      "start": 0,
+      "end": 3,
+      "line": "Bedroom establishing wide",
+      "scene": "Establishing wide — bedroom, protagonist, window and phone",
+      "in": {
+        "type": "cut"
+      },
+      "bars": null
+    },
+    {
+      "id": "s002",
+      "start": 3,
+      "end": 6,
+      "line": "Bedroom medium single",
+      "scene": "Medium single — protagonist notices the phone",
+      "in": {
+        "type": "cut"
+      },
+      "bars": null
+    },
+    {
+      "id": "s003",
+      "start": 6,
+      "end": 9,
+      "line": "Street establishing wide",
+      "scene": "Establishing wide — street, door, streetlamp and ball",
+      "in": {
+        "type": "cut"
+      },
+      "bars": null
+    },
+    {
+      "id": "s004",
+      "start": 9,
+      "end": 12,
+      "line": "Character object interaction",
+      "scene": "Character-object interaction — protagonist reaches for the moving ball",
+      "in": {
+        "type": "cut"
+      },
+      "bars": null
+    },
+    {
+      "id": "s005",
+      "start": 12,
+      "end": 15,
+      "line": "Office establishing wide",
+      "scene": "Establishing wide — office, desk, windows and cup",
+      "in": {
+        "type": "cut"
+      },
+      "bars": null
+    },
+    {
+      "id": "s006",
+      "start": 15,
+      "end": 18,
+      "line": "Office interaction",
+      "scene": "Character-object interaction — protagonist reaches to steady the cup",
+      "in": {
+        "type": "cut"
+      },
+      "bars": null
+    },
+    {
+      "id": "s007",
+      "start": 18,
+      "end": 21,
+      "line": "Close-up reaction",
+      "scene": "Close-up — protagonist reacts with quiet realization",
+      "in": {
+        "type": "cut"
+      },
+      "bars": null
+    },
+    {
+      "id": "s008",
+      "start": 21,
+      "end": 24,
+      "line": "Over the shoulder",
+      "scene": "Over-the-shoulder — friend in foreground, protagonist and ball in focus",
+      "in": {
+        "type": "cut"
+      },
+      "bars": null
+    }
+  ],
+  "music": []
+}
