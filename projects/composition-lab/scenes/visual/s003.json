@@ -1,0 +1,163 @@
+{
+  "version": 1,
+  "id": "s003",
+  "background": {
+    "color": "#202734"
+  },
+  "camera": {
+    "x": [
+      {
+        "at": 0,
+        "value": 35
+      },
+      {
+        "at": 3,
+        "value": -20,
+        "ease": "sine"
+      }
+    ],
+    "zoom": [
+      {
+        "at": 0,
+        "value": 1
+      },
+      {
+        "at": 3,
+        "value": 1.04,
+        "ease": "sine"
+      }
+    ]
+  },
+  "layers": [
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 0,
+      "w": 1920,
+      "h": 720,
+      "fill": "#303747"
+    },
+    {
+      "type": "rect",
+      "x": 120,
+      "y": 280,
+      "w": 520,
+      "h": 450,
+      "fill": "#4D4B57"
+    },
+    {
+      "type": "rect",
+      "x": 210,
+      "y": 380,
+      "w": 110,
+      "h": 160,
+      "fill": "#C18D62"
+    },
+    {
+      "type": "rect",
+      "x": 380,
+      "y": 380,
+      "w": 110,
+      "h": 160,
+      "fill": "#C18D62"
+    },
+    {
+      "type": "rect",
+      "x": 720,
+      "y": 220,
+      "w": 580,
+      "h": 510,
+      "fill": "#454552"
+    },
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 730,
+      "w": 1920,
+      "h": 350,
+      "fill": "#282C36"
+    },
+    {
+      "type": "line",
+      "x": 0,
+      "y": 900,
+      "x2": 1920,
+      "y2": 900,
+      "width": 5,
+      "color": "#8D8290"
+    },
+    {
+      "type": "line",
+      "x": 120,
+      "y": 1030,
+      "x2": 460,
+      "y2": 1030,
+      "width": 8,
+      "color": "#D9C9B5"
+    },
+    {
+      "type": "line",
+      "x": 700,
+      "y": 1030,
+      "x2": 1040,
+      "y2": 1030,
+      "width": 8,
+      "color": "#D9C9B5"
+    },
+    {
+      "type": "rect",
+      "x": 1510,
+      "y": 280,
+      "w": 16,
+      "h": 480,
+      "fill": "#202532"
+    },
+    {
+      "type": "circle",
+      "x": 1518,
+      "y": 260,
+      "radius": 54,
+      "fill": "#D9B77F"
+    },
+    {
+      "type": "circle",
+      "x": 1518,
+      "y": 260,
+      "radius": 90,
+      "fill": "#796C62"
+    },
+    {
+      "type": "rect",
+      "x": 1410,
+      "y": 690,
+      "w": 210,
+      "h": 80,
+      "fill": "#363B48",
+      "radius": 8
+    },
+    {
+      "type": "circle",
+      "x": 1080,
+      "y": 800,
+      "radius": 34,
+      "fill": "#C9794D"
+    },
+    {
+      "type": "hero",
+      "x": 760,
+      "y": 950,
+      "scale": 1.15,
+      "pose": "stand",
+      "expression": "curious"
+    },
+    {
+      "type": "text",
+      "x": 960,
+      "y": 100,
+      "value": "QUIET CITY STREET",
+      "size": 34,
+      "color": "#D9D0C5",
+      "weight": 600
+    }
+  ]
+}
