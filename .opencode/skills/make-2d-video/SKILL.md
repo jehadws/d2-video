@@ -20,7 +20,7 @@ Turn a voiceover (plus an optional script) into a finished MP4 where every frame
 **Bundled resources (this skill's base directory):**
 - `kit/`: the tested studio (renderer, engine, tools, audio, the `examples/reaction-time` reference project). Install it into the workspace as `aitrends-2d-studio/` (see `references/install.md`).
 - `references/install.md`: install, dependency table, doctor, self-test.
-- `references/style-bible.md`: **the look** (characters, sets, light, camera, editing, graphics, 9:16 rules, don'ts). Read it fully before designing any shot.
+- `references/style-bible.md`: **the look** (characters, sets, light, camera, editing, graphics, 9:16 rules, don'ts). Read it fully before designing any shot. Also read `references/visual-reference-pack.md` and inspect its overview image when available; this defines the light protagonist, neutral environment palette, and restrained cinematic finish.
 - `references/story-breakdown.md`: writing `story/bible.md` and `story/shots.json`, plus pacing rules.
 - `references/engine-api.md`: the scene API, config and shots.json schemas, and the three-kit reference.
 - `references/sound-design.md`: the music plan, SFX library, ambience and levels.
@@ -79,11 +79,12 @@ Read `references/engine-api.md` and the example scenes in `examples/reaction-tim
 3. Check motion with `--stills t1,t2,t3` or `--from A --to B --scale 0.5` (writes `build/preview.mp4`).
 
 Non-negotiables from the style bible:
-- Rim light on every lit figure.
-- Colours from `mood()`/`S()`.
-- A camera move in every shot.
-- Atmosphere (dust, rain, glows).
-- Moody value structure.
+- Keep the protagonist's off-white head and navy clothing consistent; never default to a black silhouette.
+- Use neutral environment colors and restrained warm accents from `mood()`/`S()`.
+- Use subtle character separation lighting; avoid automatic heavy rim glow.
+- A motivated camera move in every shot.
+- Atmosphere only when it supports the scene; avoid decorative FX overload.
+- Keep the subject readable against a deliberate environment value structure.
 - Graphics synced to words with `wordTime()`.
 - `V()` for every aspect-dependent value.
 - No `Math.random`/`Date.now`.
