@@ -30,10 +30,10 @@ The test has no voiceover or audio dependency. It is intentionally a silent visu
 | s004 | Street | Character–object interaction (ball) | JSON DSL |
 | s005 | Office | Establishing wide | JSON DSL |
 | s006 | Office | Character–object interaction (cup) | JSON DSL |
-| s007 | Office | Giant face close-up | JavaScript |
+| s007 | Bedroom | Giant face close-up | JavaScript |
 | s008 | Street | Over-the-shoulder | JavaScript |
 
-Reusable JS set and prop drawings live in `scenes/sets/visual-assets.js` (bedroom/street/office palette, door, ball, cup, and phone). DSL shots use equivalent native primitives because DSL v1 does not yet support importing shared asset functions.
+Reusable environment and prop drawings live in `scenes/sets/visual-assets.js`: bedroom, street, office, door, ball, cup, and phone. DSL shots use equivalent native primitives because DSL v1 does not yet support importing shared asset functions.
 
 ## Review criteria
 
