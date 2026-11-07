@@ -191,7 +191,7 @@ function sleeveColor(o, far) { const c = o.top === 'labcoat' ? '#f3f0f6' : o.top
 // ---------- main draw ----------
 // drawFigure(g, { x, y, s, facing, pose, rot, outfit, expr, talk, blink, look, rim:{dir:[x,y], color, w}, dim, alpha, prop, shadow })
 export function drawFigure(g, o) {
-  const st = S(), ink = o.ink || st.ink, far = o.inkFar || st.inkFar;
+  const st = S(), ink = o.ink || o.outfit?.headColor || st.ink, far = o.inkFar || o.outfit?.headShadow || st.inkFar;
   const p = o.pose || POSES.stand, s = (o.s ?? 1) * (o.outfit?.kid ? 0.72 : 1), f = o.facing ?? 1;
   const of = { ...(o.outfit || {}), _ink: ink };
   const rim = o.rim === false ? null : { dir: [-0.8, -0.5], w: st.rimWidth, color: '#ffc68a', ...(o.rim || {}) };
@@ -271,7 +271,7 @@ export function headPos(o) { const p = o.pose || POSES.stand, s = (o.s ?? 1) * (
 // ---------- giant close-up head (fills the frame) ----------
 // bigFace(g, cx, cy, r, { outfit, expr, talk, blink, look, rimColor, rimSide:-1|1, tilt })
 export function bigFace(g, cx, cy, r, o = {}) {
-  const st = S(), ink = o.headColor || st.ink, feature = o.featureColor || st.feature, of = o.outfit || {}, rc = o.rimColor || '#ffc68a', side = o.rimSide ?? -1;
+  const st = S(), of = o.outfit || {}, ink = o.headColor || of.headColor || st.ink, feature = o.featureColor || st.feature, rc = o.rimColor || '#ffc68a', side = o.rimSide ?? -1;
   g.save(); g.translate(cx, cy); if (o.tilt) g.rotate(o.tilt);
   // shoulders / clothing at the bottom
   const top = of.top || 'none', cc = top === 'labcoat' ? '#ebe7f0' : of.color || ink;
