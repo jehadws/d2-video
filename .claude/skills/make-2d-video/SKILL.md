@@ -20,7 +20,7 @@ Turn a voiceover (plus an optional script) into a finished MP4 where every frame
 **Bundled resources (this skill's base directory):**
 - `kit/`: the tested studio (renderer, engine, tools, audio, the `examples/reaction-time` reference project). Install it into the workspace as `aitrends-2d-studio/` (see `references/install.md`).
 - `references/install.md`: install, dependency table, doctor, self-test.
-- `references/style-bible.md`: **the look** (characters, sets, light, camera, editing, graphics, 9:16 rules, don'ts). Read it fully before designing any shot.
+- `references/style-bible.md`: **the look** (characters, sets, light, camera, editing, graphics, 9:16 rules, don'ts). Read it fully before designing any shot. For the recurring protagonist, set `headColor: '#F1E8DC'`, `headShadow: '#D9D0C5'`, and a deep-navy hoodie in the cast outfit; the rig reads these identity colors in both full-body and giant close-up shots.
 - `references/story-breakdown.md`: writing `story/bible.md` and `story/shots.json`, plus pacing rules.
 - `references/engine-api.md`: the scene API, config and shots.json schemas, and the three-kit reference.
 - `references/sound-design.md`: the music plan, SFX library, ambience and levels.
