@@ -3,6 +3,7 @@
 import { E, V, setStyle, getShot, clamp, ease, prog, alpha, text, FONTS } from './core.js';
 import { STYLES } from './styles.js';
 import { captions } from './ui2d.js';
+import { registerVisualShot } from './visual-dsl.js';
 
 const q = new URLSearchParams(location.search);
 const PROJ = '/project';
@@ -41,6 +42,11 @@ async function boot() {
   for (let k = 0; k < 4; k++) { const c = mk(gw, gh), x = c.getContext('2d'), id = x.createImageData(gw, gh); let s = 1234 + k * 999; for (let i = 0; i < id.data.length; i += 4) { s = (s * 1664525 + 1013904223) >>> 0; const v = s >>> 24; id.data[i] = id.data[i + 1] = id.data[i + 2] = v; id.data[i + 3] = 255; } x.putImageData(id, 0, 0); grainTiles.push(c); }
   const list = await (await fetch(`/__manifest`)).json();
   for (const f of list) { try { await import(f); } catch (e) { errors.push(`import ${f}: ${e.message}`); console.log('IMPORT ERROR', f, e.message); } }
+  const visualFiles = await (await fetch('/__visual_manifest')).json();
+  for (const f of visualFiles) {
+    try { const r = await fetch(f); if (!r.ok) throw new Error('HTTP ' + r.status); registerVisualShot(await r.json()); }
+    catch (e) { errors.push('visual ' + f + ': ' + e.message); console.log('VISUAL DSL ERROR', f, e.message); }
+  }
   if (E.shots.some(s => getShot(s.id)?.kind === '3d')) { three = await import('./three-kit.js'); glCanvas = mk(outW, outH); three.getRenderer(glCanvas); }
   const dur = story.duration || E.shots[E.shots.length - 1].end;
   window.DURATION = dur; window.TOTAL_FRAMES = Math.ceil(dur * E.fps); window.OUT = [outW, outH];

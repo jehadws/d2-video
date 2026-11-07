@@ -58,6 +58,18 @@ registerShot('s008', { kind: '3d',                   // 3D: init once (T = three
 - **fx2d.js:** `rain drops dust snow stars fog sun moon godRays lightCone pool lensStreak sparkle lightning speedLines rings skyline hills clouds tree pine lampPost windowFrame facade door chair stool counter screen bed clock floorLines crowd`.
 - **ui2d.js:** `titleCard bigLine badge readout callout dimension dataCard compareBars meter blueprint bpStroke lineFigure bubble endScreen captions`.
 
+## Structured Visual DSL (v1)
+
+Use declarative JSON for ordinary 2D shots. Put files in scenes/visual/<shot-id>.json; the renderer discovers them separately from JavaScript scene modules. A JSON shot with the same id intentionally overrides a legacy registerShot() definition, so migration can happen one shot at a time. Existing JavaScript shots and 3D shots remain supported.
+
+Layers are drawn in array order, back to front. Supported types: hero, figure, rect, circle, line, and text.
+- hero uses the canonical off-white protagonist from characters.js. figure uses the existing rig and accepts an outfit object.
+- Camera tracks support x, y, and zoom. Element tracks support x, y, scale, rotation (radians), and alpha.
+- Animation keyframes use { at: seconds, value: number, ease: linear|in|out|inOut|sine|outBack|outElastic }. Times are local to the shot and must increase strictly.
+- Keep timing in story/shots.json; the DSL controls only what is drawn.
+- Use JavaScript registerShot() for visuals outside this intentionally small v1 vocabulary, especially custom canvas work and 3D.
+- Invalid DSL is reported with the file path and shot id; it is never evaluated as executable code.
+
 ## three-kit.js (passed as `T` to `init`/`draw`)
 `T.stage({mood, fov, fog:[near, far], sky, keyPos, keyIntensity, ambient, bloom})` → `{scene, camera, composer, sun, add(...objs), render(), dispose()}`. Builders: `box cyl cone sphere plane ground(w, d, color, tex) planks tiles windowPane(w, h, {glowColor, cols, rows, power, interior}) shaft(w, len, color, opacity) building(w, h, d, {color, win, lit}) tree3D pine3D crowd3D({rows, perRow, width, step, rise, colors}) figure3D(outfit, {rim, pose, s}) → .setPose(pose)`, `mat basic canvasTex`, and cameras `orbit(camera, t, {target, radius, height, from, to, dur})` and `dolly(camera, t, [[t, {pos, look, fov}], …])`. Units are metres, a figure is ~1.7 m and faces +x. 3D shots get the same grade, bars and grain automatically. Keep exposure moody: let windows and lamps be the brightest things, and keep the floor dark.
 

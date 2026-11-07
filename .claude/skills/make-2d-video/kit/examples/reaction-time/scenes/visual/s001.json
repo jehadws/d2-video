@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "id": "s001",
+  "background": { "color": "#292832" },
+  "camera": {
+    "x": [
+      { "at": 0, "value": 24 },
+      { "at": 3.4, "value": -28, "ease": "inOut" }
+    ],
+    "zoom": [
+      { "at": 0, "value": 1 },
+      { "at": 3.4, "value": 1.07, "ease": "sine" }
+    ]
+  },
+  "layers": [
+    { "type": "rect", "x": 0, "y": 770, "w": 1920, "h": 310, "fill": "#45404A" },
+    { "type": "rect", "x": 260, "y": 700, "w": 1400, "h": 34, "fill": "#8A6650", "radius": 10 },
+    { "type": "hero", "x": 680, "y": 770, "scale": 1.28, "pose": "think", "expression": "curious",
+      "animate": { "x": [{ "at": 0, "value": 735 }, { "at": 3.4, "value": 680 }] } },
+    { "type": "figure", "x": 1240, "y": 770, "scale": 1.22, "facing": -1, "pose": "phone",
+      "outfit": { "top": "hoodie", "color": "#7A5360", "color2": "#E5D6C8", "legs": "#343846" } },
+    { "type": "circle", "x": 1500, "y": 380, "radius": 8, "fill": "#E8D8B8",
+      "animate": { "x": [{ "at": 0, "value": 1580 }, { "at": 3.4, "value": 1120 }] } },
+    { "type": "text", "x": 960, "y": 125, "value": "A FLY BUZZES PAST", "size": 46, "color": "#F1E8DC", "glow": 4 }
+  ]
+}
