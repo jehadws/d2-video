@@ -74,7 +74,7 @@ Open `build/styles/style_grid.png`, then show it with one line per style: **dusk
 
 ## Stage 6: Build every shot
 Read `references/engine-api.md` and the example scenes in `examples/reaction-time/scenes/` once. Prefer the Structured Visual DSL for standard 2D shots: write `scenes/visual/<shot-id>.json`, validate it through the renderer, and use the existing JavaScript registerShot() API only when the shot needs capabilities outside DSL v1. Keep 3D shots and specialized Canvas work in JavaScript. JSON DSL files override a JS shot with the same id, enabling gradual migration. Work in batches of 8–12 shots:
-1. Write `scenes/sets/<location>.js` (reusable, anchored to `GY = E.H * V(0.8, 0.68)` and `CX = E.W/2`, with walls, floor and sky extended past the frame) and `scenes/shots/NN_<name>.js` with `registerShot('<id>', {...})` for the ids in shots.json.
+1. For standard 2D shots, write `scenes/visual/<shot-id>.json` using DSL v1. Add reusable `scenes/sets/<location>.js` only when a custom environment is needed; use `scenes/shots/NN_<name>.js` with `registerShot('<id>', {...})` for advanced Canvas work and all 3D shots. Keep reusable sets anchored to `GY = E.H * V(0.8, 0.68)` and `CX = E.W/2`, with walls, floor and sky extended past the frame.
 2. Run `node render.mjs --project projects/<slug> --sheet --scale 0.5`. Open every `build/sheets/sheet_XX.png` and check it against the QC checklist in `references/render-qc.md`. Fix any MISSING shots, errors printed by the renderer, and composition problems.
 3. Check motion with `--stills t1,t2,t3` or `--from A --to B --scale 0.5` (writes `build/preview.mp4`).
 
