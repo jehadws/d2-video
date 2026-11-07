@@ -1,0 +1,21 @@
+{
+  "title": "Visual Composition Lab",
+  "aspect": "16:9",
+  "resolution": "720p",
+  "fps": 24,
+  "style": "dusk",
+  "voiceover": null,
+  "script": null,
+  "duration": 24,
+  "captions": false,
+  "bars": null,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "music": {
+    "enabled": false
+  },
+  "sfx": {
+    "enabled": false
+  },
+  "loudness": -14
+}
