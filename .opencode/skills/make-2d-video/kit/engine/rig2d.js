@@ -271,7 +271,7 @@ export function headPos(o) { const p = o.pose || POSES.stand, s = (o.s ?? 1) * (
 // ---------- giant close-up head (fills the frame) ----------
 // bigFace(g, cx, cy, r, { outfit, expr, talk, blink, look, rimColor, rimSide:-1|1, tilt })
 export function bigFace(g, cx, cy, r, o = {}) {
-  const st = S(), ink = st.ink, of = o.outfit || {}, rc = o.rimColor || '#ffc68a', side = o.rimSide ?? -1;
+  const st = S(), ink = o.headColor || st.ink, feature = o.featureColor || st.feature, of = o.outfit || {}, rc = o.rimColor || '#ffc68a', side = o.rimSide ?? -1;
   g.save(); g.translate(cx, cy); if (o.tilt) g.rotate(o.tilt);
   // shoulders / clothing at the bottom
   const top = of.top || 'none', cc = top === 'labcoat' ? '#ebe7f0' : of.color || ink;
@@ -279,7 +279,7 @@ export function bigFace(g, cx, cy, r, o = {}) {
   if (of.head === 'hood') { const hc = of.headColor || of.color || '#d64a33'; circle(g, side * -r * 0.04, r * 0.06, r * 1.2, shade(hc, -0.15)); g.strokeStyle = alpha(shade(hc, 0.4), 0.7); g.lineWidth = r * 0.05; g.beginPath(); g.arc(-r * 0.05, 0, r * 1.12, Math.PI * 1.1, Math.PI * 1.5); g.stroke(); }
   // rim crescent on the lit side (chiaroscuro)
   g.save();
-  g.shadowColor = rc; g.shadowBlur = r * 0.14;
+  g.shadowColor = rc; g.shadowBlur = o.rimGlow === 0 ? 0 : (o.rimGlow ?? r * 0.14);
   g.beginPath(); g.arc(0, 0, r + r * 0.08, 0, Math.PI * 2); g.arc(side * r * 0.09, r * 0.02, r, 0, Math.PI * 2, true); g.fillStyle = rc; g.fill('evenodd');
   g.restore();
   const headGrad = g.createLinearGradient(side * -r, 0, side * r, 0);
@@ -289,8 +289,8 @@ export function bigFace(g, cx, cy, r, o = {}) {
   g.fillStyle = headGrad;
   g.beginPath(); g.arc(0, 0, r, 0, Math.PI * 2); g.fill();
   if (of.head && !['hood', 'none'].includes(of.head)) drawHeadwear(g, { ...of, _ink: ink }, 0, 0, r, 'main');
-  face(g, 0, 0, r, { expr: o.expr, talk: o.talk, blink: o.blink, look: o.look, front: true, override: o.face });
-  if (of.face === 'glasses') { g.strokeStyle = st.feature; g.lineWidth = r * 0.06; for (const dx of [-0.34, 0.34]) { g.beginPath(); g.arc(dx * r, -r * 0.16, r * 0.26, 0, Math.PI * 2); g.stroke(); } }
+  face(g, 0, 0, r, { expr: o.expr, talk: o.talk, blink: o.blink, look: o.look, front: true, color: feature, override: o.face });
+  if (of.face === 'glasses') { g.strokeStyle = feature; g.lineWidth = r * 0.06; for (const dx of [-0.34, 0.34]) { g.beginPath(); g.arc(dx * r, -r * 0.16, r * 0.26, 0, Math.PI * 2); g.stroke(); } }
   if (of.face === 'sunglasses') { g.fillStyle = '#05060a'; rr(g, -r * 0.66, -r * 0.34, r * 0.6, r * 0.4, r * 0.12); g.fill(); rr(g, r * 0.06, -r * 0.34, r * 0.6, r * 0.4, r * 0.12); g.fill(); g.fillStyle = 'rgba(160,230,255,.6)'; g.fillRect(-r * 0.55, -r * 0.28, r * 0.12, r * 0.05); }
   g.restore();
 }
