@@ -60,7 +60,7 @@
       "y": 1020,
       "scale": 1.45,
       "pose": "reach",
-      "expression": "focused"
+      "expression": "determined"
     },
     {
       "type": "rect",
@@ -78,12 +78,12 @@
           },
           {
             "at": 1.2,
-            "value": 1130,
+            "value": 900,
             "ease": "inOut"
           },
           {
             "at": 3,
-            "value": 1120
+            "value": 870
           }
         ],
         "y": [
@@ -93,12 +93,12 @@
           },
           {
             "at": 1.2,
-            "value": 650,
+            "value": 700,
             "ease": "inOut"
           },
           {
             "at": 3,
-            "value": 650
+            "value": 700
           }
         ]
       }
