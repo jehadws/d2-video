@@ -1,0 +1,142 @@
+{
+  "version": 1,
+  "id": "s005",
+  "background": {
+    "color": "#252B37"
+  },
+  "camera": {
+    "x": [
+      {
+        "at": 0,
+        "value": 0
+      },
+      {
+        "at": 3,
+        "value": 30,
+        "ease": "sine"
+      }
+    ],
+    "zoom": [
+      {
+        "at": 0,
+        "value": 1
+      },
+      {
+        "at": 3,
+        "value": 1.04,
+        "ease": "sine"
+      }
+    ]
+  },
+  "layers": [
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 0,
+      "w": 1920,
+      "h": 730,
+      "fill": "#343C4A"
+    },
+    {
+      "type": "rect",
+      "x": 180,
+      "y": 110,
+      "w": 600,
+      "h": 470,
+      "fill": "#687687",
+      "radius": 8
+    },
+    {
+      "type": "rect",
+      "x": 210,
+      "y": 140,
+      "w": 540,
+      "h": 410,
+      "fill": "#A7A8A5"
+    },
+    {
+      "type": "line",
+      "x": 480,
+      "y": 140,
+      "x2": 480,
+      "y2": 550,
+      "width": 12,
+      "color": "#4A5260"
+    },
+    {
+      "type": "line",
+      "x": 210,
+      "y": 350,
+      "x2": 750,
+      "y2": 350,
+      "width": 12,
+      "color": "#4A5260"
+    },
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 730,
+      "w": 1920,
+      "h": 350,
+      "fill": "#333744"
+    },
+    {
+      "type": "rect",
+      "x": 420,
+      "y": 650,
+      "w": 1050,
+      "h": 38,
+      "fill": "#8B6D59",
+      "radius": 8
+    },
+    {
+      "type": "rect",
+      "x": 490,
+      "y": 688,
+      "w": 24,
+      "h": 260,
+      "fill": "#574A46"
+    },
+    {
+      "type": "rect",
+      "x": 1370,
+      "y": 688,
+      "w": 24,
+      "h": 260,
+      "fill": "#574A46"
+    },
+    {
+      "type": "rect",
+      "x": 1080,
+      "y": 570,
+      "w": 48,
+      "h": 82,
+      "fill": "#D9D0C5",
+      "radius": 8
+    },
+    {
+      "type": "circle",
+      "x": 1104,
+      "y": 570,
+      "radius": 22,
+      "fill": "#805239"
+    },
+    {
+      "type": "hero",
+      "x": 760,
+      "y": 980,
+      "scale": 1.12,
+      "pose": "stand",
+      "expression": "neutral"
+    },
+    {
+      "type": "text",
+      "x": 960,
+      "y": 90,
+      "value": "OFFICE  /  LATE AFTERNOON",
+      "size": 34,
+      "color": "#D9D0C5",
+      "weight": 600
+    }
+  ]
+}
