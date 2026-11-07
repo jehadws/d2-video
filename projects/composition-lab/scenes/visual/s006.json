@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "id": "s006",
+  "background": {
+    "color": "#252B37"
+  },
+  "camera": {
+    "x": [
+      {
+        "at": 0,
+        "value": 40
+      },
+      {
+        "at": 3,
+        "value": -30,
+        "ease": "inOut"
+      }
+    ],
+    "zoom": [
+      {
+        "at": 0,
+        "value": 1.1
+      },
+      {
+        "at": 3,
+        "value": 1.18,
+        "ease": "inOut"
+      }
+    ]
+  },
+  "layers": [
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 0,
+      "w": 1920,
+      "h": 760,
+      "fill": "#343C4A"
+    },
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 760,
+      "w": 1920,
+      "h": 320,
+      "fill": "#333744"
+    },
+    {
+      "type": "rect",
+      "x": 340,
+      "y": 730,
+      "w": 1180,
+      "h": 34,
+      "fill": "#8B6D59",
+      "radius": 8
+    },
+    {
+      "type": "hero",
+      "x": 760,
+      "y": 1020,
+      "scale": 1.45,
+      "pose": "reach",
+      "expression": "focused"
+    },
+    {
+      "type": "rect",
+      "x": 1080,
+      "y": 620,
+      "w": 68,
+      "h": 105,
+      "fill": "#D9D0C5",
+      "radius": 12,
+      "animate": {
+        "x": [
+          {
+            "at": 0,
+            "value": 1170
+          },
+          {
+            "at": 1.2,
+            "value": 1130,
+            "ease": "inOut"
+          },
+          {
+            "at": 3,
+            "value": 1120
+          }
+        ],
+        "y": [
+          {
+            "at": 0,
+            "value": 500
+          },
+          {
+            "at": 1.2,
+            "value": 650,
+            "ease": "inOut"
+          },
+          {
+            "at": 3,
+            "value": 650
+          }
+        ]
+      }
+    },
+    {
+      "type": "circle",
+      "x": 1114,
+      "y": 620,
+      "radius": 8,
+      "fill": "#805239"
+    },
+    {
+      "type": "circle",
+      "x": 1150,
+      "y": 675,
+      "radius": 30,
+      "fill": "#805239"
+    },
+    {
+      "type": "text",
+      "x": 960,
+      "y": 110,
+      "value": "KEEP IT STEADY",
+      "size": 36,
+      "color": "#D9D0C5",
+      "weight": 600
+    }
+  ]
+}
