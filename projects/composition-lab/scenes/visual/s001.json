@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "id": "s001",
+  "background": {
+    "color": "#242936"
+  },
+  "camera": {
+    "x": [
+      {
+        "at": 0,
+        "value": 0
+      },
+      {
+        "at": 3,
+        "value": -24,
+        "ease": "sine"
+      }
+    ],
+    "zoom": [
+      {
+        "at": 0,
+        "value": 1
+      },
+      {
+        "at": 3,
+        "value": 1.035,
+        "ease": "sine"
+      }
+    ]
+  },
+  "layers": [
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 0,
+      "w": 1920,
+      "h": 700,
+      "fill": "#343746"
+    },
+    {
+      "type": "rect",
+      "x": 220,
+      "y": 140,
+      "w": 560,
+      "h": 430,
+      "fill": "#687080",
+      "radius": 8
+    },
+    {
+      "type": "rect",
+      "x": 250,
+      "y": 170,
+      "w": 500,
+      "h": 370,
+      "fill": "#B5AAB0"
+    },
+    {
+      "type": "line",
+      "x": 500,
+      "y": 170,
+      "x2": 500,
+      "y2": 540,
+      "width": 12,
+      "color": "#454958"
+    },
+    {
+      "type": "line",
+      "x": 250,
+      "y": 355,
+      "x2": 750,
+      "y2": 355,
+      "width": 12,
+      "color": "#454958"
+    },
+    {
+      "type": "circle",
+      "x": 650,
+      "y": 250,
+      "radius": 64,
+      "fill": "#E5D7B8"
+    },
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 700,
+      "w": 1920,
+      "h": 380,
+      "fill": "#3B3B46"
+    },
+    {
+      "type": "rect",
+      "x": 940,
+      "y": 560,
+      "w": 720,
+      "h": 150,
+      "fill": "#66505A",
+      "radius": 24
+    },
+    {
+      "type": "rect",
+      "x": 980,
+      "y": 520,
+      "w": 640,
+      "h": 85,
+      "fill": "#B5A9A2",
+      "radius": 32
+    },
+    {
+      "type": "rect",
+      "x": 1500,
+      "y": 650,
+      "w": 110,
+      "h": 65,
+      "fill": "#292F3D",
+      "radius": 12
+    },
+    {
+      "type": "rect",
+      "x": 1530,
+      "y": 615,
+      "w": 50,
+      "h": 80,
+      "fill": "#A7B4C4",
+      "radius": 8
+    },
+    {
+      "type": "hero",
+      "x": 650,
+      "y": 900,
+      "scale": 1.1,
+      "pose": "stand",
+      "expression": "sleepy"
+    },
+    {
+      "type": "text",
+      "x": 960,
+      "y": 90,
+      "value": "BEDROOM  /  NIGHT",
+      "size": 34,
+      "color": "#D9D0C5",
+      "weight": 600
+    }
+  ]
+}
