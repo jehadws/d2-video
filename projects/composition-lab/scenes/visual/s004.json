@@ -103,19 +103,42 @@
     },
     {
       "type": "circle",
-      "x": 1100,
-      "y": 615,
-      "radius": 12,
-      "fill": "#E6B18A"
-    },
-    {
-      "type": "line",
-      "x": 1250,
-      "y": 520,
-      "x2": 1150,
-      "y2": 560,
-      "width": 5,
-      "color": "#D9C9B5"
+      "x": 860,
+      "y": 658,
+      "radius": 9,
+      "fill": "#E6B18A",
+      "animate": {
+        "x": [
+          {
+            "at": 0,
+            "value": 1110
+          },
+          {
+            "at": 1.5,
+            "value": 860,
+            "ease": "inOut"
+          },
+          {
+            "at": 3,
+            "value": 820
+          }
+        ],
+        "y": [
+          {
+            "at": 0,
+            "value": 508
+          },
+          {
+            "at": 1.5,
+            "value": 658,
+            "ease": "inOut"
+          },
+          {
+            "at": 3,
+            "value": 648
+          }
+        ]
+      }
     },
     {
       "type": "text",
