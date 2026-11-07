@@ -64,24 +64,24 @@
     },
     {
       "type": "circle",
-      "x": 1120,
-      "y": 635,
+      "x": 850,
+      "y": 670,
       "radius": 44,
       "fill": "#C9794D",
       "animate": {
         "x": [
           {
             "at": 0,
-            "value": 1250
+            "value": 1100
           },
           {
             "at": 1.5,
-            "value": 970,
+            "value": 850,
             "ease": "inOut"
           },
           {
             "at": 3,
-            "value": 900
+            "value": 810
           }
         ],
         "y": [
@@ -91,12 +91,12 @@
           },
           {
             "at": 1.5,
-            "value": 610,
+            "value": 670,
             "ease": "inOut"
           },
           {
             "at": 3,
-            "value": 590
+            "value": 660
           }
         ]
       }
