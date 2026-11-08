@@ -103,8 +103,8 @@ async function renderVideo() {
     preview: !!(args.from || args.to),
   };
   const performancePath = path.join(BUILD, args.from || args.to ? 'performance-preview.json' : 'performance.json');
-  fs.writeFileSync(performancePath, JSON.stringify(performance, null, 2) + '\\n');
-  console.log(`\\nDone: ${out}  (${fmtT(elapsedSeconds)})`);
+  fs.writeFileSync(performancePath, JSON.stringify(performance, null, 2));
+  console.log('Done: ' + out + ' (' + fmtT(elapsedSeconds) + ')');
   console.log(`Performance report: ${performancePath}  (${performance.averageFramesPerSecond} fps average)`);
 }
 // grid of labelled images, laid out by the browser (works on every OS)
