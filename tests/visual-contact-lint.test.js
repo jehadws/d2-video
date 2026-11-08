@@ -67,5 +67,26 @@ test('static attached prop is checked for the whole shot without requiring a win
     layers: [hero({ prop: { type: 'phone', offsetX: 0, offsetY: 0 } })],
   });
   assert.ok(!result.includes('prop-contact-window-missing'));
-  assert.ok(!result.includes('prop-detached-at-end'));
+  assert.ok(!result.includes('prop-detached-during-shot'));
+});
+
+test('static attached prop drift is checked across the whole shot', () => {
+  const result = codes({
+    framing: 'insert',
+    camera: { x: [{ at: 0, value: 0 }, { at: 2, value: 10 }] },
+    layers: [hero({ prop: { type: 'phone', offsetX: 100, offsetY: 0 } })],
+  });
+  assert.ok(result.includes('prop-detached-during-shot'));
+});
+
+test('separate target interaction requires an explicit contact window', () => {
+  const result = codes({
+    framing: 'insert',
+    camera: { x: [{ at: 0, value: 0 }, { at: 2, value: 10 }] },
+    layers: [
+      hero({ pose: 'reach' }),
+      { type: 'circle', role: 'story_object', x: 962, y: 796, radius: 80, fill: '#fff' },
+    ],
+  });
+  assert.ok(result.includes('contact-window-missing'));
 });
