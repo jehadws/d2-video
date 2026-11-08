@@ -39,7 +39,9 @@ export function lintProject(projectDir) {
     if (spec.version === 2) {
       const result = lintComposition(spec, {
         frame: { width: W, height: H },
-        captionSafe: bars > 0,
+        // A configured caption-safe area is meaningful only when captions are enabled.
+        // Preserve the existing default-wide behavior for projects that omit "captions".
+        captionSafe: cfg.captions !== false && bars > 0,
         captionHeight: (bars / H) * 100,
       });
       for (const x of result.diagnostics) findings.push({
