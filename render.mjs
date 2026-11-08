@@ -43,7 +43,7 @@ const FPS = CFG.fps || 24;
 async function openPlayer(browser, style) {
   const qs = new URLSearchParams(); if (args.scale) qs.set('scale', args.scale); if (style || args.style) qs.set('style', style || args.style); if (args.debug) qs.set('debug', '1');
   const page = await browser.newPage({ viewport: { width: 640, height: 360 } });
-  page.on('pageerror', e => console.log('[pageerror]', e.message));
+  const pageErrors = []; page.on('pageerror', e => { pageErrors.push(e.message); console.log('[pageerror]', e.message); }); page.qaPageErrors = pageErrors;
   page.on('console', m => { const t = m.text(); if (/ERROR|missing/i.test(t)) console.log('[page]', t); });
   await page.goto(`http://localhost:${PORT}/player.html?${qs}`);
   await page.waitForFunction('window.READY === true || !!window.BOOT_ERROR', null, { timeout: 120000 });
@@ -183,7 +183,7 @@ async function renderQaFrames() {
         seenErrors.add(error);
         const match = String(error).match(/^([\\w-]+)@([0-9.]+):/);
         findings.push({
-          sceneId: match?.[1] || scene.id,
+          sceneId: match?.[1] || null,
           timestamp: match ? { local: Number(match[2]), global: Number((scene.start + Number(match[2])).toFixed(4)), frame: frameIndex } : undefined,
           severity: 'error', category: 'rendering', code: 'scene-render-exception',
           message: String(error),
@@ -192,6 +192,15 @@ async function renderQaFrames() {
         });
       }
     }
+  }
+
+  for (const error of page.qaPageErrors || []) {
+    findings.push({
+      severity: 'error', category: 'rendering', code: 'player-page-exception',
+      message: String(error),
+      suggestion: 'Inspect the browser page exception and fix the player or scene module that triggered it.',
+      detector: 'rendered.page-errors',
+    });
   }
 
   const all = frames.map(frame => ({ img: fs.readFileSync(path.join(PROJECT, frame.evidence)), label: frame.sceneId + ' @ ' + frame.localTime.toFixed(2) + 's' }));
