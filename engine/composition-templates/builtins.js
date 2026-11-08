@@ -37,7 +37,9 @@ export const BUILTIN_TEMPLATE_DEFINITIONS = Object.freeze([
   define('over-the-shoulder', 'Over the Shoulder', 'Uses a foreground character and a second character as the conversational target.', {
     primary: { min: 1, max: 1, types: character },
     secondary: { min: 1, max: 1, types: character },
-  }, { framing: 'two_shot', camera: { zoom: 1.18 } }),
+  }, { framing: 'two_shot', camera: { zoom: 1.18 } }, {
+    relationships: [{ type: 'in_front_of', subjectRole: 'primary', targetRole: 'secondary', priority: 80 }],
+  }),
   define('object-interaction', 'Object Interaction', 'Connects the primary character to one clearly readable story object.', {
     primary: { min: 1, max: 1, types: character },
     objects: { min: 1, max: 1, types: objects },
