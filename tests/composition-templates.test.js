@@ -113,3 +113,9 @@ test('template request rejects unknown templates and malformed composition block
 test('canonical composition role names are stable', () => {
   assert.deepEqual(COMPOSITION_ROLES, ['primary', 'secondary', 'objects', 'environment']);
 });
+
+test('malformed entity entries are reported instead of crashing template validation', () => {
+  const malformed = { version: 2, id: 's009', entities: [null],
+    composition: { template: 'medium', roles: { primary: 'hero' } } };
+  assert.ok(validateTemplateRequest(malformed, registry()).some(x => x.includes('references missing entity')));
+});
