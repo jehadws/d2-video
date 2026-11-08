@@ -35,12 +35,24 @@ export const MAX_SAME_FRAMING_RUN = 3; // more consecutive shots with the same f
 const isChar = (l) => l && (l.type === 'hero' || l.type === 'figure');
 const num = (v, d) => (typeof v === 'number' && Number.isFinite(v) ? v : d);
 
+const lintEase = {
+  linear: (x) => clamp01(x),
+  in: (x) => clamp01(x) ** 3,
+  out: (x) => 1 - (1 - clamp01(x)) ** 3,
+  inOut: (x) => { x = clamp01(x); return x < 0.5 ? 4 * x ** 3 : 1 - (-2 * x + 2) ** 3 / 2; },
+  sine: (x) => -(Math.cos(Math.PI * clamp01(x)) - 1) / 2,
+};
+function clamp01(x) { return Math.max(0, Math.min(1, x)); }
 function sampleLinear(track, t, fallback) {
   if (!Array.isArray(track) || !track.length) return fallback;
   if (t <= track[0].at) return track[0].value;
   for (let i = 1; i < track.length; i++) {
     const a = track[i - 1], b = track[i];
-    if (t <= b.at) return a.value + (b.value - a.value) * ((t - a.at) / Math.max(1e-6, b.at - a.at));
+    if (t <= b.at) {
+      const raw = (t - a.at) / Math.max(1e-6, b.at - a.at);
+      const eased = (lintEase[b.ease] || lintEase.linear)(raw);
+      return a.value + (b.value - a.value) * eased;
+    }
   }
   return track[track.length - 1].value;
 }
@@ -126,24 +138,53 @@ export function lintVisualShot(spec, opts = {}) {
   for (const l of chars) {
     const hand = HAND_ANCHORS[l.pose];
     if (!hand) continue;
-    if (!objs.length) { if (l.prop) continue; add('warn', 'reach-no-target', 'hero uses hand pose "' + l.pose + '" but the shot has no story_object or attached prop to reach for.'); continue; }
-    let best = Infinity;
-    for (const t of ts) {
+    const contact = l.contact && typeof l.contact === 'object' ? l.contact : null;
+    const hasWindow = contact && Number.isFinite(contact.from) && Number.isFinite(contact.to);
+    const window = hasWindow ? { from: contact.from, to: contact.to } : null;
+    const sampleTimes = window
+      ? [...new Set([...ts, window.from, window.to].filter((t) => t >= window.from && t <= window.to))].sort((a, b) => a - b)
+      : ts;
+
+    if (!objs.length) {
+      if (l.prop) continue;
+      add('warn', 'reach-no-target', 'hero uses hand pose "' + l.pose + '" but the shot has no story_object or attached prop to reach for.');
+      continue;
+    }
+
+    const targets = window && Number.isInteger(contact.target)
+      ? [spec.layers[contact.target]]
+      : objs;
+    if (window && (!targets.length || !targets[0] || targets[0].role !== 'story_object')) continue;
+
+    let best = Infinity, worst = 0, worstAt = window ? window.from : 0;
+    for (const t of sampleTimes) {
       const s = layerVal(l, 'scale', t, 1), facing = l.facing === -1 ? -1 : 1;
       const hx = layerVal(l, 'x', t, 0) + hand[0] * s * facing;
       const hy = layerVal(l, 'y', t, 0) + hand[1] * s;
-      for (const o of objs) {
+      let nearest = Infinity;
+      for (const o of targets) {
         const ox = layerVal(o, 'x', t, 0) + (o.type === 'rect' ? num(o.w, 0) / 2 : 0);
         const oy = layerVal(o, 'y', t, 0) + (o.type === 'rect' ? num(o.h, 0) / 2 : 0);
-        best = Math.min(best, Math.hypot(ox - hx, oy - hy) / (heroH * s));
+        nearest = Math.min(nearest, Math.hypot(ox - hx, oy - hy) / (heroH * s));
       }
+      best = Math.min(best, nearest);
+      if (nearest > worst) { worst = nearest; worstAt = t; }
     }
-    if (best > REACH_RANGE) add('error', 'reach-too-far', 'hand anchor is ' + best.toFixed(2) + ' hero-heights from the nearest story object (limit ' + REACH_RANGE + '); align the hand with the prop or add an explicit contact pose.');
+
+    if (window) {
+      const tolerance = num(contact.tolerance, REACH_RANGE);
+      if (contact.hand === 'B') {
+        add('error', 'contact-hand-unsupported', 'time-window contact lint currently requires hand "F"; use the near-hand anchor or add a registered far-hand anchor.');
+      } else if (worst > tolerance) {
+        add('error', 'contact-breaks-during-window', 'hand-to-target distance reaches ' + worst.toFixed(2) + ' hero-heights at ' + worstAt.toFixed(2) + 's inside the contact window (limit ' + tolerance + '); keep the target within contact for the entire window.');
+      }
+    } else if (best > REACH_RANGE) {
+      add('error', 'reach-too-far', 'hand anchor is ' + best.toFixed(2) + ' hero-heights from the nearest story object (limit ' + REACH_RANGE + '); align the hand with the prop or add an explicit contact pose.');
+    }
   }
 
-
-  // ---- attached prop contact ------------------------------------------------------------------------------
-  // Props may travel during an action, but their final keyframe must land at the selected rig hand.
+  // ---- attached prop contact -------------------------------------------------------------------------------
+  // A declared contact window is checked at every sampled time; without one, preserve the final-landing check.
   for (const l of chars) {
     if (!l.prop) continue;
     const hand = HAND_ANCHORS[l.pose];
@@ -152,14 +193,27 @@ export function lintVisualShot(spec, opts = {}) {
       continue;
     }
     const p = typeof l.prop === 'string' ? { type: l.prop } : l.prop;
-    const endOffset = (key) => {
-      const track = p.animate && p.animate[key];
-      return Array.isArray(track) && track.length ? num(track[track.length - 1].value, num(p[key], 0)) : num(p[key], 0);
-    };
-    const dx = endOffset('offsetX'), dy = endOffset('offsetY');
-    const scale = Math.max(0.01, layerVal(l, 'scale', dur, 1));
-    const distance = Math.hypot(dx, dy) / (heroH * scale);
-    if (distance > REACH_RANGE) add('error', 'prop-detached-at-end', 'attached ' + (p.type || 'prop') + ' finishes ' + distance.toFixed(2) + ' hero-heights from its hand anchor (limit ' + REACH_RANGE + '); bring its final offset back to the hand.');
+    const contact = l.contact && typeof l.contact === 'object' ? l.contact : null;
+    const hasWindow = contact && Number.isFinite(contact.from) && Number.isFinite(contact.to);
+    const window = hasWindow ? { from: contact.from, to: contact.to } : null;
+    const sampleTimes = window
+      ? [...new Set([...ts, window.from, window.to].filter((t) => t >= window.from && t <= window.to))].sort((a, b) => a - b)
+      : [dur];
+    let worst = 0, worstAt = sampleTimes[0] || dur;
+    for (const t of sampleTimes) {
+      const offsetX = sampleLinear(p.animate && p.animate.offsetX, t, num(p.offsetX, 0));
+      const offsetY = sampleLinear(p.animate && p.animate.offsetY, t, num(p.offsetY, 0));
+      const scale = Math.max(0.01, layerVal(l, 'scale', t, 1));
+      const distance = Math.hypot(offsetX, offsetY) / (heroH * scale);
+      if (distance > worst) { worst = distance; worstAt = t; }
+    }
+    const tolerance = num(contact && contact.tolerance, REACH_RANGE);
+    if (worst > tolerance) {
+      add('error', window ? 'prop-breaks-during-contact-window' : 'prop-detached-at-end',
+        'attached ' + (p.type || 'prop') + (window ? ' reaches ' : ' finishes ') + worst.toFixed(2) +
+        ' hero-heights from its hand anchor' + (window ? ' at ' + worstAt.toFixed(2) + 's inside the contact window' : '') +
+        ' (limit ' + tolerance + '); bring its offset back to the hand.');
+    }
   }
 
   // ---- camera -----------------------------------------------------------------------------------------------
