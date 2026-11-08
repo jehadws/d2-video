@@ -17,6 +17,15 @@ export function parseQaArgs(argv) {
   return args;
 }
 
+export function selectQaChecks(args) {
+  const selected = [];
+  const hasExplicitBaseCheck = !!(args.static || args.geometry);
+  if (args.static || !hasExplicitBaseCheck) selected.push('static');
+  if (args.geometry || !hasExplicitBaseCheck) selected.push('geometry');
+  if (args.production) selected.push('production');
+  return selected;
+}
+
 export async function main(argv = process.argv.slice(2)) {
   const args = parseQaArgs(argv);
   if (!args.project) {
@@ -27,12 +36,7 @@ export async function main(argv = process.argv.slice(2)) {
     console.error('Temporal continuity analysis is not implemented yet.');
     return 2;
   }
-  const selected = [];
-  const hasExplicitBaseCheck = !!(args.static || args.geometry);
-  if (args.static || !hasExplicitBaseCheck) selected.push('static');
-  if (args.geometry || !hasExplicitBaseCheck) selected.push('geometry');
-  if (args.production) selected.push('production');
-  const checks = selected;
+  const checks = selectQaChecks(args);
   const projectDir = path.resolve(String(args.project));
   try {
     const { report } = runQA(projectDir, { checks });
