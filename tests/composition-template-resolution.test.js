@@ -91,7 +91,7 @@ test('close-up template centers the camera on the primary head anchor', () => {
   hero.transform.position.y = 24;
   const spec = { version: 2, id: 's007', entities: [hero], relationships: [],
     composition: { template: 'close-up', roles: { primary: 'hero' } } };
-  const expanded = applyCompositionTemplate(spec);
+  const expanded = resolveCompositionTemplate(spec).spec;
   const head = getEntityGeometry(hero).anchors['head.center'];
   assert.equal(expanded.camera.x, head.x);
   assert.equal(expanded.camera.y, head.y);
