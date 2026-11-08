@@ -85,14 +85,15 @@ function localGeometry(entity) {
   if (entity.type === 'cup') {
     anchors.grip = { x: w * 0.72, y: 0 };
     anchors.rim = { x: 0, y: -h * 0.38 };
-    anchors.bottom = { x: 0, y: h * 0.5 };
+    anchors.bottom = { x: 0, y: h * 0.52 };
   }
   if (entity.type === 'surface') {
     anchors.top = { x: 0, y: -h/2 };
     anchors.topLeft = { x: -w/2, y: -h/2 };
     anchors.topRight = { x: w/2, y: -h/2 };
   }
-  return { bounds: { left:-w/2, right:w/2, top:-h/2, bottom:h/2, width:w, height:h }, anchors };
+  const left=-w/2, right=entity.type==='cup'?w*0.72:w/2, top=-h/2, bottom=entity.type==='cup'?h*0.52:h/2;
+  return { bounds: { left, right, top, bottom, width:right-left, height:bottom-top }, anchors };
 }
 export function getEntityGeometry(entity) {
   const transform = entity.transform || {};
@@ -305,7 +306,8 @@ export function resolveComposition(spec, time=0, frame={width:1920,height:1080})
 export function lintComposition(spec, options={}) {
   const frame=options.frame||{width:1920,height:1080}, result=resolveComposition(spec,options.time||0,frame);
   const diagnostics=[...result.diagnostics], view=result.viewport||{left:-frame.width/frame.height*50,right:frame.width/frame.height*50,top:-50,bottom:50};
-  const captionTop=finite(options.captionTop)?options.captionTop:view.bottom-(options.captionHeight??14);
+  const captionHeight=finite(options.captionHeight)?options.captionHeight*((view.bottom-view.top)/100):14;
+  const captionTop=finite(options.captionTop)?options.captionTop:view.bottom-captionHeight;
   for(const g of result.geometry){
     const b=g.bounds;
     if(b.left<view.left-EPSILON||b.right>view.right+EPSILON||b.top<view.top-EPSILON||b.bottom>view.bottom+EPSILON)
