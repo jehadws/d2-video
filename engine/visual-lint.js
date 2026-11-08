@@ -138,7 +138,28 @@ export function lintVisualShot(spec, opts = {}) {
         best = Math.min(best, Math.hypot(ox - hx, oy - hy) / (heroH * s));
       }
     }
-    if (best > REACH_RANGE) add('warn', 'reach-too-far', 'hand anchor is ' + best.toFixed(2) + ' hero-heights from the nearest story object (limit ' + REACH_RANGE + '); align the hand with the prop or add an explicit contact pose.');
+    if (best > REACH_RANGE) add('error', 'reach-too-far', 'hand anchor is ' + best.toFixed(2) + ' hero-heights from the nearest story object (limit ' + REACH_RANGE + '); align the hand with the prop or add an explicit contact pose.');
+  }
+
+
+  // ---- attached prop contact ------------------------------------------------------------------------------
+  // Props may travel during an action, but their final keyframe must land at the selected rig hand.
+  for (const l of chars) {
+    if (!l.prop) continue;
+    const hand = HAND_ANCHORS[l.pose];
+    if (!hand) {
+      add('error', 'prop-no-hand-anchor', 'character has an attached prop but pose "' + l.pose + '" has no registered hand anchor; use a supported contact pose.');
+      continue;
+    }
+    const p = typeof l.prop === 'string' ? { type: l.prop } : l.prop;
+    const endOffset = (key) => {
+      const track = p.animate && p.animate[key];
+      return Array.isArray(track) && track.length ? num(track[track.length - 1].value, num(p[key], 0)) : num(p[key], 0);
+    };
+    const dx = endOffset('offsetX'), dy = endOffset('offsetY');
+    const scale = Math.max(0.01, layerVal(l, 'scale', dur, 1));
+    const distance = Math.hypot(dx, dy) / (heroH * scale);
+    if (distance > REACH_RANGE) add('error', 'prop-detached-at-end', 'attached ' + (p.type || 'prop') + ' finishes ' + distance.toFixed(2) + ' hero-heights from its hand anchor (limit ' + REACH_RANGE + '); bring its final offset back to the hand.');
   }
 
   // ---- camera -----------------------------------------------------------------------------------------------
