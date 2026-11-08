@@ -38,6 +38,7 @@ export async function main(argv = process.argv.slice(2)) {
       const rendered = await runRenderedChecks(projectDir, {
         scale: args.scale == null ? 0.5 : Number(args.scale),
         style: args.style || undefined,
+        quiet: !!args.json,
       });
       report.findings.push(...rendered.findings);
       report.summary.checkedFrames = rendered.checkedFrames;
