@@ -38,7 +38,7 @@ test('asset references resolve character identity and prop geometry/material wit
   assert.equal(resolved.environmentDef.id, 'environment.office');
   assert.equal(resolved.lightingDef.id, 'lighting.cool-interior');
   assert.equal(source.entities[0].type, undefined);
-  assert.equal(source.entities[1].geometry, undefined);
+  assert.deepEqual(source.entities[1].geometry, { width: 9 });
 });
 
 test('asset validation reports missing, wrong-kind and stale references', () => {
