@@ -31,6 +31,7 @@ export function formatReport(report) {
     const time = finding.timestamp ? ' @ ' + finding.timestamp.global + 's' : '';
     lines.push('[' + finding.severity.toUpperCase() + '] ' + location + time + ' ' + finding.code + ': ' + finding.message);
     if (finding.suggestion) lines.push('  Suggested fix: ' + finding.suggestion);
+    if (finding.evidence) lines.push('  Evidence: ' + finding.evidence);
   }
   return lines.join('\n');
 }
