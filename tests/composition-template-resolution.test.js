@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DEFAULT_COMPOSITION_TEMPLATES, applyCompositionTemplate, resolveTemplatedComposition } from '../engine/composition-templates/resolve.js';
+import { lintCompositionFraming } from '../engine/visual-lint.js';
 
 const entity = (id, type = 'hero', x = 0) => ({
   id, type, pose: 'stand', geometry: type === 'cup' ? { width: 8, height: 10 } : undefined,
@@ -59,4 +60,27 @@ test('template expansion is opt-in and does not mutate source shots', () => {
   const expanded = applyCompositionTemplate(spec);
   assert.equal(spec.framing, undefined);
   assert.equal(expanded.framing, 'reaction');
+});
+
+test('semantic framing lint uses canonical resolved character bounds', () => {
+  const spec = { framing: 'medium', entities: [entity('hero')] };
+  const tooSmall = lintCompositionFraming(spec, {
+    viewport: { top: -50, bottom: 50 },
+    geometry: [{ id: 'hero', bounds: { height: 20 } }],
+  });
+  assert.equal(tooSmall[0].code, 'character-too-small');
+  const readable = lintCompositionFraming(spec, {
+    viewport: { top: -50, bottom: 50 },
+    geometry: [{ id: 'hero', bounds: { height: 65 } }],
+  });
+  assert.deepEqual(readable, []);
+});
+
+test('over-the-shoulder template places the foreground role in front', () => {
+  const spec = { version: 2, id: 's006', entities: [entity('foreground'), entity('target')],
+    relationships: [], composition: { template: 'over-the-shoulder',
+      roles: { primary: 'foreground', secondary: ['target'] } } };
+  const expanded = applyCompositionTemplate(spec);
+  assert.ok(expanded.relationships.some(x => x.type === 'in_front_of' && x.subject === 'foreground' && x.target === 'target'));
+  assert.equal(resolveTemplatedComposition(spec).valid, true);
 });
