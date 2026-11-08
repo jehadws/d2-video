@@ -22,6 +22,12 @@ node render.mjs --project projects/composition-lab --from 0 --to 24 --scale 0.5
 
 The test has no voiceover or audio dependency. It is intentionally a silent visual project.
 
+Run the focused contact-lint regression tests with Node's built-in test runner:
+
+```bash
+node --test tests/visual-contact-lint.test.js
+```
+
 ## Coverage
 
 | Shot | Environment | Composition | Implementation |
