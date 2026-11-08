@@ -14,8 +14,8 @@ export function drawBedroom(g) {
   g.fillRect(0, 0, E.W, E.H);
   g.fillStyle = '#687080'; rr(g, 180, 120, 590, 480, 8); g.fill();
   g.fillStyle = '#B5AAB0'; rr(g, 205, 145, 540, 430, 4); g.fill();
-  seg(g, [[475, 145], [475, 575]], 12, '#454958);
-  seg(g, [[205, 360], [745, 360]], 12, '#454958);
+  seg(g, [[475, 145], [475, 575]], 12, '#454958');
+  seg(g, [[205, 360], [745, 360]], 12, '#454958');
   circle(g, 650, 240, 54, p.warm); glow(g, 650, 240, 140, p.warm, 0.12);
   g.fillStyle = p.floor; g.fillRect(0, 720, E.W, 360);
   g.fillStyle = '#66505A'; rr(g, 900, 570, 760, 160, 24); g.fill();
