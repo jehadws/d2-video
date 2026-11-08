@@ -123,7 +123,10 @@
       "y": 1010,
       "scale": 3,
       "pose": "reachDown",
-      "expression": "neutral"
+      "expression": "neutral",
+      "contact": {
+        "hand": "F"
+      }
     }
   ]
 }
