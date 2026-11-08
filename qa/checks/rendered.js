@@ -21,7 +21,8 @@ export async function runRenderedChecks(projectDir, options = {}) {
   if (options.style) args.push('--style', String(options.style));
 
   await new Promise((resolve, reject) => {
-    const child = spawn(process.execPath, args, { cwd: ROOT, stdio: 'inherit' });
+    const child = spawn(process.execPath, args, { cwd: ROOT, stdio: options.quiet ? ['ignore', 'pipe', 'inherit'] : 'inherit' });
+    if (options.quiet) child.stdout.resume();
     child.once('error', reject);
     child.once('close', code => code === 0 ? resolve() : reject(new Error('Rendered QA renderer exited with code ' + code)));
   });
