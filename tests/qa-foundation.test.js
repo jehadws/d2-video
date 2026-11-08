@@ -7,7 +7,7 @@ import { createFinding, normalizeLintFinding } from '../qa/findings.js';
 import { buildReport, formatReport } from '../qa/report.js';
 import { runQA } from '../qa/index.js';
 import { _testing } from '../qa/checks/geometry.js';
-import { parseQaArgs } from '../qa.mjs';
+import { parseQaArgs, selectQaChecks } from '../qa.mjs';
 import { isNearBlankFrame } from '../qa/checks/rendered.js';
 import { lintProject } from '../lint-visual.mjs';
 
@@ -58,6 +58,12 @@ test('geometry sampling includes interior keyframes and interval midpoints witho
   assert.ok(times.includes(1));
   assert.ok(times.includes(0.5));
   assert.ok(!times.includes(0));
+});
+
+test('production CLI keeps static and geometry preflight enabled by default', () => {
+  assert.deepEqual(selectQaChecks({ production: true }), ['static', 'geometry', 'production']);
+  assert.deepEqual(selectQaChecks({ static: true, production: true }), ['static', 'production']);
+  assert.deepEqual(selectQaChecks({ geometry: true }), ['geometry']);
 });
 
 test('CLI arguments support project and independent check selection', () => {
