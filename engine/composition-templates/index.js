@@ -1,4 +1,4 @@
-// Reusable composition-template contracts and registry (Phase 3.1).
+// Reusable composition-template contracts and registry (Phase 3).
 // Templates describe intent and role requirements; geometry resolution stays in engine/geometry.
 import { ENTITY_TYPES } from '../geometry/index.js';
 
