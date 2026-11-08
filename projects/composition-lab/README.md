@@ -12,7 +12,7 @@ node render.mjs --project projects/composition-lab --sheet --scale 0.5
 
 Open every image in `projects/composition-lab/build/sheets/`.
 
-The render first prints a `[visual lint]` report (character size, cropping, story-object size). This project is lint-clean; to check it on its own run `node lint-visual.mjs projects/composition-lab`.
+The render first prints a `[visual lint]` report (character size, cropping, story-object size, hand-to-prop contact). Errors abort rendering automatically; warnings are non-blocking. This project is lint-clean; to check it on its own run `node lint-visual.mjs projects/composition-lab`.
 
 Then inspect motion:
 
