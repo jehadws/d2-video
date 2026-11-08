@@ -287,6 +287,37 @@ export function validateComposition(spec) {
   }
   return errors;
 }
+function orderConstraints(entities, constraints) {
+  const bySubject = new Map(entities.map(entity => [entity.id, []]));
+  for (const constraint of constraints) {
+    const list = bySubject.get(constraint.subject);
+    if (list) list.push(constraint);
+  }
+  const ordered = [], visited = new Set(), visiting = new Set();
+  const priorityOrder = (a, b) => (a.priority ?? 0) - (b.priority ?? 0);
+
+  function visit(entityId) {
+    if (visited.has(entityId) || visiting.has(entityId)) return;
+    visiting.add(entityId);
+    const own = bySubject.get(entityId) || [];
+    const positional = own.filter(c => c.type !== 'inside_frame').sort(priorityOrder);
+    const containment = own.filter(c => c.type === 'inside_frame').sort(priorityOrder);
+
+    // Resolve a target's own placement before positioning entities relative to it.
+    for (const constraint of positional) {
+      if (constraint.target) visit(constraint.target);
+      ordered.push(constraint);
+    }
+    // Containment must run after every relationship that can move this entity.
+    ordered.push(...containment);
+    visiting.delete(entityId);
+    visited.add(entityId);
+  }
+
+  for (const entity of entities) visit(entity.id);
+  return ordered;
+}
+
 export function resolveComposition(spec, time=0, frame={width:1920,height:1080}) {
   const validation=validateComposition(spec);
   if(validation.length)return {entities:[],geometry:[],diagnostics:validation.map(message=>({level:'error',code:'invalid-composition',message})),valid:false};
@@ -295,7 +326,7 @@ export function resolveComposition(spec, time=0, frame={width:1920,height:1080})
   const cycles=cycleDiagnostics(entities,spec.relationships||[]);
   for(const cycle of cycles)diagnostics.push({level:'error',code:'constraint-cycle',entities:cycle,message:`Constraint cycle: ${cycle.join(' -> ')}`});
   if(!cycles.length){
-    const constraints=[...(spec.relationships||[])].sort((a,b)=>(a.priority??0)-(b.priority??0));
+    const constraints=orderConstraints(entities,spec.relationships||[]);
     for(const c of constraints)solveRelationship(c,byId,diagnostics,solveFrame);
     for(const c of constraints)if(!relationshipSatisfied(c,byId,view))
       diagnostics.push({level:'error',code:'constraint-unsatisfied',entity:c.subject,relationship:c.type,
