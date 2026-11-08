@@ -217,9 +217,9 @@ export function lintVisualShot(spec, opts = {}) {
     }
     const tolerance = num(contact && contact.tolerance, REACH_RANGE);
     if (worst > tolerance) {
-      add('error', window ? 'prop-breaks-during-contact-window' : 'prop-detached-at-end',
-        'attached ' + (p.type || 'prop') + (window ? ' reaches ' : ' finishes ') + worst.toFixed(2) +
-        ' hero-heights from its hand anchor' + (window ? ' at ' + worstAt.toFixed(2) + 's inside the contact window' : '') +
+      add('error', window ? 'prop-breaks-during-contact-window' : 'prop-detached-during-shot',
+        'attached ' + (p.type || 'prop') + ' reaches ' + worst.toFixed(2) +
+        ' hero-heights from its hand anchor at ' + worstAt.toFixed(2) + 's' + (window ? ' inside the contact window' : ' during the shot') +
         ' (limit ' + tolerance + '); bring its offset back to the hand.');
     }
   }
