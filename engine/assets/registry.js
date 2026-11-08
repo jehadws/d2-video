@@ -45,6 +45,9 @@ export function validateAssetDefinition(definition) {
   if (definition.kind === 'lighting') {
     if (typeof definition.tint !== 'string') errors.push('lighting.tint must be a CSS color');
     if (!finite(definition.opacity) || definition.opacity < 0 || definition.opacity > 0.25) errors.push('lighting.opacity must be between 0 and 0.25');
+    if (definition.rimColor != null && typeof definition.rimColor !== 'string') errors.push('lighting.rimColor must be a CSS color');
+    if (definition.rimWidth != null && (!finite(definition.rimWidth) || definition.rimWidth < 0 || definition.rimWidth > 8)) errors.push('lighting.rimWidth must be between 0 and 8');
+    if (definition.highlightStrength != null && (!finite(definition.highlightStrength) || definition.highlightStrength < 0 || definition.highlightStrength > 2)) errors.push('lighting.highlightStrength must be between 0 and 2');
   }
   return errors;
 }

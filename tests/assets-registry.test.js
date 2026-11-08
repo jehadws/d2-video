@@ -62,3 +62,12 @@ test('scene overrides take precedence over reusable asset defaults', () => {
   assert.equal(resolved.entities[0].style.fill, '#ffffff');
   assert.equal(resolved.entities[0].geometry.height, 14);
 });
+
+test('lighting presets expose restrained rim and material response without replacing character identity', () => {
+  const warm = ASSET_REGISTRY.require('lighting.warm-interior', 'lighting');
+  const night = ASSET_REGISTRY.require('lighting.night', 'lighting');
+  assert.equal(warm.rimColor, '#E8B98A');
+  assert.ok(warm.rimWidth > 0 && warm.rimWidth <= 8);
+  assert.ok(night.highlightStrength < warm.highlightStrength);
+  assert.equal(ASSET_REGISTRY.require('character.hero').render.type, 'hero');
+});

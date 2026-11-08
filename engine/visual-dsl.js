@@ -160,7 +160,7 @@ function drawLayer(g, item, t) {
   g.restore();
 }
 
-function compositionLayer(entity, frame) {
+function compositionLayer(entity, frame, lighting = null) {
   const ppu = frame.height / 100;
   const p = entity.transform?.position || entity.position || { x: 0, y: 0 };
   const x = frame.width / 2 + p.x * ppu, y = frame.height / 2 + p.y * ppu;
@@ -168,10 +168,11 @@ function compositionLayer(entity, frame) {
   const renderScale = (entity.type === 'hero' || entity.type === 'figure') ? scale * frame.height / 1080 : scale;
   const base = { x, y, rotation: entity.transform?.rotation || 0, scale: renderScale, alpha: entity.opacity ?? 1 };
   const style = entity.style || {}, geometry = entity.geometry || {}, material = entity.materialDef || {};
-  const highlightAlpha = material.roughness == null ? 0.24 : 0.08 + (1 - material.roughness) * 0.35;
+  const highlightAlpha = (material.roughness == null ? 0.24 : 0.08 + (1 - material.roughness) * 0.35) * (lighting?.highlightStrength ?? 1);
   if (entity.type === 'hero' || entity.type === 'figure') {
+    const rim = entity.rim !== undefined ? entity.rim : (lighting?.rimColor ? { color: lighting.rimColor, w: lighting.rimWidth ?? 1.5, dir: [-0.8, -0.5] } : undefined);
     return { ...base, type: entity.type, pose: entity.pose || 'stand', facing: entity.facing,
-      expression: entity.expression, look: entity.look, rim: entity.rim, outfit: entity.outfit };
+      expression: entity.expression, look: entity.look, rim, outfit: entity.outfit };
   }
   if (entity.type === 'circle') return { ...base, type: 'circle', originCenter: true, radius: geometry.radius * ppu * scale, fill: style.fill || material.baseColor || '#D6A85F', highlight: style.highlight || material.highlightColor, highlightAlpha, shadow: style.shadow || material.shadowColor, emission: material.emission || 0 };
   if (entity.type === 'cup') return { ...base, type: 'cup', originCenter: true, w: geometry.width * ppu * scale, h: geometry.height * ppu * scale,
@@ -206,7 +207,7 @@ export function registerComposedShot(spec) {
       if (spec.background) { g.fillStyle = spec.background.color; g.fillRect(0, 0, E.W, E.H); }
       const layers = resolved.entities
         .sort((a, b) => (a.transform?.z ?? a.z ?? 0) - (b.transform?.z ?? b.z ?? 0))
-        .map(entity => compositionLayer(entity, { width: E.W, height: E.H })).filter(Boolean);
+        .map(entity => compositionLayer(entity, { width: E.W, height: E.H }, expanded.lightingDef)).filter(Boolean);
       for (const layer of layers) drawLayer(g, layer, t);
       g.restore();
     },

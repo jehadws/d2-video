@@ -142,7 +142,7 @@ Supported built-in asset families:
 - Props: `prop.cup`, `prop.ball`, `prop.phone`, `prop.table`. Asset geometry supplies default semantic dimensions and anchors through the existing geometry engine.
 - Materials: ceramic, rubber, glass, wood, fabric, concrete, metal, and emissive presets. Scene-level `style` and `geometry` values override asset defaults.
 - Environments: bedroom, office, and street. Environments are composed from normalized screen-space primitives and drawn before semantic entities.
-- Lighting: soft daylight, warm/cool interiors, golden hour, dusk, night, and neutral studio. The selected lighting tint is applied subtly to the environment; character identity colors remain owned by the character rig and the existing style grade remains global.
+- Lighting: soft daylight, warm/cool interiors, golden hour, dusk, night, and neutral studio. Lighting applies a subtle environment tint, a restrained character rim-light configuration, and a small material-highlight response. It never replaces the character's base identity palette; the existing style grade remains a separate global layer.
 
 A custom project asset can be added in `projects/<project>/assets.json` using `{ "schemaVersion": 1, "assets": [...] }`. Each definition needs `schemaVersion: 1`, a namespaced ID, kind, version, and the kind-specific fields. The renderer registers this manifest before loading scene modules, and project lint builds an isolated registry from the same manifest. Do not duplicate a built-in ID or another project asset ID. Increment an asset's `version` when its public geometry or visual contract changes; shots may pin `assetVersion` to detect stale references.
 

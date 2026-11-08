@@ -33,13 +33,13 @@ export const BUILTIN_ASSETS = [
   { schemaVersion: 1, id: 'material.emissive', kind: 'material', version: 1, name: 'Warm practical light',
     baseColor: '#D9B77F', shadowColor: '#9A7048', highlightColor: '#FFF0D2', roughness: 0.2, emission: 0.7 },
 
-  { schemaVersion: 1, id: 'lighting.soft-daylight', kind: 'lighting', version: 1, name: 'Soft daylight', tint: '#DCE8F4', opacity: 0.025 },
-  { schemaVersion: 1, id: 'lighting.warm-interior', kind: 'lighting', version: 1, name: 'Warm interior', tint: '#E8B98A', opacity: 0.045 },
-  { schemaVersion: 1, id: 'lighting.cool-interior', kind: 'lighting', version: 1, name: 'Cool interior', tint: '#9FB8D5', opacity: 0.045 },
-  { schemaVersion: 1, id: 'lighting.golden-hour', kind: 'lighting', version: 1, name: 'Golden hour', tint: '#E8B17A', opacity: 0.055 },
-  { schemaVersion: 1, id: 'lighting.dusk', kind: 'lighting', version: 1, name: 'Restrained dusk', tint: '#879BB8', opacity: 0.045 },
-  { schemaVersion: 1, id: 'lighting.night', kind: 'lighting', version: 1, name: 'Night ambience', tint: '#7187AD', opacity: 0.065 },
-  { schemaVersion: 1, id: 'lighting.neutral-studio', kind: 'lighting', version: 1, name: 'Neutral studio', tint: '#FFFFFF', opacity: 0 },
+  { schemaVersion: 1, id: 'lighting.soft-daylight', kind: 'lighting', version: 1, name: 'Soft daylight', tint: '#DCE8F4', opacity: 0.025, rimColor: '#DCE8F4', rimWidth: 1.5, highlightStrength: 1 },
+  { schemaVersion: 1, id: 'lighting.warm-interior', kind: 'lighting', version: 1, name: 'Warm interior', tint: '#E8B98A', opacity: 0.045, rimColor: '#E8B98A', rimWidth: 1.5, highlightStrength: 1 },
+  { schemaVersion: 1, id: 'lighting.cool-interior', kind: 'lighting', version: 1, name: 'Cool interior', tint: '#9FB8D5', opacity: 0.045, rimColor: '#9FB8D5', rimWidth: 1.5, highlightStrength: 1 },
+  { schemaVersion: 1, id: 'lighting.golden-hour', kind: 'lighting', version: 1, name: 'Golden hour', tint: '#E8B17A', opacity: 0.055, rimColor: '#E8B17A', rimWidth: 1.5, highlightStrength: 1.08 },
+  { schemaVersion: 1, id: 'lighting.dusk', kind: 'lighting', version: 1, name: 'Restrained dusk', tint: '#879BB8', opacity: 0.045, rimColor: '#879BB8', rimWidth: 1.5, highlightStrength: 1 },
+  { schemaVersion: 1, id: 'lighting.night', kind: 'lighting', version: 1, name: 'Night ambience', tint: '#7187AD', opacity: 0.065, rimColor: '#7187AD', rimWidth: 1.1, highlightStrength: 0.75 },
+  { schemaVersion: 1, id: 'lighting.neutral-studio', kind: 'lighting', version: 1, name: 'Neutral studio', tint: '#FFFFFF', opacity: 0, rimColor: '#FFFFFF', rimWidth: 0.8, highlightStrength: 1 },
 
   { schemaVersion: 1, id: 'environment.bedroom', kind: 'environment', version: 1, name: 'Bedroom',
     background: '#303443', layers: [
