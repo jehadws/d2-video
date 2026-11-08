@@ -4,7 +4,7 @@ Run from the repository root:
 
     node qa.mjs --project projects/composition-lab
 
-The default command runs the static and timeline-aware geometry checks from Phase 5A.
+The default command runs the static and timeline-aware geometry checks. Add `--production` to enforce the final 5–8 minute delivery contract, voiceover presence, word-level transcript presence, and concrete shot descriptions.
 
 ## Rendered-frame inspection
 
@@ -38,12 +38,14 @@ Inspect the linked evidence/contact sheets before changing a scene.
 
 ## Options
 
+    node qa.mjs --project projects/my-video --production
     node qa.mjs --project projects/composition-lab --static
     node qa.mjs --project projects/composition-lab --geometry
     node qa.mjs --project projects/composition-lab --rendered --scale 0.5
     node qa.mjs --project projects/composition-lab --rendered --style cinematic
     node qa.mjs --project projects/composition-lab --rendered --fail-on warning
 
+- `--production` requires a 300–480 second project with a configured voiceover, non-empty word timeline, and concrete descriptions for every shot. It warns when shot density falls outside 15–25 shots/minute.
 - `--fail-on` accepts `error` (default), `warning`, or `info`.
 - `--scale` controls the rendered QA capture scale; defaults to `0.5`.
 - `--style` selects an existing renderer style for the capture.
