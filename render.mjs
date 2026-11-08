@@ -4,6 +4,7 @@
 //   node render.mjs --project P --sheet                               one still per shot -> build/sheets/*.png
 //   node render.mjs --project P --stills 3.5,12,40                    stills at times -> build/stills
 //   node render.mjs --project P --styles dusk,midnight,golden,neon --at 3.5,12,40   style comparison grid
+//   node render.mjs --project P --qa-rendered --scale 0.5                 rendered QA samples + evidence
 // Visual DSL lint runs before every render; errors always abort, warnings are non-blocking.
 // Options: --workers N  --scale K  --style ID  --debug  --format png|jpeg  --crf 18  --gl auto|gpu|swiftshader  --out FILE
 import http from 'node:http';
@@ -133,7 +134,7 @@ async function renderQaFrames() {
     const duration = Math.max(0, scene.end - scene.start);
     for (const ratio of ratios) {
       if (duration <= 0) continue;
-      const localTime = Math.min(duration - 1 / fps, Math.max(0, duration * ratio));
+      const localTime = Math.max(0, Math.min(duration - Math.min(1 / fps, duration / 2), duration * ratio));
       const globalTime = scene.start + localTime;
       const frameIndex = Math.max(0, Math.min(totalFrames - 1, Math.round(globalTime * fps)));
       const image = await shot(page, frameIndex);
