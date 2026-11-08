@@ -246,6 +246,7 @@ function parts(g, o, p, of, ink, far, pass, grow = 0) {
   if (of.face === 'sunglasses') { g.fillStyle = '#05060a'; rr(g, p.head[0] - 1, p.head[1] - 10, 16, 11, 4); g.fill(); rr(g, p.head[0] + 17, p.head[1] - 10, 15, 11, 4); g.fill(); seg(g, [[p.head[0] - 4, p.head[1] - 7], [p.head[0] + 33, p.head[1] - 7]], 2.5, '#05060a'); g.fillStyle = '#9fe8ff'; g.fillRect(p.head[0] + 2, p.head[1] - 8, 4, 2); g.fillRect(p.head[0] + 20, p.head[1] - 8, 4, 2); }
   if (of.head === 'hood') { g.strokeStyle = shade(of.headColor || of.color || '#d64a33', 0.15); g.lineWidth = 5; g.beginPath(); g.arc(p.head[0] - 6, p.head[1] + 2, HR * 1.18, Math.PI * 0.9, Math.PI * 1.75); g.stroke(); }
   if (o.prop) drawProp(g, o.prop, p, ink);
+  if (o.contact) drawContactHand(g, p, o.contact, ink);
 }
 export function soccerBall(g, x, y, r, rot = 0, light = '#f2efe8') {
   g.save(); g.translate(x, y); g.rotate(rot); circle(g, 0, 0, r, light);
@@ -267,9 +268,19 @@ function drawProp(g, prop, p, ink) {
       rr(g, px - w * 0.36, py - height + 4, w * 0.72, height * 0.72, 1.5); g.fill();
       break;
     }
-    case 'ball':
-      soccerBall(g, px, py, t.radius || 14, t.rot || 0, t.color || '#f2efe8');
+    case 'ball': {
+      const radius = t.radius || 14;
+      if (t.style === 'orange') {
+        circle(g, px, py, radius, t.color || '#C9794D');
+        circle(g, px - radius * 0.28, py - radius * 0.32, radius * 0.24, '#E6B18A');
+        seg(g, [[px - radius * 0.55, py + radius * 0.15], [px + radius * 0.55, py - radius * 0.2]], Math.max(2, radius * 0.08), '#8E5039');
+      } else soccerBall(g, px, py, radius, t.rot || 0, t.color || '#f2efe8');
+      // Three short skin-tone strokes wrap the near edge so the hand reads as gripping.
+      seg(g, [[px - radius * 0.28, py + radius * 0.78], [px - radius * 0.2, py + radius * 0.98]], Math.max(2, radius * 0.1), ink);
+      seg(g, [[px, py + radius * 0.82], [px + radius * 0.04, py + radius]], Math.max(2, radius * 0.1), ink);
+      seg(g, [[px + radius * 0.25, py + radius * 0.72], [px + radius * 0.32, py + radius * 0.9]], Math.max(2, radius * 0.1), ink);
       break;
+    }
     case 'paper':
       g.fillStyle = '#f2e6c8'; g.fillRect(px - 4, py - 30, 30, 36);
       g.strokeStyle = '#b8a888'; g.lineWidth = 1.5;
@@ -294,6 +305,12 @@ function drawProp(g, prop, p, ink) {
       g.beginPath(); g.moveTo(px + 14, py - 4); g.lineTo(px + 260, py - 70); g.lineTo(px + 260, py + 60); g.closePath(); g.fill(); g.restore(); break;
   }
 }
+function drawContactHand(g, p, contact, ink) {
+  const hand = contact === true || contact.hand !== 'B' ? p.hF : p.hB;
+  circle(g, hand[0], hand[1], 4.5, ink);
+  seg(g, [[hand[0] - 5, hand[1] + 1], [hand[0] - 4, hand[1] + 7], [hand[0] + 3, hand[1] + 7]], 2.8, ink);
+}
+
 // world position of the head centre (for rings, labels, speech bubbles)
 export function headPos(o) { const p = o.pose || POSES.stand, s = (o.s ?? 1) * (o.outfit?.kid ? 0.72 : 1), f = o.facing ?? 1; let [x, y] = p.head; if (o.rot) { const [hx, hy] = p.hip; const c = Math.cos(o.rot), sn = Math.sin(o.rot); [x, y] = [hx + (x - hx) * c - (y - hy) * sn, hy + (x - hx) * sn + (y - hy) * c]; } return [o.x + x * f * s, o.y + y * s, 26 * s]; }
 
