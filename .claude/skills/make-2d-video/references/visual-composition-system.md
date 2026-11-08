@@ -90,7 +90,7 @@ Use percentages in planning. Convert to logical coordinates only when authoring 
 - The actor's hand/arm must visibly reach the object; do not rely on narration to explain an invisible connection.
 - The object must be large enough to track across the action: its longest side is at least 10% of frame height (about 110 px in the 1080p logical frame), and the actor is 60–85% of frame height.
 - Preserve object position and direction across consecutive shots.
-- Use DSL only for simple interactions that its existing figure/shape vocabulary can express. Use JS for detailed hand poses, prop attachment, or contact animation.
+- Use DSL for simple hand-attached props (`hero.prop`) and contact poses (`reachBall`, `reachDown`) when a single rig hand can express the action. Use JS for detailed finger articulation, multi-hand grips, complex prop attachment, or contact animation that requires independent hand/prop motion.
 
 ### 8. Dramatic reveal
 
