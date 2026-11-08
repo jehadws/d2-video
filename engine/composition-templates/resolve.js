@@ -1,4 +1,5 @@
 import { resolveComposition } from '../geometry/index.js';
+import { ease } from '../core.js';
 import { createTemplateRegistry, validateTemplateRequest } from './index.js';
 import { BUILTIN_TEMPLATE_DEFINITIONS } from './builtins.js';
 
@@ -15,7 +16,8 @@ function sampleTrack(track, time, fallback) {
   for (let i = 1; i < track.length; i++) {
     const a = track[i - 1], b = track[i];
     if (time <= b.at) {
-      const p = Math.max(0, Math.min(1, (time - a.at) / (b.at - a.at)));
+      const raw = Math.max(0, Math.min(1, (time - a.at) / (b.at - a.at)));
+      const p = (ease[b.ease || 'inOut'] || ease.inOut)(raw);
       return a.value + (b.value - a.value) * p;
     }
   }
