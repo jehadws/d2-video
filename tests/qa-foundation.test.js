@@ -85,3 +85,28 @@ test('DSL v2 shots participate in consecutive framing lint', t => {
   const result = lintProject(root);
   assert.ok(result.findings.some(item => item.code === 'framing-repeat' && item.shot === 's004'));
 });
+
+
+test('static QA detects malformed legacy DSL definitions', t => {
+  const root = project(t, [{ id: 's001', start: 0, end: 2 }]);
+  const visualDir = path.join(root, 'scenes', 'visual');
+  fs.mkdirSync(visualDir, { recursive: true });
+  fs.writeFileSync(path.join(visualDir, 's001.json'), JSON.stringify({ version: 1, id: 's001', layers: {} }));
+  const { report } = runQA(root, { checks: ['static'], write: false });
+  assert.ok(report.findings.some(item => item.code === 'visual-dsl-invalid'));
+});
+
+test('static QA detects animation keyframes beyond shot duration', t => {
+  const root = project(t, [{ id: 's001', start: 0, end: 2 }]);
+  const visualDir = path.join(root, 'scenes', 'visual');
+  fs.mkdirSync(visualDir, { recursive: true });
+  fs.writeFileSync(path.join(visualDir, 's001.json'), JSON.stringify({
+    version: 2, id: 's001',
+    entities: [{ id: 'hero', type: 'hero', pose: 'stand',
+      transform: { position: { x: 0, y: 0 } },
+      animate: { x: [{ at: 0, value: 0 }, { at: 3, value: 20 }] } }],
+    relationships: [],
+  }));
+  const { report } = runQA(root, { checks: ['static'], write: false });
+  assert.ok(report.findings.some(item => item.code === 'animation-range-outside-shot'));
+});

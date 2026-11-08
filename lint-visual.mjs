@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { lintVisualShot, lintVisualSequence, lintCompositionFraming, BARS } from './engine/visual-lint.js';
+import { validateVisualShot } from './engine/visual-dsl.js';
 import { lintComposition } from './engine/geometry/index.js';
 import { DEFAULT_COMPOSITION_TEMPLATES, resolveCompositionTemplate } from './engine/composition-templates/resolve.js';
 import { validateTemplateRequest } from './engine/composition-templates/index.js';
@@ -73,7 +74,9 @@ export function lintProject(projectDir) {
       });
       for (const x of lintCompositionFraming(expanded, result)) findings.push({ shot: id, ...x });
     } else {
-      for (const x of lintVisualShot(spec, { W, H, bars, duration })) findings.push({ shot: id, ...x });
+      const dslErrors = validateVisualShot(spec);
+      for (const message of dslErrors) findings.push({ shot: id, level: 'error', code: 'visual-dsl-invalid', message });
+      if (!dslErrors.length) for (const x of lintVisualShot(spec, { W, H, bars, duration })) findings.push({ shot: id, ...x });
       shots.push({ id, spec });
     }
   }

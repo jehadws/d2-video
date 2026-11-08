@@ -14,6 +14,55 @@ function collectFiles(dir, extension, out = []) {
   return out;
 }
 
+
+function collectAnimationTracks(spec) {
+  const tracks = [];
+  const addObject = object => {
+    if (!object || typeof object !== 'object') return;
+    for (const [name, value] of Object.entries(object)) {
+      if (Array.isArray(value) && value.every(frame => frame && typeof frame === 'object' && Number.isFinite(frame.at))) {
+        tracks.push({ name, frames: value });
+      }
+    }
+  };
+  addObject(spec.camera);
+  for (const entity of spec.entities || []) addObject(entity.animate);
+  for (const layer of spec.layers || []) {
+    addObject(layer.animate);
+    addObject(layer.prop?.animate);
+  }
+  return tracks;
+}
+
+function validateShotTiming(shot, spec, findings) {
+  if (!Number.isFinite(shot.start) || !Number.isFinite(shot.end) || shot.end <= shot.start) {
+    findings.push(createFinding({
+      sceneId: shot.id,
+      severity: 'error',
+      category: 'timeline',
+      code: 'shot-time-range-invalid',
+      message: 'Shot start/end must be finite numbers with end greater than start.',
+      detector: 'static.timeline',
+    }));
+    return;
+  }
+  const duration = shot.end - shot.start;
+  for (const track of collectAnimationTracks(spec)) {
+    const last = track.frames[track.frames.length - 1];
+    if (last && last.at > duration + 1e-6) {
+      findings.push(createFinding({
+        sceneId: shot.id,
+        severity: 'error',
+        category: 'timeline',
+        code: 'animation-range-outside-shot',
+        message: 'Animation track "' + track.name + '" ends at ' + last.at + 's, beyond the shot duration of ' + duration + 's.',
+        suggestion: 'Move the final keyframe inside the shot duration or extend the shot.',
+        detector: 'static.timeline',
+      }));
+    }
+  }
+}
+
 export function runStaticChecks(projectDir) {
   const findings = [];
   const storyPath = path.join(projectDir, 'story', 'shots.json');
@@ -61,6 +110,11 @@ export function runStaticChecks(projectDir) {
         detector: 'static.project',
       }));
       continue;
+    }
+    const visualPath = path.join(projectDir, 'scenes', 'visual', shot.id + '.json');
+    if (fs.existsSync(visualPath)) {
+      try { validateShotTiming(shot, JSON.parse(fs.readFileSync(visualPath, 'utf8')), findings); }
+      catch { /* The JSON parser diagnostic is emitted by lintProject. */ }
     }
     if (!visualIds.has(shot.id) && !scriptIds.has(shot.id)) {
       findings.push(createFinding({
