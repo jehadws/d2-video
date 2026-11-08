@@ -88,3 +88,29 @@ node lint-visual.mjs projects/composition-lab
 ```
 
 Shots s009–s011 are now part of the timed lab sequence. They exercise `held_by`, `on_surface`, `left_of`, `behind`, and `inside_frame` through the real visual-shot registration path. They are integration fixtures, not visual sign-off: inspect their contact-sheet frames and motion before accepting Phase 2.
+
+
+## Composition templates (Phase 3)
+
+DSL v2 shots can opt into a reusable template through a `composition` block. The template supplies framing/camera defaults and optional semantic relationships; explicit shot values and allowed overrides take precedence. Entity placement is still resolved only by `engine/geometry`.
+
+```json
+{
+  "composition": {
+    "template": "two-shot",
+    "intent": { "purpose": "conversation", "focus": "heroA" },
+    "roles": { "primary": "heroA", "secondary": ["heroB"] },
+    "overrides": { "camera": { "zoom": 1.08 } }
+  }
+}
+```
+
+Built-ins: `establishing-wide`, `medium-single`, `close-up`, `two-shot`, `over-the-shoulder`, `object-interaction`, `insert`, `reaction`, and `tracking`. Role bindings use entity IDs; `primary` is a single ID, while other roles are arrays. Templates are opt-in, so existing v1 and v2 shots without a `composition` block keep their previous behavior.
+
+The over-the-shoulder preset establishes foreground draw order and conversational framing, but does not synthesize a silhouette mask or automatic foreground crop. Tracking follows the primary entity's animated position at each sampled shot time. The renderer continues to call the canonical geometry solver after template expansion.
+
+Run template contract and resolution tests:
+
+```bash
+node --test tests/composition-templates.test.js tests/composition-template-resolution.test.js
+```
