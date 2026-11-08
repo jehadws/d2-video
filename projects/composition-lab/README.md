@@ -35,7 +35,7 @@ The test has no voiceover or audio dependency. It is intentionally a silent visu
 | s007 | Bedroom | Giant face close-up | JavaScript |
 | s008 | Street | Over-the-shoulder | JavaScript |
 
-Reusable environment and prop drawings live in `scenes/sets/visual-assets.js`: bedroom, street, office, door, ball, cup, and phone. DSL shots use equivalent native primitives because DSL v1 does not yet support importing shared asset functions.
+Reusable environment and prop drawings live in `scenes/sets/visual-assets.js`: bedroom, street, office, door, ball, cup, and phone. DSL shots can now attach supported props to rig hand anchors with `hero.prop`, and use a semantic `cup` layer for a recognizable cup silhouette. The DSL still does not import arbitrary project-level drawing functions; advanced custom assets remain in JavaScript.
 
 ## Review criteria
 
