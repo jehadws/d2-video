@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { DEFAULT_COMPOSITION_TEMPLATES, applyCompositionTemplate, resolveTemplatedComposition } from '../engine/composition-templates/resolve.js';
+import { DEFAULT_COMPOSITION_TEMPLATES, applyCompositionTemplate, resolveTemplatedComposition, resolveCompositionTemplate } from '../engine/composition-templates/resolve.js';
 import { lintCompositionFraming } from '../engine/visual-lint.js';
 import { getEntityGeometry } from '../engine/geometry/index.js';
 
@@ -110,4 +110,17 @@ test('tracking camera follows animated movement while preserving explicit axes',
   const expanded = applyCompositionTemplate(spec, 1);
   assert.equal(expanded.camera.x, 10);
   assert.equal(expanded.camera.y, 7);
+});
+
+test('two-pass camera focus uses the entity position after relationships resolve', () => {
+  const hero = entity('hero');
+  const target = { id: 'target', type: 'circle', geometry: { radius: 3 },
+    transform: { position: { x: 30, y: 0 } } };
+  const spec = { version: 2, id: 's009', entities: [hero, target],
+    relationships: [{ type: 'right_of', subject: 'hero', target: 'target', gap: 4 }],
+    composition: { template: 'close-up', roles: { primary: 'hero' } } };
+  const { spec: expanded, resolved } = resolveCompositionTemplate(spec);
+  const head = resolved.geometry.find(item => item.id === 'hero').anchors['head.center'];
+  assert.equal(expanded.camera.x, head.x);
+  assert.equal(expanded.camera.y, head.y);
 });
