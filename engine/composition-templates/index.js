@@ -156,14 +156,11 @@ function validateRoleBindings(composition, entities, definition, errors) {
     }
   }
 
-  for (const name of COMPOSITION_ROLES) {
-    if (bindings[name] != null && !Object.hasOwn(definition.roles, name)) continue;
-  }
-
   if (composition.intent?.focus != null) {
     const focus = composition.intent.focus;
     if (typeof focus !== 'string') errors.push('composition.intent.focus must be an entity id string');
     else if (!entityById.has(focus)) errors.push('composition.intent.focus references missing entity "' + focus + '"');
+    else if (!assigned.has(focus)) errors.push('composition.intent.focus must reference an entity assigned to a composition role');
   }
 }
 
