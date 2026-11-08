@@ -93,7 +93,7 @@ export function applyCompositionTemplate(spec, time = 0, registry = DEFAULT_COMP
 export function resolveCompositionTemplate(spec, time = 0, frame = { width: 1920, height: 1080 }, registry = DEFAULT_COMPOSITION_TEMPLATES) {
   const expanded = applyCompositionTemplate(spec, time, registry);
   let resolved = resolveComposition(expanded, time, frame);
-  if (!spec.composition || !resolved.valid) return { spec: expanded, resolved };
+  if (!spec.composition) return { spec: expanded, resolved };
 
   const definition = registry.get(spec.composition.template);
   const follow = definition?.defaults?.tracking || definition?.defaults?.focus;
