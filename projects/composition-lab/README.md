@@ -54,7 +54,7 @@ Reusable environment and prop drawings live in `scenes/sets/visual-assets.js`: b
 }
 ```
 
-`from` and `to` are shot-local seconds. `target` is an optional zero-based layer index and must point to a `story_object`; without it, lint checks the nearest story object at each sample. The linter samples the full window (including its boundaries) and fails if contact breaks at any sample. Animated attached-prop offsets also require a contact window and are checked throughout it; static attached props are checked throughout the shot. A contact marker without a window is not sufficient to prove an interaction.
+`from` and `to` are shot-local seconds. `target` is an optional zero-based layer index and must point to a `story_object`; without it, lint checks the nearest story object at each sample. The linter samples the full window (including its boundaries) and fails if contact breaks at any sample. Time-window lint currently supports the near hand (`F`); far-hand contact needs a registered far-hand anchor before it can be checked. Animated attached-prop offsets also require a contact window and are checked throughout it; static attached props are checked throughout the shot. A contact marker without a window is not sufficient to prove an interaction.
 
 The DSL still does not import arbitrary project-level drawing functions; advanced custom assets remain in JavaScript.
 
