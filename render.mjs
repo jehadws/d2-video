@@ -211,7 +211,7 @@ async function renderQaFrames() {
     frames,
     artifacts: { contactSheets },
   };
-  fs.writeFileSync(path.join(BUILD, 'qa', 'rendered.json'), JSON.stringify(result, null, 2) + '\\n');
+  fs.writeFileSync(path.join(BUILD, 'qa', 'rendered.json'), JSON.stringify(result, null, 2) + '\n');
   console.log('Rendered QA: ' + frames.length + ' frames sampled; ' + findings.length + ' finding(s).');
   console.log('Rendered QA report: ' + path.join(BUILD, 'qa', 'rendered.json'));
 }
