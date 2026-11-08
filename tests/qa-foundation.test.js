@@ -110,3 +110,23 @@ test('static QA detects animation keyframes beyond shot duration', t => {
   const { report } = runQA(root, { checks: ['static'], write: false });
   assert.ok(report.findings.some(item => item.code === 'animation-range-outside-shot'));
 });
+
+
+test('static QA recognizes descriptive JavaScript filenames by registerShot ID', t => {
+  const root = project(t, [{ id: 's007', start: 0, end: 2 }, { id: 's008', start: 2, end: 4 }]);
+  const shotsDir = path.join(root, 'scenes', 'shots');
+  fs.mkdirSync(shotsDir, { recursive: true });
+  fs.writeFileSync(path.join(shotsDir, '07_closeup.js'), "registerShot('s007', { draw() {} });");
+  fs.writeFileSync(path.join(shotsDir, '08_ots.js'), 'registerShot("s008", { draw() {} });');
+  const { report } = runQA(root, { checks: ['static'], write: false });
+  assert.ok(!report.findings.some(item => item.code === 'scene-implementation-missing'));
+});
+
+test('static QA does not accept a descriptive JavaScript filename without shot registration', t => {
+  const root = project(t, [{ id: 's007', start: 0, end: 2 }]);
+  const shotsDir = path.join(root, 'scenes', 'shots');
+  fs.mkdirSync(shotsDir, { recursive: true });
+  fs.writeFileSync(path.join(shotsDir, '07_closeup.js'), 'export {};');
+  const { report } = runQA(root, { checks: ['static'], write: false });
+  assert.ok(report.findings.some(item => item.code === 'scene-implementation-missing' && item.sceneId === 's007'));
+});
