@@ -16,6 +16,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "tools"))
 from dsp import SR, secs, db, rms_db, place, write_wav, as_stereo, lp
 from common import load_audio
+from validation import validate_voiceover_duration
 import sfx as SFX
 import music as MUSIC
 
@@ -36,11 +37,14 @@ def load_any(path, sr=SR):
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument("--project", required=True); ap.add_argument("--video"); ap.add_argument("--no-music", action="store_true"); ap.add_argument("--no-sfx", action="store_true"); ap.add_argument("--out")
+    ap = argparse.ArgumentParser(); ap.add_argument("--project", required=True); ap.add_argument("--video"); ap.add_argument("--no-music", action="store_true"); ap.add_argument("--no-sfx", action="store_true"); ap.add_argument("--out"); ap.add_argument("--duration-tolerance", type=float, default=1.5, help="maximum allowed voiceover/story duration difference in seconds (default: 1.5)")
     a = ap.parse_args(); P = a.project
     cfg = json.load(open(os.path.join(P, "config.json"), encoding="utf-8")); story = json.load(open(os.path.join(P, "story", "shots.json"), encoding="utf-8"))
     total = story.get("duration") or story["shots"][-1]["end"]; n = secs(total)
     voice = load_any(os.path.join(P, cfg["voiceover"]))
+    voice_duration = len(voice) / SR
+    validate_voiceover_duration(voice_duration, total, a.duration_tolerance)
+    print(f"voiceover/story duration: {voice_duration:.2f}s / {total:.2f}s (tolerance ±{a.duration_tolerance:.2f}s)")
     voice = np.concatenate([voice, np.zeros((max(0, n - len(voice)), 2), np.float32)])[:n]
     v_rms = rms_db(voice[np.abs(voice).mean(1) > db(-40)]) if np.any(np.abs(voice).mean(1) > db(-40)) else -20
     env = envelope(voice)
