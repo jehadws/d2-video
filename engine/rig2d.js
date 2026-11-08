@@ -266,6 +266,7 @@ function drawProp(g, prop, p, ink) {
       g.fillStyle = ink; g.fill();
       g.fillStyle = t.glow || '#9fd8ff';
       rr(g, px - w * 0.36, py - height + 4, w * 0.72, height * 0.72, 1.5); g.fill();
+      seg(g, [[px - w * 0.4, py - 1], [px - w * 0.22, py + 3], [px + w * 0.22, py + 3], [px + w * 0.4, py - 1]], Math.max(2, w * 0.13), ink);
       break;
     }
     case 'ball': {
