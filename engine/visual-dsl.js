@@ -190,7 +190,7 @@ export function registerComposedShot(spec) {
       if (spec.background) { g.fillStyle = spec.background.color; g.fillRect(0, 0, E.W, E.H); }
       const layers = resolved.entities
         .sort((a, b) => (a.transform?.z ?? a.z ?? 0) - (b.transform?.z ?? b.z ?? 0))
-        .map(entity => compositionLayer(entity, E)).filter(Boolean);
+        .map(entity => compositionLayer(entity, { width: E.W, height: E.H })).filter(Boolean);
       for (const layer of layers) drawLayer(g, layer, t);
       g.restore();
     },
