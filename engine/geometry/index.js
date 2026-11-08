@@ -52,7 +52,7 @@ function rotatePoint(p, scale, rotation) {
 function localGeometry(entity) {
   const g = entity.geometry || {};
   if (entity.type === 'hero' || entity.type === 'figure') {
-    const pose = typeof entity.pose === 'string' ? POSES[entity.pose] : entity.pose;
+    const pose = entity.pose == null ? POSES.stand : typeof entity.pose === 'string' ? POSES[entity.pose] : entity.pose;
     if (!pose || !pose.head || !pose.hF || !pose.hB) throw new Error(`Unknown or incomplete pose for entity "${entity.id}"`);
     // Rig coordinates are renderer pixels at 1080p; 10.8 rig px = one world unit.
     const keys = ['head', 'sh', 'hip', 'eF', 'hF', 'eB', 'hB', 'kF', 'fF', 'kB', 'fB'];
@@ -272,7 +272,7 @@ export function validateComposition(spec) {
   }
   if(spec.relationships!=null&&!Array.isArray(spec.relationships))errors.push('relationships must be an array');
   if(spec.camera!=null&&(!spec.camera||typeof spec.camera!=='object'||Array.isArray(spec.camera)))errors.push('camera must be an object');
-  if(spec.camera&&typeof spec.camera==='object')for(const key of ['x','y','zoom']){const v=spec.camera[key];if(v!=null&&!finite(v)&&!Array.isArray(v))errors.push('camera.'+key+' must be a finite number or keyframe array');if(Array.isArray(v)){let prev=-Infinity;if(!v.length)errors.push('camera.'+key+' keyframes must not be empty');for(const f of v){if(!f||typeof f!=='object'||!finite(f.at)||f.at<0||f.at<=prev||!finite(f.value)||(f.ease!=null&&!ease[f.ease]))errors.push('camera.'+key+' has invalid keyframes');if(f&&finite(f.at))prev=f.at;}}}
+  if(spec.camera&&typeof spec.camera==='object')for(const key of ['x','y','zoom']){const v=spec.camera[key];if(v!=null&&!finite(v)&&!Array.isArray(v))errors.push('camera.'+key+' must be a finite number or keyframe array');if(key==='zoom'&&finite(v)&&v<=0)errors.push('camera.zoom must be positive');if(Array.isArray(v)){let prev=-Infinity;if(!v.length)errors.push('camera.'+key+' keyframes must not be empty');for(const f of v){if(!f||typeof f!=='object'||!finite(f.at)||f.at<0||f.at<=prev||!finite(f.value)||(f.ease!=null&&!ease[f.ease])||(key==='zoom'&&f.value<=0))errors.push('camera.'+key+' has invalid keyframes');if(f&&finite(f.at))prev=f.at;}}}
   for(const [i,c] of (Array.isArray(spec.relationships)?spec.relationships:[]).entries()){
     if(!c||typeof c!=='object'||!['left_of','right_of','above','below','held_by','touching','on_surface','behind','in_front_of','inside_frame'].includes(c.type))errors.push(`relationships[${i}].type is unsupported`);
     if(!c||!ids.has(c.subject))errors.push(`relationships[${i}].subject does not exist`);
