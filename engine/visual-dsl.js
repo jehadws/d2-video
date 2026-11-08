@@ -44,9 +44,15 @@ export function validateVisualShot(spec) {
       }
     }
     if ((layer.type === 'hero' || layer.type === 'figure') && layer.pose && !POSES[layer.pose]) errors.push(p + '.pose is not a known pose');
+    if ((layer.type === 'hero' || layer.type === 'figure') && layer.contact != null &&
+        !(layer.contact === true || (isObject(layer.contact) && ['F', 'B'].includes(layer.contact.hand || 'F')))) errors.push(p + '.contact must be true or { hand: "F"|"B" }');
     if ((layer.type === 'hero' || layer.type === 'figure') && layer.prop != null) {
       const propType = typeof layer.prop === 'string' ? layer.prop : layer.prop && layer.prop.type;
       if (!['phone', 'ball', 'cup', 'paper', 'paddle', 'pointer', 'tablet', 'flashlight'].includes(propType)) errors.push(p + '.prop must be a supported prop name or { type } object');
+      if (layer.prop && typeof layer.prop === 'object' && layer.prop.animate != null) {
+        if (!isObject(layer.prop.animate)) errors.push(p + '.prop.animate must be an object');
+        else for (const k of ['offsetX', 'offsetY', 'rot']) if (layer.prop.animate[k] != null) validateTrack(layer.prop.animate[k], p + '.prop.animate.' + k, errors);
+      }
     }
     if ((layer.type === 'hero' || layer.type === 'figure') && layer.scale != null && !number(layer.scale)) errors.push(p + '.scale must be a finite number');
     if (layer.type === 'rect' && (!number(layer.w) || !number(layer.h) || typeof layer.fill !== 'string')) errors.push(p + ' rect needs numeric w/h and a fill color');
@@ -74,6 +80,13 @@ function animated(layer, key, t, fallback) {
   return sample(layer.animate && layer.animate[key], t, layer[key] == null ? fallback : layer[key]);
 }
 
+function propAt(prop, t) {
+  if (!prop || typeof prop !== 'object' || !prop.animate) return prop;
+  const out = { ...prop };
+  for (const k of ['offsetX', 'offsetY', 'rot']) if (prop.animate[k]) out[k] = sample(prop.animate[k], t, prop[k] || 0);
+  return out;
+}
+
 function drawLayer(g, item, t) {
   const x = animated(item, 'x', t, 0), y = animated(item, 'y', t, 0);
   const scale = animated(item, 'scale', t, 1), rotation = animated(item, 'rotation', t, 0);
@@ -84,7 +97,7 @@ function drawLayer(g, item, t) {
     const options = { x: 0, y: 0, s: scale, facing: item.facing === -1 ? -1 : 1,
       pose: POSES[item.pose || 'stand'], expr: item.expression || 'neutral',
       look: item.look, rim: item.rim === false ? false : (item.rim || undefined),
-      outfit: item.type === 'figure' ? (item.outfit || {}) : undefined, prop: item.prop };
+      outfit: item.type === 'figure' ? (item.outfit || {}) : undefined, prop: propAt(item.prop, t), contact: item.contact };
     if (item.type === 'hero') drawHero(g, options); else drawFigure(g, options);
   } else if (item.type === 'rect') {
     g.fillStyle = item.fill; if (item.radius > 0) { rr(g, x, y, item.w, item.h, item.radius); g.fill(); } else g.fillRect(x, y, item.w, item.h);
