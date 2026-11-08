@@ -1,7 +1,7 @@
 // lint-visual.mjs: framing lint for Structured Visual DSL shots.
 //   node lint-visual.mjs projects/my-video            print findings, exit 1 if any error
 //   node lint-visual.mjs projects/my-video --warn     print findings, always exit 0
-// render.mjs calls lintProject() before every render (warn-only unless --strict-lint is passed).
+// render.mjs calls lintProject() before every render and aborts on errors; warnings are non-blocking.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
