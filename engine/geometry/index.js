@@ -201,9 +201,10 @@ function solveRelationship(c, byId, diagnostics, frame) {
       case 'behind': subject.transform.z=(target.transform?.z ?? target.z ?? 0)-1; break;
       case 'in_front_of': subject.transform.z=(target.transform?.z ?? target.z ?? 0)+1; break;
       case 'inside_frame': {
-        const g=getEntityGeometry(subject), width=frame.width/frame.height*100, height=100, b=g.bounds;
-        const dx=b.left< -width/2 ? -width/2-b.left : b.right>width/2 ? width/2-b.right : 0;
-        const dy=b.top< -height/2 ? -height/2-b.top : b.bottom>height/2 ? height/2-b.bottom : 0;
+        const g=getEntityGeometry(subject), b=g.bounds;
+        const view=frame.view || {left:-frame.width/frame.height*50,right:frame.width/frame.height*50,top:-50,bottom:50};
+        const dx=b.left<view.left ? view.left-b.left : b.right>view.right ? view.right-b.right : 0;
+        const dy=b.top<view.top ? view.top-b.top : b.bottom>view.bottom ? view.bottom-b.bottom : 0;
         moveEntity(subject,dx,dy,diagnostics,c); break;
       }
       default: diagnostics.push({level:'error',code:'unknown-relationship',relationship:c.type,message:`Unsupported relationship "${c.type}"`});
