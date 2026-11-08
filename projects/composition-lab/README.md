@@ -35,7 +35,22 @@ The test has no voiceover or audio dependency. It is intentionally a silent visu
 | s007 | Bedroom | Giant face close-up | JavaScript |
 | s008 | Street | Over-the-shoulder | JavaScript |
 
-Reusable environment and prop drawings live in `scenes/sets/visual-assets.js`: bedroom, street, office, door, ball, cup, and phone. DSL shots can now attach supported props to rig hand anchors with `hero.prop` (including animated anchor offsets), use `contact: { hand: "F" }` for contact with a separate target layer, and use a semantic `cup` layer for a recognizable cup silhouette. The DSL still does not import arbitrary project-level drawing functions; advanced custom assets remain in JavaScript.
+Reusable environment and prop drawings live in `scenes/sets/visual-assets.js`: bedroom, street, office, door, ball, cup, and phone. DSL shots can attach supported props to rig hand anchors with `hero.prop` (including animated anchor offsets), use a semantic `cup` layer for a recognizable cup silhouette, and declare a time-bounded hand contact window:
+
+```json
+{
+  "contact": {
+    "hand": "F",
+    "from": 1.2,
+    "to": 3,
+    "target": 4
+  }
+}
+```
+
+`from` and `to` are shot-local seconds. `target` is an optional zero-based layer index and must point to a `story_object`; without it, lint checks the nearest story object at each sample. The linter samples the full window (including its boundaries) and fails if contact breaks at any sample. Animated attached-prop offsets also require a contact window and are checked throughout it; static attached props are checked throughout the shot. A contact marker without a window is not sufficient to prove an interaction.
+
+The DSL still does not import arbitrary project-level drawing functions; advanced custom assets remain in JavaScript.
 
 ## Review criteria
 
