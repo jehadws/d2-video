@@ -95,6 +95,15 @@ test('template request validates intent and allowed overrides', () => {
   assert.ok(errors.some(x => x.includes('does not allow override "colors"')));
 });
 
+test('intent focus must be one of the template-assigned entities', () => {
+  const invalid = shot({
+    template: 'medium',
+    intent: { focus: 'friend' },
+    roles: { primary: 'hero' },
+  });
+  assert.ok(validateTemplateRequest(invalid, registry()).some(x => x.includes('must reference an entity assigned to a composition role')));
+});
+
 test('template request rejects unknown templates and malformed composition blocks', () => {
   assert.ok(validateTemplateRequest(shot({ template: 'unknown' }), registry()).some(x => x.includes('unknown composition template')));
   assert.ok(validateTemplateRequest(shot([]), registry()).some(x => x.includes('composition must be an object')));
