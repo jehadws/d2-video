@@ -1,4 +1,4 @@
-import { resolveComposition } from '../geometry/index.js';
+import { resolveComposition, getEntityGeometry } from '../geometry/index.js';
 import { ease } from '../core.js';
 import { createTemplateRegistry, validateTemplateRequest } from './index.js';
 import { BUILTIN_TEMPLATE_DEFINITIONS } from './builtins.js';
@@ -54,14 +54,17 @@ export function applyCompositionTemplate(spec, time = 0, registry = DEFAULT_COMP
   out.framing = request.overrides?.framing ?? out.framing ?? defaults.framing;
 
   const camera = { ...(defaults.camera || {}), ...(out.camera || {}), ...(request.overrides?.camera || {}) };
-  const tracking = defaults.tracking;
-  if (tracking) {
-    const focusId = request.intent?.focus || roleIds(request, tracking.role)[0];
-    const focus = out.entities.find(entity => entity.id === focusId);
-    if (focus) {
-      const p = entityPosition(focus, time);
-      camera.x = p.x;
-      camera.y = p.y;
+  const follow = defaults.tracking || defaults.focus;
+  if (follow) {
+    const focusId = request.intent?.focus || roleIds(request, follow.role)[0];
+    const focusEntity = out.entities.find(entity => entity.id === focusId);
+    if (focusEntity) {
+      const p = follow.anchor
+        ? (getEntityGeometry(focusEntity).anchors[follow.anchor] || entityPosition(focusEntity, time))
+        : entityPosition(focusEntity, time);
+      // Explicit camera coordinates always win over template focus defaults.
+      if (out.camera?.x == null) camera.x = p.x;
+      if (out.camera?.y == null) camera.y = p.y;
     }
   }
   out.camera = camera;
