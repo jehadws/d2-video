@@ -14,6 +14,20 @@ function collectFiles(dir, extension, out = []) {
   return out;
 }
 
+function collectRegisteredShotIds(files) {
+  const ids = new Set();
+  // Scene modules are often named descriptively (e.g. 07_closeup.js), so
+  // filename matching alone cannot establish whether they implement a shot.
+  // Read the explicit registerShot() declaration instead.
+  const registration = /\bregisterShot\s*\(\s*(['"])([^'"]+)\1/g;
+  for (const file of files) {
+    let source;
+    try { source = fs.readFileSync(file, 'utf8'); }
+    catch { continue; }
+    for (const match of source.matchAll(registration)) ids.add(match[2]);
+  }
+  return ids;
+}
 
 function collectAnimationTracks(spec) {
   const tracks = [];
@@ -101,6 +115,7 @@ export function runStaticChecks(projectDir) {
   const scriptFiles = collectFiles(path.join(projectDir, 'scenes'), '.js');
   const visualIds = new Set(visualFiles.map(file => path.basename(file, '.json')));
   const scriptIds = new Set(scriptFiles.map(file => path.basename(file, '.js')));
+  const registeredShotIds = collectRegisteredShotIds(scriptFiles);
 
   for (const shot of story.shots) {
     if (!shot || typeof shot.id !== 'string' || !shot.id) {
@@ -116,14 +131,14 @@ export function runStaticChecks(projectDir) {
       try { validateShotTiming(shot, JSON.parse(fs.readFileSync(visualPath, 'utf8')), findings); }
       catch { /* The JSON parser diagnostic is emitted by lintProject. */ }
     }
-    if (!visualIds.has(shot.id) && !scriptIds.has(shot.id)) {
+    if (!visualIds.has(shot.id) && !scriptIds.has(shot.id) && !registeredShotIds.has(shot.id)) {
       findings.push(createFinding({
         sceneId: shot.id,
         severity: 'error',
         category: 'project',
         code: 'scene-implementation-missing',
-        message: 'Story shot "' + shot.id + '" has no matching visual JSON or scene JavaScript module.',
-        suggestion: 'Add scenes/visual/' + shot.id + '.json or a scene module named ' + shot.id + '.js.',
+        message: 'Story shot "' + shot.id + '" has no matching visual JSON or registered JavaScript scene.',
+        suggestion: 'Add scenes/visual/' + shot.id + '.json or register the shot ID with registerShot() in a scene module.',
         detector: 'static.project',
       }));
     }
