@@ -88,7 +88,24 @@ async function renderVideo() {
   const list = path.join(partsDir, 'list.txt'); fs.writeFileSync(list, parts.map(p => `file '${p.replace(/\\/g, '/').replace(/'/g, "'\\''")}'`).join('\n'));
   const out = path.resolve(args.out || path.join(BUILD, args.from || args.to ? 'preview.mp4' : 'video_silent.mp4'));
   await new Promise((res, rej) => spawn('ffmpeg', ['-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', '-movflags', '+faststart', out], { stdio: 'inherit' }).on('close', c => (c ? rej(new Error('concat failed')) : res())));
-  console.log(`\nDone: ${out}  (${fmtT((Date.now() - t0) / 1000)})`);
+  const elapsedSeconds = Number(((Date.now() - t0) / 1000).toFixed(3));
+  const performance = {
+    schemaVersion: 1,
+    output: path.relative(PROJECT, out).split(path.sep).join('/'),
+    renderedFrames: f1 - f0,
+    renderedSeconds: Number(((f1 - f0) / fps).toFixed(3)),
+    elapsedSeconds,
+    averageFramesPerSecond: Number(((f1 - f0) / Math.max(0.001, elapsedSeconds)).toFixed(2)),
+    workers: W,
+    fps,
+    resolution: CFG.resolution || null,
+    format: 'mp4',
+    preview: !!(args.from || args.to),
+  };
+  const performancePath = path.join(BUILD, args.from || args.to ? 'performance-preview.json' : 'performance.json');
+  fs.writeFileSync(performancePath, JSON.stringify(performance, null, 2));
+  console.log('Done: ' + out + ' (' + fmtT(elapsedSeconds) + ')');
+  console.log(`Performance report: ${performancePath}  (${performance.averageFramesPerSecond} fps average)`);
 }
 // grid of labelled images, laid out by the browser (works on every OS)
 async function contactSheet(browser, items, outFile, cols = 4, cellW = 480) {
