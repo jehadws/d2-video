@@ -71,10 +71,11 @@ test('DSL v2 shots participate in consecutive framing lint', t => {
     { id: 's001', start: 0, end: 2 },
     { id: 's002', start: 2, end: 4 },
     { id: 's003', start: 4, end: 6 },
+    { id: 's004', start: 6, end: 8 },
   ]);
   const visualDir = path.join(root, 'scenes', 'visual');
   fs.mkdirSync(visualDir, { recursive: true });
-  for (const id of ['s001', 's002', 's003']) {
+  for (const id of ['s001', 's002', 's003', 's004']) {
     fs.writeFileSync(path.join(visualDir, id + '.json'), JSON.stringify({
       version: 2, id, framing: 'wide',
       entities: [{ id: 'hero', type: 'hero', pose: 'stand', transform: { position: { x: 0, y: 0 } } }],
@@ -82,5 +83,5 @@ test('DSL v2 shots participate in consecutive framing lint', t => {
     }));
   }
   const result = lintProject(root);
-  assert.ok(result.findings.some(item => item.code === 'framing-repeat' && item.shot === 's003'));
+  assert.ok(result.findings.some(item => item.code === 'framing-repeat' && item.shot === 's004'));
 });
