@@ -33,6 +33,7 @@ export function formatReport(report) {
     if (finding.suggestion) lines.push('  Suggested fix: ' + finding.suggestion);
     if (finding.evidence) lines.push('  Evidence: ' + finding.evidence);
   }
+  if (report.artifacts?.contactSheets?.length) lines.push('', 'Contact sheets:', ...report.artifacts.contactSheets.map(file => '  ' + file));
   return lines.join('\n');
 }
 
