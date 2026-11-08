@@ -77,6 +77,43 @@ function validateShotTiming(shot, spec, findings) {
   }
 }
 
+
+function validateProjectTimeline(story, findings) {
+  const shots = story.shots;
+  const eps = 1 / 1000;
+  if (!shots.length) {
+    findings.push(createFinding({ severity: 'error', category: 'timeline', code: 'timeline-empty', message: 'The story timeline contains no shots.', detector: 'static.timeline' }));
+    return;
+  }
+  let previous = null;
+  const ids = new Set();
+  for (let i = 0; i < shots.length; i++) {
+    const shot = shots[i];
+    if (!shot || typeof shot.id !== 'string' || !shot.id) continue;
+    if (ids.has(shot.id)) findings.push(createFinding({ sceneId: shot.id, severity: 'error', category: 'timeline', code: 'shot-id-duplicate', message: 'Shot IDs must be unique.', detector: 'static.timeline' }));
+    ids.add(shot.id);
+    if (!Number.isFinite(shot.start) || !Number.isFinite(shot.end) || shot.end <= shot.start) continue;
+    if (i === 0 && Math.abs(shot.start) > eps) {
+      findings.push(createFinding({ sceneId: shot.id, severity: 'error', category: 'timeline', code: 'timeline-start-not-zero', message: 'The first shot must start at 0 seconds; found ' + shot.start + 's.', detector: 'static.timeline' }));
+    }
+    if (previous) {
+      const delta = shot.start - previous.end;
+      if (delta > eps) findings.push(createFinding({ sceneId: shot.id, severity: 'error', category: 'timeline', code: 'timeline-gap', message: 'Timeline gap of ' + delta.toFixed(3) + 's between ' + previous.id + ' and ' + shot.id + '.', suggestion: 'Make adjacent shot boundaries contiguous or represent intentional black/silence as an explicit shot.', detector: 'static.timeline' }));
+      else if (delta < -eps) findings.push(createFinding({ sceneId: shot.id, severity: 'error', category: 'timeline', code: 'timeline-overlap', message: 'Timeline overlap of ' + (-delta).toFixed(3) + 's between ' + previous.id + ' and ' + shot.id + '.', suggestion: 'Use the incoming transition duration for visual overlap, not overlapping story time ranges.', detector: 'static.timeline' }));
+    }
+    const transition = shot.in;
+    if (transition && transition.dur != null) {
+      if (!Number.isFinite(transition.dur) || transition.dur < 0 || transition.dur > shot.end - shot.start + eps) {
+        findings.push(createFinding({ sceneId: shot.id, severity: 'error', category: 'timeline', code: 'transition-duration-invalid', message: 'Incoming transition duration must be finite, non-negative, and no longer than its shot.', detector: 'static.timeline' }));
+      }
+    }
+    previous = shot;
+  }
+  if (previous && Number.isFinite(story.duration) && Math.abs(previous.end - story.duration) > eps) {
+    findings.push(createFinding({ sceneId: previous.id, severity: 'error', category: 'timeline', code: 'timeline-duration-mismatch', message: 'story.duration (' + story.duration + 's) does not match the final shot end (' + previous.end + 's).', suggestion: 'Set story.duration to the final shot end or correct the final shot boundary.', detector: 'static.timeline' }));
+  }
+}
+
 export function runStaticChecks(projectDir) {
   const findings = [];
   const storyPath = path.join(projectDir, 'story', 'shots.json');
@@ -110,6 +147,8 @@ export function runStaticChecks(projectDir) {
     }));
     return findings;
   }
+
+  validateProjectTimeline(story, findings);
 
   const visualFiles = collectFiles(path.join(projectDir, 'scenes', 'visual'), '.json');
   const scriptFiles = collectFiles(path.join(projectDir, 'scenes'), '.js');

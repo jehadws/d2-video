@@ -58,7 +58,7 @@ const fmtT = s => `${Math.floor(s / 60)}m${String(Math.round(s % 60)).padStart(2
 async function renderVideo() {
   const b0 = await chromium.launch(LAUNCH); const p0 = await openPlayer(b0);
   const total = await p0.evaluate('window.TOTAL_FRAMES'), fps = FPS;
-  const missing = (await p0.evaluate('window.SHOT_LIST')).filter(s => !s.ok); if (missing.length) console.log(`WARNING: ${missing.length} shots have no scene file yet: ${missing.slice(0, 12).map(s => s.id).join(', ')}${missing.length > 12 ? ' …' : ''}`);
+  const missing = (await p0.evaluate('window.SHOT_LIST')).filter(s => !s.ok); if (missing.length) { await b0.close(); throw new Error(`Render blocked: ${missing.length} story shot(s) have no registered implementation: ${missing.slice(0, 20).map(s => s.id).join(', ')}`); }
   await b0.close();
   const f0 = Math.max(0, Math.round((+args.from || 0) * fps)), f1 = Math.min(total, args.to ? Math.round(+args.to * fps) : total);
   const W = Math.max(1, Math.min(+(args.workers || Math.max(1, Math.min(8, Math.floor(os.cpus().length / 2)))), Math.ceil((f1 - f0) / 24)));
@@ -75,13 +75,17 @@ async function renderVideo() {
       if (done % 48 === 0) { const el = (Date.now() - t0) / 1000, eta = (el / done) * (f1 - f0 - done); process.stdout.write(`  ${done}/${f1 - f0} frames  ${(done / el).toFixed(2)} fps  elapsed ${fmtT(el)}  eta ${fmtT(eta)}\n`); }
     }
     (await page.evaluate('window.ERRORS')).forEach(e => errs.add(e));
-    ff.stdin.end(); await new Promise(r => ff.on('close', r)); await browser.close(); return out;
+    (page.qaPageErrors || []).forEach(e => errs.add('pageerror: ' + e));
+    ff.stdin.end();
+    const ffCode = await new Promise((res, rej) => { ff.once('error', rej); ff.once('close', res); });
+    await browser.close();
+    if (ffCode !== 0) throw new Error(`ffmpeg worker ${k} exited with code ${ffCode}`);
+    return out;
   };
   const parts = (await Promise.all([...Array(W)].map((_, k) => work(k)))).filter(Boolean);
   const list = path.join(partsDir, 'list.txt'); fs.writeFileSync(list, parts.map(p => `file '${p.replace(/\\/g, '/').replace(/'/g, "'\\''")}'`).join('\n'));
   const out = path.resolve(args.out || path.join(BUILD, args.from || args.to ? 'preview.mp4' : 'video_silent.mp4'));
   await new Promise((res, rej) => spawn('ffmpeg', ['-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', '-movflags', '+faststart', out], { stdio: 'inherit' }).on('close', c => (c ? rej(new Error('concat failed')) : res())));
-  if (errs.size) { console.log(`\n${errs.size} shot error(s):`); [...errs].slice(0, 40).forEach(e => console.log('  ' + e)); }
   console.log(`\nDone: ${out}  (${fmtT((Date.now() - t0) / 1000)})`);
 }
 // grid of labelled images, laid out by the browser (works on every OS)
