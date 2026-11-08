@@ -105,6 +105,117 @@ async function renderStills() {
   else { const per = 24; for (let i = 0; i < all.length; i += per) await contactSheet(browser, all.slice(i, i + per), path.join(dir, `sheet_${String(i / per + 1).padStart(2, '0')}.png`), 4, 440); }
   await browser.close(); console.log(`Wrote ${all.length} stills + contact sheet(s) to ${dir}`);
 }
-try { if (args.sheet || args.stills || args.styles) await renderStills(); else await renderVideo(); }
+
+async function renderQaFrames() {
+  const browser = await chromium.launch(LAUNCH);
+  const dir = path.join(BUILD, 'qa', 'frames');
+  fs.rmSync(dir, { recursive: true, force: true });
+  fs.mkdirSync(dir, { recursive: true });
+  const page = await openPlayer(browser, args.style || null);
+  const shots = await page.evaluate('window.SHOT_LIST');
+  const totalFrames = await page.evaluate('window.TOTAL_FRAMES');
+  const fps = FPS;
+  const findings = [];
+  const frames = [];
+  const seenErrors = new Set();
+  const ratios = [0.2, 0.5, 0.8];
+
+  for (const scene of shots) {
+    if (!scene.ok) {
+      findings.push({
+        sceneId: scene.id, severity: 'error', category: 'rendering',
+        code: 'rendered-shot-missing',
+        message: 'The player has no registered implementation for this story shot.',
+        detector: 'rendered.scene-registry',
+      });
+      continue;
+    }
+    const duration = Math.max(0, scene.end - scene.start);
+    for (const ratio of ratios) {
+      if (duration <= 0) continue;
+      const localTime = Math.min(duration - 1 / fps, Math.max(0, duration * ratio));
+      const globalTime = scene.start + localTime;
+      const frameIndex = Math.max(0, Math.min(totalFrames - 1, Math.round(globalTime * fps)));
+      const image = await shot(page, frameIndex);
+      const metrics = await page.evaluate(() => {
+        const source = document.getElementById('main');
+        const sample = document.createElement('canvas');
+        sample.width = 64; sample.height = 36;
+        const ctx = sample.getContext('2d', { willReadFrequently: true });
+        ctx.drawImage(source, 0, 0, sample.width, sample.height);
+        const pixels = ctx.getImageData(0, 0, sample.width, sample.height).data;
+        let sum = 0, sum2 = 0, dark = 0;
+        const colors = new Set();
+        const count = pixels.length / 4;
+        for (let i = 0; i < pixels.length; i += 4) {
+          const y = pixels[i] * 0.2126 + pixels[i + 1] * 0.7152 + pixels[i + 2] * 0.0722;
+          sum += y; sum2 += y * y;
+          if (y < 8) dark++;
+          colors.add((pixels[i] >> 4) + ':' + (pixels[i + 1] >> 4) + ':' + (pixels[i + 2] >> 4));
+        }
+        const mean = sum / count;
+        return {
+          meanLuminance: Number(mean.toFixed(2)),
+          luminanceStdDev: Number(Math.sqrt(Math.max(0, sum2 / count - mean * mean)).toFixed(2)),
+          darkPixelRatio: Number((dark / count).toFixed(4)),
+          colorBuckets: colors.size,
+        };
+      });
+      const filename = scene.id + '_' + localTime.toFixed(2).replace('.', 'p') + 's.png';
+      const framePath = path.join(dir, filename);
+      fs.writeFileSync(framePath, image);
+      const evidence = path.relative(PROJECT, framePath).replace(/\\/g, '/');
+      frames.push({ sceneId: scene.id, localTime: Number(localTime.toFixed(4)), globalTime: Number(globalTime.toFixed(4)), frame: frameIndex, evidence, metrics });
+
+      if (metrics.meanLuminance < 3 && metrics.luminanceStdDev < 1.2) {
+        findings.push({
+          sceneId: scene.id, timestamp: { local: Number(localTime.toFixed(4)), global: Number(globalTime.toFixed(4)), frame: frameIndex },
+          severity: 'warning', category: 'rendering', code: 'rendered-frame-near-blank',
+          message: 'The sampled rendered frame is almost uniformly black; verify that this is intentional.',
+          suggestion: 'Inspect the evidence frame and check scene drawing, opacity, camera position, and transitions.',
+          evidence, detector: 'rendered.pixel-sample', confidence: 0.92,
+        });
+      }
+
+      const errors = await page.evaluate('window.ERRORS');
+      for (const error of errors) {
+        if (seenErrors.has(error)) continue;
+        seenErrors.add(error);
+        const match = String(error).match(/^([\\w-]+)@([0-9.]+):/);
+        findings.push({
+          sceneId: match?.[1] || scene.id,
+          timestamp: match ? { local: Number(match[2]), global: Number((scene.start + Number(match[2])).toFixed(4)), frame: frameIndex } : undefined,
+          severity: 'error', category: 'rendering', code: 'scene-render-exception',
+          message: String(error),
+          suggestion: 'Fix the scene exception reported by the player and render the affected shot again.',
+          evidence, detector: 'rendered.player-errors',
+        });
+      }
+    }
+  }
+
+  const all = frames.map(frame => ({ img: fs.readFileSync(path.join(PROJECT, frame.evidence)), label: frame.sceneId + ' @ ' + frame.localTime.toFixed(2) + 's' }));
+  const contactSheets = [];
+  for (let i = 0; i < all.length; i += 24) {
+    const name = 'contact-sheet-' + String(Math.floor(i / 24) + 1).padStart(2, '0') + '.png';
+    await contactSheet(browser, all.slice(i, i + 24), path.join(dir, name), 4, 440);
+    contactSheets.push(path.relative(PROJECT, path.join(dir, name)).replace(/\\/g, '/'));
+  }
+  await page.close();
+  await browser.close();
+
+  const result = {
+    schemaVersion: 1,
+    checkedFrames: frames.length,
+    findings,
+    frames,
+    artifacts: { contactSheets },
+  };
+  fs.writeFileSync(path.join(BUILD, 'qa', 'rendered.json'), JSON.stringify(result, null, 2) + '\\n');
+  console.log('Rendered QA: ' + frames.length + ' frames sampled; ' + findings.length + ' finding(s).');
+  console.log('Rendered QA report: ' + path.join(BUILD, 'qa', 'rendered.json'));
+}
+
+try { if (args.qaRendered) await renderQaFrames(); else if (args.sheet || args.stills || args.styles) await renderStills(); else await renderVideo(); }
 catch (e) { console.error('RENDER FAILED:', e.message); process.exitCode = 1; }
 finally { server.close(); }
