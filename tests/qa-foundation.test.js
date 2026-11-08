@@ -189,6 +189,40 @@ test('static QA enforces zero start and story duration matching the final shot',
   assert.ok(report.findings.some(item => item.code === 'timeline-duration-mismatch'));
 });
 
+test('production QA accepts a complete six-minute narration package', t => {
+  const shots = Array.from({ length: 90 }, (_, i) => ({
+    id: 's' + String(i + 1).padStart(3, '0'),
+    start: i * 4,
+    end: (i + 1) * 4,
+    scene: 'A concrete visual beat for shot ' + (i + 1),
+  }));
+  const root = project(t, shots);
+  fs.writeFileSync(path.join(root, 'config.json'), JSON.stringify({
+    aspect: '16:9', fps: 24, duration: 360, voiceover: 'input/voiceover.wav',
+  }));
+  fs.writeFileSync(path.join(root, 'story', 'shots.json'), JSON.stringify({ duration: 360, shots }));
+  fs.mkdirSync(path.join(root, 'input'), { recursive: true });
+  fs.writeFileSync(path.join(root, 'input', 'voiceover.wav'), 'fixture');
+  fs.mkdirSync(path.join(root, 'timeline'), { recursive: true });
+  fs.writeFileSync(path.join(root, 'timeline', 'words.json'), JSON.stringify({
+    words: [{ word: 'Narration', start: 0.1, end: 0.5 }],
+  }));
+  const { report } = runQA(root, { checks: ['production'], write: false });
+  assert.equal(report.status, 'passed');
+});
+
+test('production QA rejects projects shorter than five minutes', t => {
+  const root = project(t, [{ id: 's001', start: 0, end: 33, scene: 'Short fixture' }]);
+  fs.writeFileSync(path.join(root, 'config.json'), JSON.stringify({
+    aspect: '16:9', fps: 24, duration: 33, voiceover: 'input/voiceover.wav',
+  }));
+  fs.writeFileSync(path.join(root, 'story', 'shots.json'), JSON.stringify({
+    duration: 33, shots: [{ id: 's001', start: 0, end: 33, scene: 'Short fixture' }],
+  }));
+  const { report } = runQA(root, { checks: ['production'], write: false });
+  assert.ok(report.findings.some(item => item.code === 'production-duration-out-of-range'));
+});
+
 test('static QA rejects transcript words that extend beyond the voiceover', t => {
   const root = project(t, [{ id: 's001', start: 0, end: 10 }]);
   fs.writeFileSync(path.join(root, 'config.json'), JSON.stringify({ aspect: '16:9', fps: 24, duration: 10 }));
