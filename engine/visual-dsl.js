@@ -45,7 +45,15 @@ export function validateVisualShot(spec) {
     }
     if ((layer.type === 'hero' || layer.type === 'figure') && layer.pose && !POSES[layer.pose]) errors.push(p + '.pose is not a known pose');
     if ((layer.type === 'hero' || layer.type === 'figure') && layer.contact != null &&
-        !(layer.contact === true || (isObject(layer.contact) && ['F', 'B'].includes(layer.contact.hand || 'F')))) errors.push(p + '.contact must be true or { hand: "F"|"B" }');
+        !(layer.contact === true || (isObject(layer.contact) && ['F', 'B'].includes(layer.contact.hand || 'F')))) errors.push(p + '.contact must be true or an object with hand "F"|"B"');
+    if ((layer.type === 'hero' || layer.type === 'figure') && isObject(layer.contact)) {
+      const hasFrom = layer.contact.from != null, hasTo = layer.contact.to != null;
+      if (hasFrom !== hasTo) errors.push(p + '.contact.from and .contact.to must be provided together');
+      if (hasFrom && (!number(layer.contact.from) || !number(layer.contact.to) || layer.contact.from < 0 || layer.contact.to <= layer.contact.from)) errors.push(p + '.contact window must have 0 <= from < to');
+      if (layer.contact.tolerance != null && (!number(layer.contact.tolerance) || layer.contact.tolerance <= 0)) errors.push(p + '.contact.tolerance must be a positive number');
+      if (layer.contact.target != null && (!Number.isInteger(layer.contact.target) || layer.contact.target < 0 || layer.contact.target >= spec.layers.length || spec.layers[layer.contact.target]?.role !== 'story_object')) errors.push(p + '.contact.target must be the layer index of a story_object');
+      if (layer.contact.target != null && !hasFrom) errors.push(p + '.contact.target requires a from/to contact window');
+    }
     if ((layer.type === 'hero' || layer.type === 'figure') && layer.prop != null) {
       const propType = typeof layer.prop === 'string' ? layer.prop : layer.prop && layer.prop.type;
       if (!['phone', 'ball', 'cup', 'paper', 'paddle', 'pointer', 'tablet', 'flashlight'].includes(propType)) errors.push(p + '.prop must be a supported prop name or { type } object');
