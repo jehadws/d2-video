@@ -189,6 +189,32 @@ test('static QA enforces zero start and story duration matching the final shot',
   assert.ok(report.findings.some(item => item.code === 'timeline-duration-mismatch'));
 });
 
+test('static QA rejects transcript words that extend beyond the voiceover', t => {
+  const root = project(t, [{ id: 's001', start: 0, end: 10 }]);
+  fs.writeFileSync(path.join(root, 'config.json'), JSON.stringify({ aspect: '16:9', fps: 24, duration: 10 }));
+  const timelineDir = path.join(root, 'timeline');
+  fs.mkdirSync(timelineDir, { recursive: true });
+  fs.writeFileSync(path.join(timelineDir, 'words.json'), JSON.stringify({
+    source: 'test',
+    words: [{ word: 'hello', start: 0.2, end: 0.6 }, { word: 'world', start: 11.8, end: 12.2 }],
+  }));
+  const { report } = runQA(root, { checks: ['static'], write: false });
+  assert.ok(report.findings.some(item => item.code === 'transcript-exceeds-voiceover'));
+});
+
+test('static QA rejects unsorted transcript word timestamps', t => {
+  const root = project(t, [{ id: 's001', start: 0, end: 10 }]);
+  fs.writeFileSync(path.join(root, 'config.json'), JSON.stringify({ aspect: '16:9', fps: 24, duration: 10 }));
+  const timelineDir = path.join(root, 'timeline');
+  fs.mkdirSync(timelineDir, { recursive: true });
+  fs.writeFileSync(path.join(timelineDir, 'words.json'), JSON.stringify({
+    source: 'test',
+    words: [{ word: 'later', start: 2, end: 2.4 }, { word: 'earlier', start: 1, end: 1.4 }],
+  }));
+  const { report } = runQA(root, { checks: ['static'], write: false });
+  assert.ok(report.findings.some(item => item.code === 'transcript-word-order-invalid'));
+});
+
 test('static QA accepts a contiguous timeline with a matching declared duration', t => {
   const root = project(t, [
     { id: 's001', start: 0, end: 2 },
