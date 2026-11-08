@@ -125,7 +125,7 @@ export function lintVisualShot(spec, opts = {}) {
   for (const l of chars) {
     const hand = HAND_ANCHORS[l.pose];
     if (!hand) continue;
-    if (!objs.length) { add('warn', 'reach-no-target', 'hero uses hand pose "' + l.pose + '" but the shot has no story_object to reach for.'); continue; }
+    if (!objs.length) { if (l.prop) continue; add('warn', 'reach-no-target', 'hero uses hand pose "' + l.pose + '" but the shot has no story_object or attached prop to reach for.'); continue; }
     let best = Infinity;
     for (const t of ts) {
       const s = layerVal(l, 'scale', t, 1), facing = l.facing === -1 ? -1 : 1;
