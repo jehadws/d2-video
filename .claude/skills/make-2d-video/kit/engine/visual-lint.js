@@ -3,8 +3,9 @@
 // validateVisualShot() in visual-dsl.js still owns validity.
 //
 // Optional metadata a DSL shot may carry (the renderer ignores both):
-//   spec.framing  : one of FRAMING keys below ("wide", "medium", "two_shot", "interaction", "insert", "reveal")
+//   spec.framing  : one of FRAMING keys below ("wide", "medium", "close_up", "two_shot", "interaction", "insert", "reveal", "reaction")
 //   layer.role    : "story_object" on the prop/ball/phone that carries the story beat
+//   layer.contact: { hand: "F", from, to, target?, tolerance? } declares a shot-local contact interval
 //
 // Measured on the real rig (1080p logical frame): one hero scale unit is ~242 px tall, i.e. 22.4% of frame
 // height, for stand / reach / phone poses. On-screen height = HERO_H * layer.scale * camera.zoom.
@@ -18,25 +19,45 @@ export const BARS = { none: 0, wide: 60, scope: 138, thin: 30 }; // 16:9 letterb
 export const FRAMING = {
   wide:        { min: 0.42, max: 0.65, note: 'establishing wide: character still readable, environment still visible' },
   medium:      { min: 0.60, max: 0.85, note: 'medium single: character is the subject' },
+  close_up:    { min: 0.78, max: 1.00, note: 'close-up: facial expression dominates the frame' },
   two_shot:    { min: 0.50, max: 0.75, note: 'two-shot: every character must be large enough to read' },
   interaction: { min: 0.60, max: 0.85, note: 'character-object interaction: actor, object and contact all visible' },
   insert:      { min: 0,    max: 0.65, note: 'insert/macro: the object is the subject; characters optional' },
   reveal:      { min: 0.30, max: 1.00, note: 'dramatic reveal: framing follows the reveal' },
+  reaction:    { min: 0.72, max: 1.00, note: 'reaction: character response is the visual focus' },
 };
 export const UNSET_FRAMING_MIN = 0.40; // universal floor when a shot does not declare framing
 export const STORY_OBJECT_MIN = 0.10;  // longest dimension of a story object, as a fraction of frame height
-export const REACH_RANGE = 0.8;        // a reaching hero needs a story object within this many hero-heights
+export const REACH_RANGE = 0.22;       // hand anchor must be within 0.22 hero-heights of the target centre
+export const HAND_ANCHORS = Object.freeze({
+  phone: [28, -166], holdFront: [36, -152], reach: [62, -204],
+  reachBall: [62, -180], reachDown: [78, -116],
+});
 export const MAX_SAME_FRAMING_RUN = 3; // more consecutive shots with the same framing than this -> warn
 
 const isChar = (l) => l && (l.type === 'hero' || l.type === 'figure');
 const num = (v, d) => (typeof v === 'number' && Number.isFinite(v) ? v : d);
 
+const lintEase = {
+  linear: (x) => clamp01(x),
+  in: (x) => clamp01(x) ** 3,
+  out: (x) => 1 - (1 - clamp01(x)) ** 3,
+  inOut: (x) => { x = clamp01(x); return x < 0.5 ? 4 * x ** 3 : 1 - (-2 * x + 2) ** 3 / 2; },
+  sine: (x) => -(Math.cos(Math.PI * clamp01(x)) - 1) / 2,
+  outBack: (x) => { x = clamp01(x); const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * (x - 1) ** 3 + c1 * (x - 1) ** 2; },
+  outElastic: (x) => { x = clamp01(x); return x === 0 || x === 1 ? x : 2 ** (-10 * x) * Math.sin((x * 10 - 0.75) * (2 * Math.PI) / 3) + 1; },
+};
+function clamp01(x) { return Math.max(0, Math.min(1, x)); }
 function sampleLinear(track, t, fallback) {
   if (!Array.isArray(track) || !track.length) return fallback;
   if (t <= track[0].at) return track[0].value;
   for (let i = 1; i < track.length; i++) {
     const a = track[i - 1], b = track[i];
-    if (t <= b.at) return a.value + (b.value - a.value) * ((t - a.at) / Math.max(1e-6, b.at - a.at));
+    if (t <= b.at) {
+      const raw = (t - a.at) / Math.max(1e-6, b.at - a.at);
+      const eased = (lintEase[b.ease || 'inOut'] || lintEase.inOut)(raw);
+      return a.value + (b.value - a.value) * eased;
+    }
   }
   return track[track.length - 1].value;
 }
@@ -50,7 +71,7 @@ function shotDuration(spec, opts) {
   for (const l of spec.layers || []) if (l && l.animate) tracks.push(...Object.values(l.animate));
   return Math.max(1, trackEnd(tracks));
 }
-function times(d) { const out = []; for (let t = 0; t <= d + 1e-9; t += Math.min(0.25, d / 4)) out.push(+t.toFixed(3)); if (out[out.length - 1] < d) out.push(d); return out; }
+function times(d) { const out = []; for (let t = 0; t <= d + 1e-9; t += Math.min(0.1, d / 10)) out.push(+t.toFixed(3)); if (out[out.length - 1] < d) out.push(d); return out; }
 
 /** Camera at time t -> world->screen mapping used by the DSL renderer (zoom about frame centre). */
 function camAt(spec, t, W, H) {
@@ -117,25 +138,137 @@ export function lintVisualShot(spec, opts = {}) {
     let zMin = Infinity; for (const t of ts) zMin = Math.min(zMin, camAt(spec, t, W, H).z);
     if (dim * zMin < STORY_OBJECT_MIN * H) add('error', 'story-object-small', 'story object (' + o.type + ' at ' + num(o.x, 0) + ',' + num(o.y, 0) + ') is ' + Math.round(dim * zMin) + 'px at its smallest; it needs at least ' + Math.round(STORY_OBJECT_MIN * H) + 'px (' + STORY_OBJECT_MIN * 100 + '% of frame height) to read as an important object.');
   }
-  if (framing === 'interaction' && !objs.length) add('warn', 'interaction-no-object', 'interaction framing but no layer has "role": "story_object"; tag the ball/phone/cup that the action is about.');
+  const hasAttachedProp = chars.some((l) => !!l.prop);
+  if (framing === 'interaction' && !objs.length && !hasAttachedProp) add('warn', 'interaction-no-object', 'interaction framing but no story_object layer or hand-attached prop is declared.');
   for (const l of chars) {
-    if (l.pose !== 'reach') continue;
-    if (!objs.length) { add('warn', 'reach-no-target', 'a hero uses pose "reach" but the shot has no story_object to reach for.'); continue; }
-    let best = Infinity;
-    for (const t of ts) {
-      const s = layerVal(l, 'scale', t, 1), hx = layerVal(l, 'x', t, 0), hy = layerVal(l, 'y', t, 0) - 0.65 * heroH * s;
-      for (const o of objs) {
-        const ox = layerVal(o, 'x', t, 0) + (o.type === 'rect' ? num(o.w, 0) / 2 : 0), oy = layerVal(o, 'y', t, 0) + (o.type === 'rect' ? num(o.h, 0) / 2 : 0);
-        best = Math.min(best, Math.hypot(ox - hx, oy - hy) / (heroH * s));
-      }
+    const hand = HAND_ANCHORS[l.pose];
+    if (!hand) continue;
+    const contact = l.contact && typeof l.contact === 'object' ? l.contact : null;
+    const hasWindow = contact && Number.isFinite(contact.from) && Number.isFinite(contact.to);
+    const window = hasWindow ? { from: contact.from, to: contact.to } : null;
+    const sampleTimes = window
+      ? [...new Set([...ts, window.from, window.to].filter((t) => t >= window.from && t <= window.to))].sort((a, b) => a - b)
+      : ts;
+
+    if (!objs.length) {
+      if (l.prop) continue;
+      add('warn', 'reach-no-target', 'hero uses hand pose "' + l.pose + '" but the shot has no story_object or attached prop to reach for.');
+      continue;
     }
-    if (best > REACH_RANGE) add('warn', 'reach-too-far', 'hero reaches but the nearest story object is ' + best.toFixed(1) + ' hero-heights away (limit ' + REACH_RANGE + '); the hand must visibly meet the object.');
+
+    const targets = window && Number.isInteger(contact.target)
+      ? [spec.layers[contact.target]]
+      : objs;
+    if (window && (!targets.length || !targets[0] || targets[0].role !== 'story_object')) continue;
+
+    const targetKeyTimes = targets.flatMap((o) => Object.values(o.animate || {}).flatMap((track) => Array.isArray(track) ? track.map((kf) => kf.at) : []));
+    const actorKeyTimes = Object.values(l.animate || {}).flatMap((track) => Array.isArray(track) ? track.map((kf) => kf.at) : []);
+    const contactSamples = window
+      ? [...new Set([...sampleTimes, ...targetKeyTimes, ...actorKeyTimes, window.from, window.to].filter((t) => t >= window.from && t <= window.to))].sort((a, b) => a - b)
+      : sampleTimes;
+    let worst = 0, worstAt = window ? window.from : 0;
+    for (const t of contactSamples) {
+      const s = layerVal(l, 'scale', t, 1), facing = l.facing === -1 ? -1 : 1;
+      const hx = layerVal(l, 'x', t, 0) + hand[0] * s * facing;
+      const hy = layerVal(l, 'y', t, 0) + hand[1] * s;
+      let nearest = Infinity;
+      for (const o of targets) {
+        const ox = layerVal(o, 'x', t, 0) + (o.type === 'rect' ? num(o.w, 0) / 2 : 0);
+        const oy = layerVal(o, 'y', t, 0) + (o.type === 'rect' ? num(o.h, 0) / 2 : 0);
+        nearest = Math.min(nearest, Math.hypot(ox - hx, oy - hy) / (heroH * s));
+      }
+      if (nearest > worst) { worst = nearest; worstAt = t; }
+    }
+
+    if (window) {
+      const tolerance = num(contact.tolerance, REACH_RANGE);
+      if (contact.hand === 'B') {
+        add('error', 'contact-hand-unsupported', 'time-window contact lint currently requires hand "F"; use the near-hand anchor or add a registered far-hand anchor.');
+      } else if (worst > tolerance) {
+        add('error', 'contact-breaks-during-window', 'hand-to-target distance reaches ' + worst.toFixed(2) + ' hero-heights at ' + worstAt.toFixed(2) + 's inside the contact window (limit ' + tolerance + '); keep the target within contact for the entire window.');
+      }
+    } else {
+      add('error', 'contact-window-missing', 'hand-to-object interaction has no declared contact window; add contact.from/contact.to for the full interval in which the hand must stay on the target.');
+    }
+  }
+
+  // ---- attached prop contact -------------------------------------------------------------------------------
+  // A declared contact window is checked at every sampled time. Static props are checked for the full shot;
+  for (const l of chars) {
+    if (!l.prop) continue;
+    const hand = HAND_ANCHORS[l.pose];
+    if (!hand) {
+      add('error', 'prop-no-hand-anchor', 'character has an attached prop but pose "' + l.pose + '" has no registered hand anchor; use a supported contact pose.');
+      continue;
+    }
+    const p = typeof l.prop === 'string' ? { type: l.prop } : l.prop;
+    const contact = l.contact && typeof l.contact === 'object' ? l.contact : null;
+    const hasWindow = contact && Number.isFinite(contact.from) && Number.isFinite(contact.to);
+    const window = hasWindow ? { from: contact.from, to: contact.to } : null;
+    const offsetTracks = [p.animate && p.animate.offsetX, p.animate && p.animate.offsetY].filter(Array.isArray);
+    const hasOffsetMotion = offsetTracks.some((track) => track.length > 1 && track.some((kf) => kf.value !== track[0].value));
+    if (hasOffsetMotion && !window) {
+      add('error', 'prop-contact-window-missing', 'attached ' + (p.type || 'prop') + ' has animated hand offsets but no declared contact window; specify contact.from/contact.to for the interval when it must remain gripped.');
+    }
+    const propKeyTimes = offsetTracks.flatMap((track) => track.map((kf) => kf.at));
+    const sampleTimes = window
+      ? [...new Set([...ts, ...propKeyTimes, window.from, window.to].filter((t) => t >= window.from && t <= window.to))].sort((a, b) => a - b)
+      : [...new Set([...ts, ...propKeyTimes].filter((t) => t >= 0 && t <= dur))].sort((a, b) => a - b);
+    if (window && window.to > dur + 1e-6) add('error', 'contact-window-out-of-range', 'contact window ends at ' + window.to.toFixed(2) + 's, after the shot duration ' + dur.toFixed(2) + 's.');
+    let worst = 0, worstAt = sampleTimes[0] || dur;
+    for (const t of sampleTimes) {
+      const offsetX = sampleLinear(p.animate && p.animate.offsetX, t, num(p.offsetX, 0));
+      const offsetY = sampleLinear(p.animate && p.animate.offsetY, t, num(p.offsetY, 0));
+      const scale = Math.max(0.01, layerVal(l, 'scale', t, 1));
+      const distance = Math.hypot(offsetX, offsetY) / (heroH * scale);
+      if (distance > worst) { worst = distance; worstAt = t; }
+    }
+    const tolerance = num(contact && contact.tolerance, REACH_RANGE);
+    if (worst > tolerance) {
+      add('error', window ? 'prop-breaks-during-contact-window' : 'prop-detached-during-shot',
+        'attached ' + (p.type || 'prop') + ' reaches ' + worst.toFixed(2) +
+        ' hero-heights from its hand anchor at ' + worstAt.toFixed(2) + 's' + (window ? ' inside the contact window' : ' during the shot') +
+        ' (limit ' + tolerance + '); bring its offset back to the hand.');
+    }
   }
 
   // ---- camera -----------------------------------------------------------------------------------------------
   const c = spec.camera || {};
   const moves = ['x', 'y', 'zoom'].some((a) => Array.isArray(c[a]) && c[a].length > 1 && c[a].some((kf) => kf.value !== c[a][0].value));
   if (!moves) add('warn', 'no-camera-motion', 'camera is static; the style bible asks for one motivated camera move per shot.');
+  return out;
+}
+
+
+/**
+ * Check semantic DSL v2 character scale against the same framing vocabulary
+ * used by the v1 linter. Geometry bounds are already transformed by the
+ * canonical composition solver, so this function does not duplicate geometry.
+ */
+export function lintCompositionFraming(spec, compositionResult) {
+  const out = [];
+  if (!spec || !Array.isArray(spec.entities) || !compositionResult?.geometry || !spec.framing) return out;
+  const rule = FRAMING[spec.framing];
+  if (!rule) {
+    out.push({ level: 'warn', code: 'framing-unknown', message: 'unknown framing "' + spec.framing + '"; expected one of ' + Object.keys(FRAMING).join(', ') + '.' });
+    return out;
+  }
+  const view = compositionResult.viewport;
+  const viewHeight = view ? view.bottom - view.top : 100;
+  const geometryById = new Map(compositionResult.geometry.map(item => [item.id, item]));
+  for (const entity of spec.entities.filter(item => item && (item.type === 'hero' || item.type === 'figure'))) {
+    const geometry = geometryById.get(entity.id);
+    if (!geometry) continue;
+    const fraction = geometry.bounds.height / Math.max(1e-6, viewHeight);
+    if (fraction + 1e-6 < rule.min) {
+      out.push({ level: 'error', code: 'character-too-small', entity: entity.id,
+        message: 'character "' + entity.id + '" is ' + Math.round(fraction * 100) + '% of frame height; ' + spec.framing + ' needs at least ' + Math.round(rule.min * 100) + '%.' });
+    }
+    if (fraction > rule.max + 1e-6) {
+      out.push({ level: 'warn', code: 'character-too-large', entity: entity.id,
+        message: 'character "' + entity.id + '" reaches ' + Math.round(fraction * 100) + '% of frame height; ' + spec.framing + ' is meant to stay under ' + Math.round(rule.max * 100) + '%.' });
+    }
+  }
   return out;
 }
 

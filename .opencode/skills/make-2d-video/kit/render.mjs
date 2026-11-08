@@ -4,6 +4,8 @@
 //   node render.mjs --project P --sheet                               one still per shot -> build/sheets/*.png
 //   node render.mjs --project P --stills 3.5,12,40                    stills at times -> build/stills
 //   node render.mjs --project P --styles dusk,midnight,golden,neon --at 3.5,12,40   style comparison grid
+//   node render.mjs --project P --qa-rendered --scale 0.5                 rendered QA samples + evidence
+// Visual DSL lint runs before every render; errors always abort, warnings are non-blocking.
 // Options: --workers N  --scale K  --style ID  --debug  --format png|jpeg  --crf 18  --gl auto|gpu|swiftshader  --out FILE
 import http from 'node:http';
 import fs from 'node:fs';
@@ -12,6 +14,8 @@ import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { runQA } from './qa/index.js';
+import { formatReport } from './qa/report.js';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const args = {}; { const a = process.argv.slice(2); for (let i = 0; i < a.length; i++) { if (a[i].startsWith('--')) { const k = a[i].slice(2); const v = a[i + 1] && !a[i + 1].startsWith('--') ? a[++i] : true; args[k] = v; } } }
@@ -36,11 +40,12 @@ const LAUNCH = { args: ['--ignore-gpu-blocklist', '--enable-unsafe-swiftshader',
 const FORMAT = args.format === 'jpeg' ? 'jpeg' : 'png';
 const CFG = JSON.parse(fs.readFileSync(path.join(PROJECT, 'config.json'), 'utf8'));
 const FPS = CFG.fps || 24;
+{ const preflight = runQA(PROJECT, { checks: ['static', 'geometry'] }); console.log(formatReport(preflight.report)); if (preflight.report.status === 'failed') { console.error('Aborting: production preflight found critical errors. Fix the timeline, assets, scenes, or geometry before rendering.'); process.exit(1); } }
 
 async function openPlayer(browser, style) {
   const qs = new URLSearchParams(); if (args.scale) qs.set('scale', args.scale); if (style || args.style) qs.set('style', style || args.style); if (args.debug) qs.set('debug', '1');
   const page = await browser.newPage({ viewport: { width: 640, height: 360 } });
-  page.on('pageerror', e => console.log('[pageerror]', e.message));
+  const pageErrors = []; page.on('pageerror', e => { pageErrors.push(e.message); console.log('[pageerror]', e.message); }); page.qaPageErrors = pageErrors;
   page.on('console', m => { const t = m.text(); if (/ERROR|missing/i.test(t)) console.log('[page]', t); });
   await page.goto(`http://localhost:${PORT}/player.html?${qs}`);
   await page.waitForFunction('window.READY === true || !!window.BOOT_ERROR', null, { timeout: 120000 });
@@ -54,7 +59,7 @@ const fmtT = s => `${Math.floor(s / 60)}m${String(Math.round(s % 60)).padStart(2
 async function renderVideo() {
   const b0 = await chromium.launch(LAUNCH); const p0 = await openPlayer(b0);
   const total = await p0.evaluate('window.TOTAL_FRAMES'), fps = FPS;
-  const missing = (await p0.evaluate('window.SHOT_LIST')).filter(s => !s.ok); if (missing.length) console.log(`WARNING: ${missing.length} shots have no scene file yet: ${missing.slice(0, 12).map(s => s.id).join(', ')}${missing.length > 12 ? ' …' : ''}`);
+  const missing = (await p0.evaluate('window.SHOT_LIST')).filter(s => !s.ok); if (missing.length) { await b0.close(); throw new Error(`Render blocked: ${missing.length} story shot(s) have no registered implementation: ${missing.slice(0, 20).map(s => s.id).join(', ')}`); }
   await b0.close();
   const f0 = Math.max(0, Math.round((+args.from || 0) * fps)), f1 = Math.min(total, args.to ? Math.round(+args.to * fps) : total);
   const W = Math.max(1, Math.min(+(args.workers || Math.max(1, Math.min(8, Math.floor(os.cpus().length / 2)))), Math.ceil((f1 - f0) / 24)));
@@ -71,13 +76,18 @@ async function renderVideo() {
       if (done % 48 === 0) { const el = (Date.now() - t0) / 1000, eta = (el / done) * (f1 - f0 - done); process.stdout.write(`  ${done}/${f1 - f0} frames  ${(done / el).toFixed(2)} fps  elapsed ${fmtT(el)}  eta ${fmtT(eta)}\n`); }
     }
     (await page.evaluate('window.ERRORS')).forEach(e => errs.add(e));
-    ff.stdin.end(); await new Promise(r => ff.on('close', r)); await browser.close(); return out;
+    (page.qaPageErrors || []).forEach(e => errs.add('pageerror: ' + e));
+    ff.stdin.end();
+    const ffCode = await new Promise((res, rej) => { ff.once('error', rej); ff.once('close', res); });
+    await browser.close();
+    if (ffCode !== 0) throw new Error(`ffmpeg worker ${k} exited with code ${ffCode}`);
+    return out;
   };
   const parts = (await Promise.all([...Array(W)].map((_, k) => work(k)))).filter(Boolean);
+  if (errs.size) throw new Error(`Render blocked: ${errs.size} browser/scene error(s). First errors:\n${[...errs].slice(0, 30).join('\n')}`);
   const list = path.join(partsDir, 'list.txt'); fs.writeFileSync(list, parts.map(p => `file '${p.replace(/\\/g, '/').replace(/'/g, "'\\''")}'`).join('\n'));
   const out = path.resolve(args.out || path.join(BUILD, args.from || args.to ? 'preview.mp4' : 'video_silent.mp4'));
   await new Promise((res, rej) => spawn('ffmpeg', ['-y', '-v', 'error', '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', '-movflags', '+faststart', out], { stdio: 'inherit' }).on('close', c => (c ? rej(new Error('concat failed')) : res())));
-  if (errs.size) { console.log(`\n${errs.size} shot error(s):`); [...errs].slice(0, 40).forEach(e => console.log('  ' + e)); }
   console.log(`\nDone: ${out}  (${fmtT((Date.now() - t0) / 1000)})`);
 }
 // grid of labelled images, laid out by the browser (works on every OS)
@@ -102,6 +112,126 @@ async function renderStills() {
   else { const per = 24; for (let i = 0; i < all.length; i += per) await contactSheet(browser, all.slice(i, i + per), path.join(dir, `sheet_${String(i / per + 1).padStart(2, '0')}.png`), 4, 440); }
   await browser.close(); console.log(`Wrote ${all.length} stills + contact sheet(s) to ${dir}`);
 }
-try { if (args.sheet || args.stills || args.styles) await renderStills(); else await renderVideo(); }
+
+async function renderQaFrames() {
+  const browser = await chromium.launch(LAUNCH);
+  const dir = path.join(BUILD, 'qa', 'frames');
+  fs.rmSync(dir, { recursive: true, force: true });
+  fs.mkdirSync(dir, { recursive: true });
+  const page = await openPlayer(browser, args.style || null);
+  const shots = await page.evaluate('window.SHOT_LIST');
+  const totalFrames = await page.evaluate('window.TOTAL_FRAMES');
+  const fps = FPS;
+  const findings = [];
+  const frames = [];
+  const seenErrors = new Set();
+  const ratios = [0.2, 0.5, 0.8];
+
+  for (const scene of shots) {
+    if (!scene.ok) {
+      findings.push({
+        sceneId: scene.id, severity: 'error', category: 'rendering',
+        code: 'rendered-shot-missing',
+        message: 'The player has no registered implementation for this story shot.',
+        detector: 'rendered.scene-registry',
+      });
+      continue;
+    }
+    const duration = Math.max(0, scene.end - scene.start);
+    for (const ratio of ratios) {
+      if (duration <= 0) continue;
+      const localTime = Math.max(0, Math.min(duration - Math.min(1 / fps, duration / 2), duration * ratio));
+      const globalTime = scene.start + localTime;
+      const frameIndex = Math.max(0, Math.min(totalFrames - 1, Math.round(globalTime * fps)));
+      const image = await shot(page, frameIndex);
+      const metrics = await page.evaluate(() => {
+        const source = document.getElementById('main');
+        const sample = document.createElement('canvas');
+        sample.width = 64; sample.height = 36;
+        const ctx = sample.getContext('2d', { willReadFrequently: true });
+        ctx.drawImage(source, 0, 0, sample.width, sample.height);
+        const pixels = ctx.getImageData(0, 0, sample.width, sample.height).data;
+        let sum = 0, sum2 = 0, dark = 0;
+        const colors = new Set();
+        const count = pixels.length / 4;
+        for (let i = 0; i < pixels.length; i += 4) {
+          const y = pixels[i] * 0.2126 + pixels[i + 1] * 0.7152 + pixels[i + 2] * 0.0722;
+          sum += y; sum2 += y * y;
+          if (y < 8) dark++;
+          colors.add((pixels[i] >> 4) + ':' + (pixels[i + 1] >> 4) + ':' + (pixels[i + 2] >> 4));
+        }
+        const mean = sum / count;
+        return {
+          meanLuminance: Number(mean.toFixed(2)),
+          luminanceStdDev: Number(Math.sqrt(Math.max(0, sum2 / count - mean * mean)).toFixed(2)),
+          darkPixelRatio: Number((dark / count).toFixed(4)),
+          colorBuckets: colors.size,
+        };
+      });
+      const filename = scene.id + '_' + localTime.toFixed(2).replace('.', 'p') + 's.png';
+      const framePath = path.join(dir, filename);
+      fs.writeFileSync(framePath, image);
+      const evidence = path.relative(PROJECT, framePath).replace(/\\/g, '/');
+      frames.push({ sceneId: scene.id, localTime: Number(localTime.toFixed(4)), globalTime: Number(globalTime.toFixed(4)), frame: frameIndex, evidence, metrics });
+
+      if (metrics.meanLuminance < 3 && metrics.luminanceStdDev < 1.2) {
+        findings.push({
+          sceneId: scene.id, timestamp: { local: Number(localTime.toFixed(4)), global: Number(globalTime.toFixed(4)), frame: frameIndex },
+          severity: 'warning', category: 'rendering', code: 'rendered-frame-near-blank',
+          message: 'The sampled rendered frame is almost uniformly black; verify that this is intentional.',
+          suggestion: 'Inspect the evidence frame and check scene drawing, opacity, camera position, and transitions.',
+          evidence, detector: 'rendered.pixel-sample', confidence: 0.92,
+        });
+      }
+
+      const errors = await page.evaluate('window.ERRORS');
+      for (const error of errors) {
+        if (seenErrors.has(error)) continue;
+        seenErrors.add(error);
+        const match = String(error).match(/^([\\w-]+)@([0-9.]+):/);
+        findings.push({
+          sceneId: match?.[1] || null,
+          timestamp: match ? { local: Number(match[2]), global: Number((scene.start + Number(match[2])).toFixed(4)), frame: frameIndex } : undefined,
+          severity: 'error', category: 'rendering', code: 'scene-render-exception',
+          message: String(error),
+          suggestion: 'Fix the scene exception reported by the player and render the affected shot again.',
+          evidence, detector: 'rendered.player-errors',
+        });
+      }
+    }
+  }
+
+  for (const error of page.qaPageErrors || []) {
+    findings.push({
+      severity: 'error', category: 'rendering', code: 'player-page-exception',
+      message: String(error),
+      suggestion: 'Inspect the browser page exception and fix the player or scene module that triggered it.',
+      detector: 'rendered.page-errors',
+    });
+  }
+
+  const all = frames.map(frame => ({ img: fs.readFileSync(path.join(PROJECT, frame.evidence)), label: frame.sceneId + ' @ ' + frame.localTime.toFixed(2) + 's' }));
+  const contactSheets = [];
+  for (let i = 0; i < all.length; i += 24) {
+    const name = 'contact-sheet-' + String(Math.floor(i / 24) + 1).padStart(2, '0') + '.png';
+    await contactSheet(browser, all.slice(i, i + 24), path.join(dir, name), 4, 440);
+    contactSheets.push(path.relative(PROJECT, path.join(dir, name)).replace(/\\/g, '/'));
+  }
+  await page.close();
+  await browser.close();
+
+  const result = {
+    schemaVersion: 1,
+    checkedFrames: frames.length,
+    findings,
+    frames,
+    artifacts: { contactSheets },
+  };
+  fs.writeFileSync(path.join(BUILD, 'qa', 'rendered.json'), JSON.stringify(result, null, 2) + '\n');
+  console.log('Rendered QA: ' + frames.length + ' frames sampled; ' + findings.length + ' finding(s).');
+  console.log('Rendered QA report: ' + path.join(BUILD, 'qa', 'rendered.json'));
+}
+
+try { if (args['qa-rendered']) await renderQaFrames(); else if (args.sheet || args.stills || args.styles) await renderStills(); else await renderVideo(); }
 catch (e) { console.error('RENDER FAILED:', e.message); process.exitCode = 1; }
 finally { server.close(); }

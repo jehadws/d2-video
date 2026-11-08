@@ -1,11 +1,16 @@
 // lint-visual.mjs: framing lint for Structured Visual DSL shots.
 //   node lint-visual.mjs projects/my-video            print findings, exit 1 if any error
 //   node lint-visual.mjs projects/my-video --warn     print findings, always exit 0
-// render.mjs calls lintProject() before every render (warn-only unless --strict-lint is passed).
+// render.mjs calls lintProject() before every render and aborts on errors; warnings are non-blocking.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { lintVisualShot, lintVisualSequence, BARS } from './engine/visual-lint.js';
+import { lintVisualShot, lintVisualSequence, lintCompositionFraming, BARS } from './engine/visual-lint.js';
+import { validateVisualShot } from './engine/visual-dsl.js';
+import { lintComposition } from './engine/geometry/index.js';
+import { DEFAULT_COMPOSITION_TEMPLATES, resolveCompositionTemplate } from './engine/composition-templates/resolve.js';
+import { validateTemplateRequest } from './engine/composition-templates/index.js';
+import { ASSET_REGISTRY, createAssetRegistry, registerAssets, validateAssetReferences, resolveAssetReferences } from './engine/assets/index.js';
 
 const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 const dimsFor = (aspect) => (aspect === '9:16' ? { W: 1080, H: 1920, vertical: true } : { W: 1920, H: 1080, vertical: false });
@@ -28,6 +33,12 @@ export function lintProject(projectDir) {
   const order = new Map(story.shots.map((s, i) => [s.id, i]));
   const files = fs.readdirSync(dir).filter((f) => f.endsWith('.json') && !f.startsWith('_')).sort();
   const shots = [];
+  const assetRegistry = createAssetRegistry(ASSET_REGISTRY.list());
+  const assetManifestPath = path.join(projectDir, 'assets.json');
+  if (fs.existsSync(assetManifestPath)) {
+    try { registerAssets(readJson(assetManifestPath), assetRegistry); }
+    catch (error) { findings.push({ shot: 'assets.json', level: 'error', code: 'asset-manifest-invalid', message: error.message }); }
+  }
   for (const f of files) {
     let spec;
     try { spec = readJson(path.join(dir, f)); } catch (e) { findings.push({ shot: f, level: 'error', code: 'json-parse', message: e.message }); continue; }
@@ -35,8 +46,39 @@ export function lintProject(projectDir) {
     const meta = story.shots.find((s) => s.id === id);
     const bars = barPx(meta && meta.bars !== undefined && meta.bars !== null ? meta.bars : cfg.bars, vertical);
     const duration = meta ? meta.end - meta.start : undefined;
-    for (const x of lintVisualShot(spec, { W, H, bars, duration })) findings.push({ shot: id, ...x });
-    shots.push({ id, spec });
+    if (spec.version === 2) {
+      const assetErrors = validateAssetReferences(spec, assetRegistry);
+      for (const message of assetErrors) findings.push({ shot: id, level: 'error', code: 'asset-reference-invalid', message });
+      let expanded = spec;
+      if (!assetErrors.length) {
+        try { expanded = resolveAssetReferences(spec, assetRegistry); }
+        catch (error) { findings.push({ shot: id, level: 'error', code: 'asset-reference-invalid', message: error.message }); }
+      }
+      const templateErrors = validateTemplateRequest(expanded, DEFAULT_COMPOSITION_TEMPLATES);
+      for (const message of templateErrors) findings.push({ shot: id, level: 'error', code: 'composition-template-invalid', message });
+      if (!assetErrors.length && !templateErrors.length && expanded.composition) {
+        try { expanded = resolveCompositionTemplate(expanded, 0, { width: W, height: H }, DEFAULT_COMPOSITION_TEMPLATES).spec; }
+        catch (error) { findings.push({ shot: id, level: 'error', code: 'composition-template-invalid', message: error.message }); }
+      }
+      // Include semantic DSL v2 shots in sequence-level framing analysis too.
+      shots.push({ id, spec: expanded });
+      const result = lintComposition(expanded, {
+        frame: { width: W, height: H },
+        // A configured caption-safe area is meaningful only when captions are enabled.
+        // Preserve the existing default-wide behavior for projects that omit "captions".
+        captionSafe: cfg.captions !== false && bars > 0,
+        captionHeight: (bars / H) * 100,
+      });
+      for (const x of result.diagnostics) findings.push({
+        shot: id, level: x.level, code: x.code, message: x.message,
+      });
+      for (const x of lintCompositionFraming(expanded, result)) findings.push({ shot: id, ...x });
+    } else {
+      const dslErrors = validateVisualShot(spec);
+      for (const message of dslErrors) findings.push({ shot: id, level: 'error', code: 'visual-dsl-invalid', message });
+      if (!dslErrors.length) for (const x of lintVisualShot(spec, { W, H, bars, duration })) findings.push({ shot: id, ...x });
+      shots.push({ id, spec });
+    }
   }
   shots.sort((a, b) => (order.get(a.id) ?? 1e9) - (order.get(b.id) ?? 1e9));
   findings.push(...lintVisualSequence(shots));
