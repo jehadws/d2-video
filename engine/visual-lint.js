@@ -3,7 +3,7 @@
 // validateVisualShot() in visual-dsl.js still owns validity.
 //
 // Optional metadata a DSL shot may carry (the renderer ignores both):
-//   spec.framing  : one of FRAMING keys below ("wide", "medium", "two_shot", "interaction", "insert", "reveal")
+//   spec.framing  : one of FRAMING keys below ("wide", "medium", "close_up", "two_shot", "interaction", "insert", "reveal", "reaction")
 //   layer.role    : "story_object" on the prop/ball/phone that carries the story beat
 //   layer.contact: { hand: "F", from, to, target?, tolerance? } declares a shot-local contact interval
 //
