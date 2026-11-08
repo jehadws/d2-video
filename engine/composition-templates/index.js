@@ -121,7 +121,7 @@ function validateRoleBindings(composition, entities, definition, errors) {
     else if (!Object.hasOwn(definition.roles, name)) errors.push('template "' + definition.id + '" does not support role "' + name + '"');
   }
 
-  const entityById = new Map(entities.map(entity => [entity.id, entity]));
+  const entityById = new Map(entities.filter(entity => entity && typeof entity === 'object' && typeof entity.id === 'string').map(entity => [entity.id, entity]));
   const assigned = new Map();
 
   for (const [name, roleDefinition] of Object.entries(definition.roles)) {
