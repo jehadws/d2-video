@@ -1,9 +1,6 @@
 {
   "version": 2,
   "id": "s011",
-  "background": {
-    "color": "#303846"
-  },
   "camera": {
     "zoom": 1
   },
@@ -19,24 +16,22 @@
           "y": 38
         },
         "scale": 2.6
-      }
+      },
+      "assetId": "character.hero"
     },
     {
       "id": "heroB",
       "type": "figure",
       "pose": "stand",
       "facing": -1,
-      "outfit": {
-        "top": "hoodie",
-        "color": "#3A6C83"
-      },
       "transform": {
         "position": {
           "x": 24,
           "y": 38
         },
         "scale": 2.6
-      }
+      },
+      "assetId": "character.companion"
     }
   ],
   "relationships": [
@@ -64,5 +59,7 @@
         "heroB"
       ]
     }
-  }
+  },
+  "environment": "environment.street",
+  "lighting": "lighting.dusk"
 }

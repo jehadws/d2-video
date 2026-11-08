@@ -114,3 +114,54 @@ Run template contract and resolution tests:
 ```bash
 node --test tests/composition-templates.test.js tests/composition-template-resolution.test.js
 ```
+
+
+## Visual asset library (Phase 4)
+
+DSL v2 can reference shared assets by stable, versioned IDs instead of repeating character, prop, material, environment, and lighting definitions. The built-in registry lives in `engine/assets/` and is intentionally small: it provides registration, lookup, schema checks, reference validation, and deterministic resolution.
+
+Example:
+
+```json
+{
+  "version": 2,
+  "id": "s012",
+  "environment": "environment.office",
+  "lighting": "lighting.cool-interior",
+  "entities": [
+    { "id": "hero", "assetId": "character.hero", "pose": "stand" },
+    { "id": "cup", "assetId": "prop.cup", "material": "material.ceramic" }
+  ],
+  "relationships": []
+}
+```
+
+Supported built-in asset families:
+
+- Characters: `character.hero`, `character.companion`. The protagonist delegates to the existing rig and fixed off-white identity palette; the companion reuses the same rig with a reusable outfit definition.
+- Props: `prop.cup`, `prop.ball`, `prop.phone`, `prop.table`. Asset geometry supplies default semantic dimensions and anchors through the existing geometry engine.
+- Materials: ceramic, rubber, glass, wood, fabric, concrete, metal, and emissive presets. Scene-level `style` and `geometry` values override asset defaults.
+- Environments: bedroom, office, and street. Environments are composed from normalized screen-space primitives and drawn before semantic entities.
+- Lighting: soft daylight, warm/cool interiors, golden hour, dusk, night, and neutral studio. The selected lighting tint is applied subtly to the environment; character identity colors remain owned by the character rig and the existing style grade remains global.
+
+A custom asset can be added by creating a definition with `schemaVersion: 1`, a namespaced ID, kind, version, and the kind-specific fields, then registering it through `createAssetRegistry()`. Do not duplicate a built-in ID. Increment an asset's `version` when its public geometry or visual contract changes; shots may pin `assetVersion` to detect stale references.
+
+Asset references are resolved before template expansion and geometry validation. The renderer and project linter share the same registry and resolver. Missing IDs, wrong asset kinds, conflicting entity types, and stale pinned versions are lint errors. Existing DSL v1 shots and DSL v2 shots without asset references remain unchanged.
+
+
+### Phase 4 verification commands
+
+Run the asset registry and asset-lint tests together with the earlier composition regressions:
+
+```bash
+node --test tests/assets-registry.test.js tests/assets-lint.test.js tests/composition-templates.test.js tests/composition-template-resolution.test.js tests/geometry-composition.test.js tests/visual-contact-lint.test.js tests/visual-lint-project.test.js
+node lint-visual.mjs projects/composition-lab
+```
+
+Compare the same semantic-template shots under multiple existing global styles:
+
+```bash
+node render.mjs --project projects/composition-lab --styles dusk,cinematic,storybook --at 25.35,28.35,31.35 --scale 0.5
+```
+
+Inspect the generated style grid and the regular contact sheets at full size. The asset tests prove registry and reference behavior; they do not replace visual review of the rendered frames.

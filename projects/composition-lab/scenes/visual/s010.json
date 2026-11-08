@@ -1,9 +1,6 @@
 {
   "version": 2,
   "id": "s010",
-  "background": {
-    "color": "#252B37"
-  },
   "camera": {
     "zoom": 1
   },
@@ -22,17 +19,11 @@
           "z": -1
         }
       },
-      "style": {
-        "fill": "#8B6D59"
-      }
+      "assetId": "prop.table"
     },
     {
       "id": "cup",
       "type": "cup",
-      "geometry": {
-        "width": 8,
-        "height": 11
-      },
       "transform": {
         "position": {
           "x": 8,
@@ -40,10 +31,7 @@
           "z": 1
         }
       },
-      "style": {
-        "fill": "#D9D0C5",
-        "handle": "#D9D0C5"
-      }
+      "assetId": "prop.cup"
     }
   ],
   "relationships": [
@@ -71,5 +59,7 @@
         "cup"
       ]
     }
-  }
+  },
+  "environment": "environment.office",
+  "lighting": "lighting.cool-interior"
 }

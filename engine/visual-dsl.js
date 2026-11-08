@@ -5,6 +5,8 @@ import { drawFigure, POSES } from './rig2d.js';
 import { validateComposition, resolveComposition } from './geometry/index.js';
 import { DEFAULT_COMPOSITION_TEMPLATES, resolveCompositionTemplate } from './composition-templates/resolve.js';
 import { validateTemplateRequest } from './composition-templates/index.js';
+import { validateAssetReferences, resolveAssetReferences } from './assets/index.js';
+import { drawEnvironment } from './assets/render.js';
 
 const TYPES = new Set(['hero', 'figure', 'rect', 'circle', 'cup', 'line', 'text']);
 const ACTOR_TRACKS = new Set(['x', 'y', 'scale', 'rotation', 'alpha']);
@@ -113,17 +115,23 @@ function drawLayer(g, item, t) {
     if (item.type === 'hero') drawHero(g, options); else drawFigure(g, options);
   } else if (item.type === 'rect') {
     if (item.originCenter) { g.translate(x, y); if (rotation) g.rotate(rotation); }
-    g.fillStyle = item.fill;
     const rx = item.originCenter ? -item.w / 2 : x, ry = item.originCenter ? -item.h / 2 : y;
+    if (item.shadow) { g.save(); g.globalAlpha *= 0.14; g.fillStyle = item.shadow; g.fillRect(rx + item.w * 0.04, ry + item.h * 0.08, item.w * 0.92, Math.max(2, item.h * 0.10)); g.restore(); }
+    g.fillStyle = item.fill;
+    if (item.emission > 0) { g.shadowColor = item.fill; g.shadowBlur = Math.min(10, item.emission * 8); }
     if (item.radius > 0) { rr(g, rx, ry, item.w, item.h, item.radius); g.fill(); } else g.fillRect(rx, ry, item.w, item.h);
+    g.shadowBlur = 0;
+    if (item.highlight) { g.save(); g.globalAlpha *= item.highlightAlpha ?? 0.24; g.fillStyle = item.highlight; g.fillRect(rx + item.w * 0.06, ry + 1, item.w * 0.88, Math.max(1, item.h * 0.035)); g.restore(); }
   } else if (item.type === 'circle') {
-    if (item.originCenter) { g.translate(x, y); if (rotation) g.rotate(rotation); circle(g, 0, 0, item.radius, item.fill); }
-    else circle(g, x, y, item.radius, item.fill);
+    if (item.originCenter) { g.translate(x, y); if (rotation) g.rotate(rotation); if (item.shadow) { g.save(); g.globalAlpha *= 0.16; g.fillStyle = item.shadow; g.beginPath(); g.ellipse(0, item.radius * 0.72, item.radius * 0.82, item.radius * 0.2, 0, 0, Math.PI * 2); g.fill(); g.restore(); } if (item.emission > 0) { g.shadowColor = item.fill; g.shadowBlur = Math.min(10, item.emission * 8); } circle(g, 0, 0, item.radius, item.fill); g.shadowBlur = 0; if (item.highlight) { g.save(); g.globalAlpha *= item.highlightAlpha ?? 0.28; circle(g, -item.radius * 0.28, -item.radius * 0.32, item.radius * 0.22, item.highlight); g.restore(); } }
+    else { if (item.shadow) { g.save(); g.globalAlpha *= 0.16; g.fillStyle = item.shadow; g.beginPath(); g.ellipse(x, y + item.radius * 0.72, item.radius * 0.82, item.radius * 0.2, 0, 0, Math.PI * 2); g.fill(); g.restore(); } if (item.emission > 0) { g.shadowColor = item.fill; g.shadowBlur = Math.min(10, item.emission * 8); } circle(g, x, y, item.radius, item.fill); g.shadowBlur = 0; if (item.highlight) { g.save(); g.globalAlpha *= item.highlightAlpha ?? 0.28; circle(g, x - item.radius * 0.28, y - item.radius * 0.32, item.radius * 0.22, item.highlight); g.restore(); } }
   } else if (item.type === 'cup') {
     if (item.originCenter) { g.translate(x, y); if (rotation) g.rotate(rotation); }
     const cx = item.originCenter ? 0 : x, cy = item.originCenter ? 0 : y;
     const w = item.w, h = item.h, top = cy - h / 2, bottom = cy + h / 2;
     g.save();
+    if (item.shadow) { g.save(); g.globalAlpha *= 0.16; g.fillStyle = item.shadow; g.beginPath(); g.ellipse(cx, bottom + h * 0.04, w * 0.42, Math.max(2, h * 0.07), 0, 0, Math.PI * 2); g.fill(); g.restore(); }
+    if (item.emission > 0) { g.shadowColor = item.fill; g.shadowBlur = Math.min(10, item.emission * 8); }
     g.fillStyle = item.fill;
     g.beginPath();
     g.moveTo(cx - w * 0.48, top + h * 0.12);
@@ -132,6 +140,7 @@ function drawLayer(g, item, t) {
     g.quadraticCurveTo(cx, bottom + h * 0.035, cx - w * 0.34, bottom);
     g.closePath();
     g.fill();
+    g.shadowBlur = 0;
     g.strokeStyle = item.handle || item.fill;
     g.lineWidth = Math.max(4, w * 0.11);
     g.beginPath();
@@ -158,33 +167,37 @@ function compositionLayer(entity, frame) {
   const scale = entity.transform?.scale ?? 1;
   const renderScale = (entity.type === 'hero' || entity.type === 'figure') ? scale * frame.height / 1080 : scale;
   const base = { x, y, rotation: entity.transform?.rotation || 0, scale: renderScale, alpha: entity.opacity ?? 1 };
-  const style = entity.style || {}, geometry = entity.geometry || {};
+  const style = entity.style || {}, geometry = entity.geometry || {}, material = entity.materialDef || {};
+  const highlightAlpha = material.roughness == null ? 0.24 : 0.08 + (1 - material.roughness) * 0.35;
   if (entity.type === 'hero' || entity.type === 'figure') {
     return { ...base, type: entity.type, pose: entity.pose || 'stand', facing: entity.facing,
       expression: entity.expression, look: entity.look, rim: entity.rim, outfit: entity.outfit };
   }
-  if (entity.type === 'circle') return { ...base, type: 'circle', originCenter: true, radius: geometry.radius * ppu * scale, fill: style.fill || '#D6A85F' };
+  if (entity.type === 'circle') return { ...base, type: 'circle', originCenter: true, radius: geometry.radius * ppu * scale, fill: style.fill || material.baseColor || '#D6A85F', highlight: style.highlight || material.highlightColor, highlightAlpha, shadow: style.shadow || material.shadowColor, emission: material.emission || 0 };
   if (entity.type === 'cup') return { ...base, type: 'cup', originCenter: true, w: geometry.width * ppu * scale, h: geometry.height * ppu * scale,
-    fill: style.fill || '#C7D5DC', handle: style.handle, rim: style.rim };
+    fill: style.fill || material.baseColor || '#C7D5DC', handle: style.handle || material.baseColor, rim: style.rim || material.highlightColor, highlight: style.highlight || material.highlightColor, highlightAlpha, shadow: style.shadow || material.shadowColor, emission: material.emission || 0 };
   if (entity.type === 'rect' || entity.type === 'surface') {
     const w = geometry.width * ppu * scale, h = geometry.height * ppu * scale;
     return { ...base, type: 'rect', originCenter: true, w, h,
-      fill: style.fill || (entity.type === 'surface' ? '#76604E' : '#9AA0A6'), radius: (geometry.radius || 0) * ppu * scale };
+      fill: style.fill || material.baseColor || (entity.type === 'surface' ? '#76604E' : '#9AA0A6'), radius: (geometry.radius || 0) * ppu * scale, highlight: style.highlight || material.highlightColor, highlightAlpha, shadow: style.shadow || material.shadowColor, emission: material.emission || 0 };
   }
   return null;
 }
 
 export function registerComposedShot(spec) {
-  const templateErrors = validateTemplateRequest(spec, DEFAULT_COMPOSITION_TEMPLATES);
-  const errors = [...templateErrors, ...validateComposition(spec)];
+  const assetErrors = validateAssetReferences(spec);
+  const resolvedAssets = assetErrors.length ? spec : resolveAssetReferences(spec);
+  const templateErrors = validateTemplateRequest(resolvedAssets, DEFAULT_COMPOSITION_TEMPLATES);
+  const errors = [...assetErrors, ...templateErrors, ...validateComposition(resolvedAssets)];
   if (errors.length) throw new Error('Visual DSL v2 ' + (spec && spec.id || '<unknown>') + ': ' + errors.join('; '));
   registerShot(spec.id, {
     kind: '2d',
     draw(g, t) {
-      const { spec: expanded, resolved } = resolveCompositionTemplate(spec, t, { width: E.W, height: E.H }, DEFAULT_COMPOSITION_TEMPLATES);
+      const { spec: expanded, resolved } = resolveCompositionTemplate(resolvedAssets, t, { width: E.W, height: E.H }, DEFAULT_COMPOSITION_TEMPLATES);
       const failures = resolved.diagnostics.filter(x => x.level === 'error');
       if (failures.length) throw new Error('Composition ' + spec.id + ': ' + failures.map(x => x.message).join('; '));
       g.save();
+      if (expanded.environmentDef) drawEnvironment(g, expanded.environmentDef, expanded.lightingDef, { width: E.W, height: E.H });
       const camera = expanded.camera || {};
       const cx = sample(camera.x, t, 0) * E.H / 100;
       const cy = sample(camera.y, t, 0) * E.H / 100;
