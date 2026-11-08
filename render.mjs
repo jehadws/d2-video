@@ -91,7 +91,7 @@ async function renderVideo() {
   const elapsedSeconds = Number(((Date.now() - t0) / 1000).toFixed(3));
   const performance = {
     schemaVersion: 1,
-    output: path.relative(PROJECT, out).replace(/\\\\/g, '/'),
+    output: path.relative(PROJECT, out).split(path.sep).join('/'),
     renderedFrames: f1 - f0,
     renderedSeconds: Number(((f1 - f0) / fps).toFixed(3)),
     elapsedSeconds,
