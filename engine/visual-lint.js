@@ -186,7 +186,7 @@ export function lintVisualShot(spec, opts = {}) {
   }
 
   // ---- attached prop contact -------------------------------------------------------------------------------
-  // A declared contact window is checked at every sampled time; without one, preserve the final-landing check.
+  // A declared contact window is checked at every sampled time. Static props are checked for the full shot;
   for (const l of chars) {
     if (!l.prop) continue;
     const hand = HAND_ANCHORS[l.pose];
