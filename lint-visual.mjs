@@ -7,6 +7,8 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { lintVisualShot, lintVisualSequence, BARS } from './engine/visual-lint.js';
 import { lintComposition } from './engine/geometry/index.js';
+import { DEFAULT_COMPOSITION_TEMPLATES, applyCompositionTemplate } from './engine/composition-templates/resolve.js';
+import { validateTemplateRequest } from './engine/composition-templates/index.js';
 
 const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 const dimsFor = (aspect) => (aspect === '9:16' ? { W: 1080, H: 1920, vertical: true } : { W: 1920, H: 1080, vertical: false });
@@ -37,7 +39,14 @@ export function lintProject(projectDir) {
     const bars = barPx(meta && meta.bars !== undefined && meta.bars !== null ? meta.bars : cfg.bars, vertical);
     const duration = meta ? meta.end - meta.start : undefined;
     if (spec.version === 2) {
-      const result = lintComposition(spec, {
+      const templateErrors = validateTemplateRequest(spec, DEFAULT_COMPOSITION_TEMPLATES);
+      for (const message of templateErrors) findings.push({ shot: id, level: 'error', code: 'composition-template-invalid', message });
+      let expanded = spec;
+      if (!templateErrors.length && spec.composition) {
+        try { expanded = applyCompositionTemplate(spec, 0, DEFAULT_COMPOSITION_TEMPLATES); }
+        catch (error) { findings.push({ shot: id, level: 'error', code: 'composition-template-invalid', message: error.message }); }
+      }
+      const result = lintComposition(expanded, {
         frame: { width: W, height: H },
         // A configured caption-safe area is meaningful only when captions are enabled.
         // Preserve the existing default-wide behavior for projects that omit "captions".
