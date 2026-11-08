@@ -216,6 +216,6 @@ async function renderQaFrames() {
   console.log('Rendered QA report: ' + path.join(BUILD, 'qa', 'rendered.json'));
 }
 
-try { if (args.qaRendered) await renderQaFrames(); else if (args.sheet || args.stills || args.styles) await renderStills(); else await renderVideo(); }
+try { if (args['qa-rendered']) await renderQaFrames(); else if (args.sheet || args.stills || args.styles) await renderStills(); else await renderVideo(); }
 catch (e) { console.error('RENDER FAILED:', e.message); process.exitCode = 1; }
 finally { server.close(); }
