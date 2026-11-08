@@ -21,6 +21,7 @@ export const POSES = {
   holdFront:  P({ head: [5, -207], sh: [1, -173], hip: [0, -100], eF: [22, -140], hF: [36, -152], eB: [16, -142], hB: [30, -154], kF: [6, -50], fF: [3, 0], kB: [-6, -50], fB: [-11, 0] }),
   phone:      P({ head: [6, -204], sh: [1, -172], hip: [0, -100], eF: [20, -138], hF: [28, -166], eB: [-7, -136], hB: [-9, -100], kF: [6, -50], fF: [3, 0], kB: [-6, -50], fB: [-11, 0] }),
   reach:      P({ head: [8, -206], sh: [4, -172], hip: [0, -100], eF: [34, -186], hF: [62, -204], eB: [-6, -136], hB: [-10, -102], kF: [10, -50], fF: [12, 0], kB: [-6, -50], fB: [-18, 0] }),
+  reachDown:  P({ head: [8, -206], sh: [4, -172], hip: [0, -100], eF: [38, -142], hF: [78, -116], eB: [-6, -136], hB: [-10, -102], kF: [10, -50], fF: [12, 0], kB: [-6, -50], fB: [-18, 0] }),
   sad:        P({ head: [12, -192], sh: [6, -166], hip: [0, -100], eF: [10, -132], hF: [12, -98], eB: [-2, -132], hB: [-2, -98], kF: [6, -50], fF: [3, 0], kB: [-6, -50], fB: [-11, 0] }),
   facepalm:   P({ head: [8, -200], sh: [2, -170], hip: [0, -100], eF: [28, -160], hF: [26, -200], eB: [-7, -136], hB: [-9, -100], kF: [6, -50], fF: [3, 0], kB: [-6, -50], fB: [-11, 0] }),
   ready:      P({ head: [12, -182], sh: [6, -148], hip: [0, -80], eF: [34, -132], hF: [56, -146], eB: [-26, -132], hB: [-46, -146], kF: [26, -44], fF: [22, 0], kB: [-24, -44], fB: [-24, 0] }),
@@ -253,16 +254,44 @@ export function soccerBall(g, x, y, r, rot = 0, light = '#f2efe8') {
   g.fillStyle = 'rgba(0,0,0,.18)'; g.beginPath(); g.arc(r * 0.15, r * 0.15, r, 0, Math.PI * 2); g.arc(0, 0, r, 0, Math.PI * 2, true); g.fill(); g.restore();
 }
 function drawProp(g, prop, p, ink) {
-  const t = typeof prop === 'string' ? { type: prop } : prop; const h = t.hand === 'B' ? p.hB : p.hF;
+  const t = typeof prop === 'string' ? { type: prop } : prop;
+  const h = t.hand === 'B' ? p.hB : p.hF;
+  const px = h[0] + (Number.isFinite(t.offsetX) ? t.offsetX : 0);
+  const py = h[1] + (Number.isFinite(t.offsetY) ? t.offsetY : 0);
   switch (t.type) {
-    case 'phone': rr(g, h[0] - 2, h[1] - 22, 14, 24, 3); g.fillStyle = ink; g.fill(); g.fillStyle = t.glow || '#9fd8ff'; g.fillRect(h[0], h[1] - 20, 10, 18); break;
-    case 'ball': soccerBall(g, h[0] + 10, h[1] - 6, 14, t.rot || 0); break;
-    case 'paper': g.fillStyle = '#f2e6c8'; g.fillRect(h[0] - 4, h[1] - 30, 30, 36); g.strokeStyle = '#b8a888'; g.lineWidth = 1.5; for (let i = 0; i < 4; i++) { g.beginPath(); g.moveTo(h[0], h[1] - 22 + i * 7); g.lineTo(h[0] + 20, h[1] - 22 + i * 7); g.stroke(); } break;
-    case 'cup': g.fillStyle = '#f2efe8'; g.fillRect(h[0] - 2, h[1] - 18, 14, 18); seg(g, [[h[0] + 12, h[1] - 14], [h[0] + 17, h[1] - 9], [h[0] + 12, h[1] - 4]], 2.5, '#f2efe8'); break;
-    case 'paddle': circle(g, h[0] + 12, h[1] - 6, 11, t.color || '#b2382a'); break;
-    case 'pointer': seg(g, [h, [h[0] + 70, h[1] - 50]], 2.5, '#d8d0c0'); break;
-    case 'tablet': rr(g, h[0] - 6, h[1] - 34, 40, 30, 4); g.fillStyle = ink; g.fill(); g.fillStyle = t.glow || '#7fd0d6'; g.fillRect(h[0] - 2, h[1] - 30, 32, 22); break;
-    case 'flashlight': seg(g, [h, [h[0] + 14, h[1] - 4]], 6, '#3a3a44'); g.save(); g.globalCompositeOperation = 'lighter'; g.fillStyle = 'rgba(255,240,200,.14)'; g.beginPath(); g.moveTo(h[0] + 14, h[1] - 4); g.lineTo(h[0] + 260, h[1] - 70); g.lineTo(h[0] + 260, h[1] + 60); g.closePath(); g.fill(); g.restore(); break;
+    case 'phone': {
+      const w = t.w || 14, height = t.h || 24;
+      rr(g, px - w / 2, py - height + 2, w, height, Math.max(2, w * 0.16));
+      g.fillStyle = ink; g.fill();
+      g.fillStyle = t.glow || '#9fd8ff';
+      rr(g, px - w * 0.36, py - height + 4, w * 0.72, height * 0.72, 1.5); g.fill();
+      break;
+    }
+    case 'ball':
+      soccerBall(g, px, py, t.radius || 14, t.rot || 0, t.color || '#f2efe8');
+      break;
+    case 'paper':
+      g.fillStyle = '#f2e6c8'; g.fillRect(px - 4, py - 30, 30, 36);
+      g.strokeStyle = '#b8a888'; g.lineWidth = 1.5;
+      for (let i = 0; i < 4; i++) { g.beginPath(); g.moveTo(px, py - 22 + i * 7); g.lineTo(px + 20, py - 22 + i * 7); g.stroke(); }
+      break;
+    case 'cup': {
+      const w = t.w || 18, height = t.h || 24, top = py - height;
+      g.fillStyle = t.color || '#f2efe8';
+      g.beginPath(); g.moveTo(px - w * 0.48, top + height * 0.12); g.lineTo(px + w * 0.48, top + height * 0.12);
+      g.lineTo(px + w * 0.34, py); g.quadraticCurveTo(px, py + 1, px - w * 0.34, py); g.closePath(); g.fill();
+      g.strokeStyle = t.color || '#f2efe8'; g.lineWidth = Math.max(2, w * 0.12);
+      g.beginPath(); g.ellipse(px + w * 0.48, top + height * 0.56, w * 0.22, height * 0.2, 0, -Math.PI * 0.42, Math.PI * 0.42); g.stroke();
+      break;
+    }
+    case 'paddle': circle(g, px + 12, py - 6, 11, t.color || '#b2382a'); break;
+    case 'pointer': seg(g, [[px, py], [px + 70, py - 50]], 2.5, '#d8d0c0'); break;
+    case 'tablet':
+      rr(g, px - 6, py - 34, 40, 30, 4); g.fillStyle = ink; g.fill(); g.fillStyle = t.glow || '#7fd0d6'; g.fillRect(px - 2, py - 30, 32, 22); break;
+    case 'flashlight':
+      seg(g, [[px, py], [px + 14, py - 4]], 6, '#3a3a44');
+      g.save(); g.globalCompositeOperation = 'lighter'; g.fillStyle = 'rgba(255,240,200,.14)';
+      g.beginPath(); g.moveTo(px + 14, py - 4); g.lineTo(px + 260, py - 70); g.lineTo(px + 260, py + 60); g.closePath(); g.fill(); g.restore(); break;
   }
 }
 // world position of the head centre (for rings, labels, speech bubbles)
