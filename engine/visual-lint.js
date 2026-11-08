@@ -41,6 +41,8 @@ const lintEase = {
   out: (x) => 1 - (1 - clamp01(x)) ** 3,
   inOut: (x) => { x = clamp01(x); return x < 0.5 ? 4 * x ** 3 : 1 - (-2 * x + 2) ** 3 / 2; },
   sine: (x) => -(Math.cos(Math.PI * clamp01(x)) - 1) / 2,
+  outBack: (x) => { x = clamp01(x); const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * (x - 1) ** 3 + c1 * (x - 1) ** 2; },
+  outElastic: (x) => { x = clamp01(x); return x === 0 || x === 1 ? x : 2 ** (-10 * x) * Math.sin((x * 10 - 0.75) * (2 * Math.PI) / 3) + 1; },
 };
 function clamp01(x) { return Math.max(0, Math.min(1, x)); }
 function sampleLinear(track, t, fallback) {
@@ -66,7 +68,7 @@ function shotDuration(spec, opts) {
   for (const l of spec.layers || []) if (l && l.animate) tracks.push(...Object.values(l.animate));
   return Math.max(1, trackEnd(tracks));
 }
-function times(d) { const out = []; for (let t = 0; t <= d + 1e-9; t += Math.min(0.25, d / 4)) out.push(+t.toFixed(3)); if (out[out.length - 1] < d) out.push(d); return out; }
+function times(d) { const out = []; for (let t = 0; t <= d + 1e-9; t += Math.min(0.1, d / 10)) out.push(+t.toFixed(3)); if (out[out.length - 1] < d) out.push(d); return out; }
 
 /** Camera at time t -> world->screen mapping used by the DSL renderer (zoom about frame centre). */
 function camAt(spec, t, W, H) {
@@ -178,8 +180,8 @@ export function lintVisualShot(spec, opts = {}) {
       } else if (worst > tolerance) {
         add('error', 'contact-breaks-during-window', 'hand-to-target distance reaches ' + worst.toFixed(2) + ' hero-heights at ' + worstAt.toFixed(2) + 's inside the contact window (limit ' + tolerance + '); keep the target within contact for the entire window.');
       }
-    } else if (best > REACH_RANGE) {
-      add('error', 'reach-too-far', 'hand anchor is ' + best.toFixed(2) + ' hero-heights from the nearest story object (limit ' + REACH_RANGE + '); align the hand with the prop or add an explicit contact pose.');
+    } else {
+      add('error', 'contact-window-missing', 'hand-to-object interaction has no declared contact window; add contact.from/contact.to for the full interval in which the hand must stay on the target.');
     }
   }
 
@@ -196,9 +198,15 @@ export function lintVisualShot(spec, opts = {}) {
     const contact = l.contact && typeof l.contact === 'object' ? l.contact : null;
     const hasWindow = contact && Number.isFinite(contact.from) && Number.isFinite(contact.to);
     const window = hasWindow ? { from: contact.from, to: contact.to } : null;
+    const offsetTracks = [p.animate && p.animate.offsetX, p.animate && p.animate.offsetY].filter(Array.isArray);
+    const hasOffsetMotion = offsetTracks.some((track) => track.length > 1 && track.some((kf) => kf.value !== track[0].value));
+    if (hasOffsetMotion && !window) {
+      add('error', 'prop-contact-window-missing', 'attached ' + (p.type || 'prop') + ' has animated hand offsets but no declared contact window; specify contact.from/contact.to for the interval when it must remain gripped.');
+    }
     const sampleTimes = window
       ? [...new Set([...ts, window.from, window.to].filter((t) => t >= window.from && t <= window.to))].sort((a, b) => a - b)
-      : [dur];
+      : ts;
+    if (window && window.to > dur + 1e-6) add('error', 'contact-window-out-of-range', 'contact window ends at ' + window.to.toFixed(2) + 's, after the shot duration ' + dur.toFixed(2) + 's.');
     let worst = 0, worstAt = sampleTimes[0] || dur;
     for (const t of sampleTimes) {
       const offsetX = sampleLinear(p.animate && p.animate.offsetX, t, num(p.offsetX, 0));
