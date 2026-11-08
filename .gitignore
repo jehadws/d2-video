@@ -5,7 +5,6 @@ __pycache__/
 .env
 .env.*
 /voices
-/projects
 /examples
 /.opencode
 /.qoder
