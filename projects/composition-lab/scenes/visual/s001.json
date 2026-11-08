@@ -125,9 +125,9 @@
     },
     {
       "type": "hero",
-      "x": 650,
+      "x": 820,
       "y": 900,
-      "scale": 1.1,
+      "scale": 2.4,
       "pose": "stand",
       "expression": "sleepy"
     },

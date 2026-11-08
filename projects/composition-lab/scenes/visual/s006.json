@@ -10,6 +10,10 @@
     "zoom": [
       { "at": 0, "value": 1.1 },
       { "at": 3, "value": 1.14, "ease": "inOut" }
+    ],
+    "y": [
+      { "at": 0, "value": 61 },
+      { "at": 3, "value": 75, "ease": "inOut" }
     ]
   },
   "layers": [
@@ -18,44 +22,44 @@
     { "type": "rect", "x": 340, "y": 730, "w": 1180, "h": 34, "fill": "#6F5549", "radius": 8 },
     { "type": "rect", "x": 340, "y": 700, "w": 1180, "h": 34, "fill": "#8B6D59", "radius": 8 },
     { "type": "circle", "x": 720, "y": 910, "radius": 110, "fill": "#292F3D" },
-    { "type": "hero", "x": 700, "y": 1010, "scale": 1.72, "pose": "reach", "expression": "determined" },
+    { "type": "hero", "x": 700, "y": 1010, "scale": 3.0, "pose": "reach", "expression": "determined" },
     {
       "type": "rect",
-      "x": 850,
-      "y": 700,
-      "w": 76,
-      "h": 112,
+      "x": 962,
+      "y": 469,
+      "w": 133,
+      "h": 195,
       "fill": "#D9D0C5",
-      "radius": 12,
+      "radius": 21,
       "animate": {
         "x": [
-          { "at": 0, "value": 1160 },
-          { "at": 1.2, "value": 850, "ease": "inOut" },
-          { "at": 3, "value": 830 }
+          { "at": 0, "value": 1502 },
+          { "at": 1.2, "value": 962, "ease": "inOut" },
+          { "at": 3, "value": 927 }
         ],
         "y": [
-          { "at": 0, "value": 500 },
-          { "at": 1.2, "value": 700, "ease": "inOut" },
-          { "at": 3, "value": 700 }
+          { "at": 0, "value": 120 },
+          { "at": 1.2, "value": 469, "ease": "inOut" },
+          { "at": 3, "value": 469 }
         ]
       }
     },
     {
       "type": "circle",
-      "x": 888,
-      "y": 700,
-      "radius": 9,
+      "x": 1028,
+      "y": 469,
+      "radius": 16,
       "fill": "#805239",
       "animate": {
         "x": [
-          { "at": 0, "value": 1198 },
-          { "at": 1.2, "value": 888, "ease": "inOut" },
-          { "at": 3, "value": 868 }
+          { "at": 0, "value": 1569 },
+          { "at": 1.2, "value": 1028, "ease": "inOut" },
+          { "at": 3, "value": 993 }
         ],
         "y": [
-          { "at": 0, "value": 500 },
-          { "at": 1.2, "value": 700, "ease": "inOut" },
-          { "at": 3, "value": 700 }
+          { "at": 0, "value": 120 },
+          { "at": 1.2, "value": 469, "ease": "inOut" },
+          { "at": 3, "value": 469 }
         ]
       }
     }
