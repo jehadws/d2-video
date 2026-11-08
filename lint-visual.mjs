@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { lintVisualShot, lintVisualSequence, BARS } from './engine/visual-lint.js';
+import { lintVisualShot, lintVisualSequence, lintCompositionFraming, BARS } from './engine/visual-lint.js';
 import { lintComposition } from './engine/geometry/index.js';
 import { DEFAULT_COMPOSITION_TEMPLATES, applyCompositionTemplate } from './engine/composition-templates/resolve.js';
 import { validateTemplateRequest } from './engine/composition-templates/index.js';
@@ -56,6 +56,7 @@ export function lintProject(projectDir) {
       for (const x of result.diagnostics) findings.push({
         shot: id, level: x.level, code: x.code, message: x.message,
       });
+      for (const x of lintCompositionFraming(expanded, result)) findings.push({ shot: id, ...x });
     } else {
       for (const x of lintVisualShot(spec, { W, H, bars, duration })) findings.push({ shot: id, ...x });
       shots.push({ id, spec });
