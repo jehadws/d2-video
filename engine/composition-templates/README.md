@@ -92,12 +92,12 @@ Relationship rules refer to role names and are expanded into normal Phase 2 rela
 - `validateTemplateDefinition(definition)` validates a template definition.
 - `createTemplateRegistry(definitions = [])` creates an isolated registry with `register`, `get`, `has`, and sorted `list`.
 - `validateTemplateRequest(spec, registry)` validates template IDs, role bindings, entity types, intent focus, and override namespaces.
-- `applyCompositionTemplate(spec, time, registry)` returns a cloned, expanded v2 shot. It does not mutate the source.
+- `applyCompositionTemplate(spec, time, registry)` returns a cloned, expanded v2 shot when a template is present; non-template shots are returned unchanged. It does not mutate the source.
 - `resolveTemplatedComposition(spec, time, frame, registry)` expands the request and delegates to the canonical geometry solver.
 - `DEFAULT_COMPOSITION_TEMPLATES` is the registry used by the renderer and project linter.
 - `TEMPLATE_SCHEMA_VERSION` and `COMPOSITION_ROLES` expose the contract version and canonical role names.
 
-The renderer validates and expands templates at registration/draw time. Project lint validates the request, resolves the expanded composition, and checks semantic framing against the solver's geometry bounds.
+The renderer validates templates at registration and expands them per frame. Tracking and head-anchor focus use a two-pass solve: relationships are resolved first, then the camera is centered on the resolved focus and geometry is checked again. Project lint validates the request, resolves the expanded composition, and checks semantic framing against the solver's geometry bounds.
 
 ## Tests
 
