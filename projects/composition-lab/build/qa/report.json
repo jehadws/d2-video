@@ -4,15 +4,57 @@
   "status": "passed",
   "summary": {
     "scenes": 11,
-    "checkedFrames": 0,
+    "checkedFrames": 33,
     "errors": 0,
     "warnings": 0,
     "info": 0
   },
   "checks": [
     "static",
-    "geometry"
+    "geometry",
+    "rendered"
   ],
   "findings": [],
-  "artifacts": {}
+  "artifacts": {
+    "report": "build/qa/rendered.json",
+    "contactSheets": [
+      "build/qa/frames/contact-sheet-01.png",
+      "build/qa/frames/contact-sheet-02.png"
+    ],
+    "frames": [
+      "build/qa/frames/s001_0p60s.png",
+      "build/qa/frames/s001_1p50s.png",
+      "build/qa/frames/s001_2p40s.png",
+      "build/qa/frames/s002_0p60s.png",
+      "build/qa/frames/s002_1p50s.png",
+      "build/qa/frames/s002_2p40s.png",
+      "build/qa/frames/s003_0p60s.png",
+      "build/qa/frames/s003_1p50s.png",
+      "build/qa/frames/s003_2p40s.png",
+      "build/qa/frames/s004_0p60s.png",
+      "build/qa/frames/s004_1p50s.png",
+      "build/qa/frames/s004_2p40s.png",
+      "build/qa/frames/s005_0p60s.png",
+      "build/qa/frames/s005_1p50s.png",
+      "build/qa/frames/s005_2p40s.png",
+      "build/qa/frames/s006_0p60s.png",
+      "build/qa/frames/s006_1p50s.png",
+      "build/qa/frames/s006_2p40s.png",
+      "build/qa/frames/s007_0p60s.png",
+      "build/qa/frames/s007_1p50s.png",
+      "build/qa/frames/s007_2p40s.png",
+      "build/qa/frames/s008_0p60s.png",
+      "build/qa/frames/s008_1p50s.png",
+      "build/qa/frames/s008_2p40s.png",
+      "build/qa/frames/s009_0p60s.png",
+      "build/qa/frames/s009_1p50s.png",
+      "build/qa/frames/s009_2p40s.png",
+      "build/qa/frames/s010_0p60s.png",
+      "build/qa/frames/s010_1p50s.png",
+      "build/qa/frames/s010_2p40s.png",
+      "build/qa/frames/s011_0p60s.png",
+      "build/qa/frames/s011_1p50s.png",
+      "build/qa/frames/s011_2p40s.png"
+    ]
+  }
 }

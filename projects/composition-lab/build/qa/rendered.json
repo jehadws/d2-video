@@ -1,0 +1,442 @@
+{
+  "schemaVersion": 1,
+  "checkedFrames": 33,
+  "findings": [],
+  "frames": [
+    {
+      "sceneId": "s001",
+      "localTime": 0.6,
+      "globalTime": 0.6,
+      "frame": 14,
+      "evidence": "build/qa/frames/s001_0p60s.png",
+      "metrics": {
+        "meanLuminance": 64.99,
+        "luminanceStdDev": 48.04,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 49
+      }
+    },
+    {
+      "sceneId": "s001",
+      "localTime": 1.5,
+      "globalTime": 1.5,
+      "frame": 36,
+      "evidence": "build/qa/frames/s001_1p50s.png",
+      "metrics": {
+        "meanLuminance": 66.09,
+        "luminanceStdDev": 49.03,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 53
+      }
+    },
+    {
+      "sceneId": "s001",
+      "localTime": 2.4,
+      "globalTime": 2.4,
+      "frame": 58,
+      "evidence": "build/qa/frames/s001_2p40s.png",
+      "metrics": {
+        "meanLuminance": 66.39,
+        "luminanceStdDev": 49.39,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 47
+      }
+    },
+    {
+      "sceneId": "s002",
+      "localTime": 0.6,
+      "globalTime": 3.6,
+      "frame": 86,
+      "evidence": "build/qa/frames/s002_0p60s.png",
+      "metrics": {
+        "meanLuminance": 66.28,
+        "luminanceStdDev": 50.42,
+        "darkPixelRatio": 0.125,
+        "colorBuckets": 46
+      }
+    },
+    {
+      "sceneId": "s002",
+      "localTime": 1.5,
+      "globalTime": 4.5,
+      "frame": 108,
+      "evidence": "build/qa/frames/s002_1p50s.png",
+      "metrics": {
+        "meanLuminance": 66.82,
+        "luminanceStdDev": 49.24,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 42
+      }
+    },
+    {
+      "sceneId": "s002",
+      "localTime": 2.4,
+      "globalTime": 5.4,
+      "frame": 130,
+      "evidence": "build/qa/frames/s002_2p40s.png",
+      "metrics": {
+        "meanLuminance": 66.38,
+        "luminanceStdDev": 48.05,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 45
+      }
+    },
+    {
+      "sceneId": "s003",
+      "localTime": 0.6,
+      "globalTime": 6.6,
+      "frame": 158,
+      "evidence": "build/qa/frames/s003_0p60s.png",
+      "metrics": {
+        "meanLuminance": 52.2,
+        "luminanceStdDev": 33.9,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 45
+      }
+    },
+    {
+      "sceneId": "s003",
+      "localTime": 1.5,
+      "globalTime": 7.5,
+      "frame": 180,
+      "evidence": "build/qa/frames/s003_1p50s.png",
+      "metrics": {
+        "meanLuminance": 54.97,
+        "luminanceStdDev": 35.81,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 55
+      }
+    },
+    {
+      "sceneId": "s003",
+      "localTime": 2.4,
+      "globalTime": 8.4,
+      "frame": 202,
+      "evidence": "build/qa/frames/s003_2p40s.png",
+      "metrics": {
+        "meanLuminance": 53.51,
+        "luminanceStdDev": 34.34,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 55
+      }
+    },
+    {
+      "sceneId": "s004",
+      "localTime": 0.6,
+      "globalTime": 9.6,
+      "frame": 230,
+      "evidence": "build/qa/frames/s004_0p60s.png",
+      "metrics": {
+        "meanLuminance": 48.27,
+        "luminanceStdDev": 35.75,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 39
+      }
+    },
+    {
+      "sceneId": "s004",
+      "localTime": 1.5,
+      "globalTime": 10.5,
+      "frame": 252,
+      "evidence": "build/qa/frames/s004_1p50s.png",
+      "metrics": {
+        "meanLuminance": 48.17,
+        "luminanceStdDev": 35.39,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 45
+      }
+    },
+    {
+      "sceneId": "s004",
+      "localTime": 2.4,
+      "globalTime": 11.4,
+      "frame": 274,
+      "evidence": "build/qa/frames/s004_2p40s.png",
+      "metrics": {
+        "meanLuminance": 48.32,
+        "luminanceStdDev": 35.86,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 45
+      }
+    },
+    {
+      "sceneId": "s005",
+      "localTime": 0.6,
+      "globalTime": 12.6,
+      "frame": 302,
+      "evidence": "build/qa/frames/s005_0p60s.png",
+      "metrics": {
+        "meanLuminance": 63.62,
+        "luminanceStdDev": 45.26,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 43
+      }
+    },
+    {
+      "sceneId": "s005",
+      "localTime": 1.5,
+      "globalTime": 13.5,
+      "frame": 324,
+      "evidence": "build/qa/frames/s005_1p50s.png",
+      "metrics": {
+        "meanLuminance": 64.37,
+        "luminanceStdDev": 45.72,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 46
+      }
+    },
+    {
+      "sceneId": "s005",
+      "localTime": 2.4,
+      "globalTime": 14.4,
+      "frame": 346,
+      "evidence": "build/qa/frames/s005_2p40s.png",
+      "metrics": {
+        "meanLuminance": 64.19,
+        "luminanceStdDev": 45.09,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 53
+      }
+    },
+    {
+      "sceneId": "s006",
+      "localTime": 0.6,
+      "globalTime": 15.6,
+      "frame": 374,
+      "evidence": "build/qa/frames/s006_0p60s.png",
+      "metrics": {
+        "meanLuminance": 54.03,
+        "luminanceStdDev": 35.45,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 45
+      }
+    },
+    {
+      "sceneId": "s006",
+      "localTime": 1.5,
+      "globalTime": 16.5,
+      "frame": 396,
+      "evidence": "build/qa/frames/s006_1p50s.png",
+      "metrics": {
+        "meanLuminance": 54.92,
+        "luminanceStdDev": 36.62,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 44
+      }
+    },
+    {
+      "sceneId": "s006",
+      "localTime": 2.4,
+      "globalTime": 17.4,
+      "frame": 418,
+      "evidence": "build/qa/frames/s006_2p40s.png",
+      "metrics": {
+        "meanLuminance": 54.61,
+        "luminanceStdDev": 35.98,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 38
+      }
+    },
+    {
+      "sceneId": "s007",
+      "localTime": 0.6,
+      "globalTime": 18.6,
+      "frame": 446,
+      "evidence": "build/qa/frames/s007_0p60s.png",
+      "metrics": {
+        "meanLuminance": 87.87,
+        "luminanceStdDev": 72.74,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 64
+      }
+    },
+    {
+      "sceneId": "s007",
+      "localTime": 1.5,
+      "globalTime": 19.5,
+      "frame": 468,
+      "evidence": "build/qa/frames/s007_1p50s.png",
+      "metrics": {
+        "meanLuminance": 86.61,
+        "luminanceStdDev": 72,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 64
+      }
+    },
+    {
+      "sceneId": "s007",
+      "localTime": 2.4,
+      "globalTime": 20.4,
+      "frame": 490,
+      "evidence": "build/qa/frames/s007_2p40s.png",
+      "metrics": {
+        "meanLuminance": 86.08,
+        "luminanceStdDev": 71.65,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 63
+      }
+    },
+    {
+      "sceneId": "s008",
+      "localTime": 0.6,
+      "globalTime": 21.6,
+      "frame": 518,
+      "evidence": "build/qa/frames/s008_0p60s.png",
+      "metrics": {
+        "meanLuminance": 51.54,
+        "luminanceStdDev": 31.69,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 49
+      }
+    },
+    {
+      "sceneId": "s008",
+      "localTime": 1.5,
+      "globalTime": 22.5,
+      "frame": 540,
+      "evidence": "build/qa/frames/s008_1p50s.png",
+      "metrics": {
+        "meanLuminance": 51.51,
+        "luminanceStdDev": 31.61,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 52
+      }
+    },
+    {
+      "sceneId": "s008",
+      "localTime": 2.4,
+      "globalTime": 23.4,
+      "frame": 562,
+      "evidence": "build/qa/frames/s008_2p40s.png",
+      "metrics": {
+        "meanLuminance": 51.53,
+        "luminanceStdDev": 31.66,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 49
+      }
+    },
+    {
+      "sceneId": "s009",
+      "localTime": 0.6,
+      "globalTime": 24.6,
+      "frame": 590,
+      "evidence": "build/qa/frames/s009_0p60s.png",
+      "metrics": {
+        "meanLuminance": 70.48,
+        "luminanceStdDev": 50.49,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 58
+      }
+    },
+    {
+      "sceneId": "s009",
+      "localTime": 1.5,
+      "globalTime": 25.5,
+      "frame": 612,
+      "evidence": "build/qa/frames/s009_1p50s.png",
+      "metrics": {
+        "meanLuminance": 70.49,
+        "luminanceStdDev": 50.51,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 58
+      }
+    },
+    {
+      "sceneId": "s009",
+      "localTime": 2.4,
+      "globalTime": 26.4,
+      "frame": 634,
+      "evidence": "build/qa/frames/s009_2p40s.png",
+      "metrics": {
+        "meanLuminance": 70.48,
+        "luminanceStdDev": 50.49,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 58
+      }
+    },
+    {
+      "sceneId": "s010",
+      "localTime": 0.6,
+      "globalTime": 27.6,
+      "frame": 662,
+      "evidence": "build/qa/frames/s010_0p60s.png",
+      "metrics": {
+        "meanLuminance": 65.91,
+        "luminanceStdDev": 43.64,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 34
+      }
+    },
+    {
+      "sceneId": "s010",
+      "localTime": 1.5,
+      "globalTime": 28.5,
+      "frame": 684,
+      "evidence": "build/qa/frames/s010_1p50s.png",
+      "metrics": {
+        "meanLuminance": 65.91,
+        "luminanceStdDev": 43.64,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 33
+      }
+    },
+    {
+      "sceneId": "s010",
+      "localTime": 2.4,
+      "globalTime": 29.4,
+      "frame": 706,
+      "evidence": "build/qa/frames/s010_2p40s.png",
+      "metrics": {
+        "meanLuminance": 65.91,
+        "luminanceStdDev": 43.64,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 34
+      }
+    },
+    {
+      "sceneId": "s011",
+      "localTime": 0.6,
+      "globalTime": 30.6,
+      "frame": 734,
+      "evidence": "build/qa/frames/s011_0p60s.png",
+      "metrics": {
+        "meanLuminance": 56.14,
+        "luminanceStdDev": 36.79,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 49
+      }
+    },
+    {
+      "sceneId": "s011",
+      "localTime": 1.5,
+      "globalTime": 31.5,
+      "frame": 756,
+      "evidence": "build/qa/frames/s011_1p50s.png",
+      "metrics": {
+        "meanLuminance": 56.12,
+        "luminanceStdDev": 36.76,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 48
+      }
+    },
+    {
+      "sceneId": "s011",
+      "localTime": 2.4,
+      "globalTime": 32.4,
+      "frame": 778,
+      "evidence": "build/qa/frames/s011_2p40s.png",
+      "metrics": {
+        "meanLuminance": 56.14,
+        "luminanceStdDev": 36.79,
+        "darkPixelRatio": 0.1111,
+        "colorBuckets": 49
+      }
+    }
+  ],
+  "artifacts": {
+    "contactSheets": [
+      "build/qa/frames/contact-sheet-01.png",
+      "build/qa/frames/contact-sheet-02.png"
+    ]
+  }
+}
