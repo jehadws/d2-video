@@ -25,7 +25,11 @@ export const FRAMING = {
 };
 export const UNSET_FRAMING_MIN = 0.40; // universal floor when a shot does not declare framing
 export const STORY_OBJECT_MIN = 0.10;  // longest dimension of a story object, as a fraction of frame height
-export const REACH_RANGE = 0.8;        // a reaching hero needs a story object within this many hero-heights
+export const REACH_RANGE = 0.22;       // hand anchor must be within 0.22 hero-heights of the target centre
+export const HAND_ANCHORS = Object.freeze({
+  phone: [28, -166], holdFront: [36, -152], reach: [62, -204],
+  reachBall: [62, -180], reachDown: [78, -116],
+});
 export const MAX_SAME_FRAMING_RUN = 3; // more consecutive shots with the same framing than this -> warn
 
 const isChar = (l) => l && (l.type === 'hero' || l.type === 'figure');
@@ -119,17 +123,21 @@ export function lintVisualShot(spec, opts = {}) {
   }
   if (framing === 'interaction' && !objs.length) add('warn', 'interaction-no-object', 'interaction framing but no layer has "role": "story_object"; tag the ball/phone/cup that the action is about.');
   for (const l of chars) {
-    if (l.pose !== 'reach') continue;
-    if (!objs.length) { add('warn', 'reach-no-target', 'a hero uses pose "reach" but the shot has no story_object to reach for.'); continue; }
+    const hand = HAND_ANCHORS[l.pose];
+    if (!hand) continue;
+    if (!objs.length) { add('warn', 'reach-no-target', 'hero uses hand pose "' + l.pose + '" but the shot has no story_object to reach for.'); continue; }
     let best = Infinity;
     for (const t of ts) {
-      const s = layerVal(l, 'scale', t, 1), hx = layerVal(l, 'x', t, 0), hy = layerVal(l, 'y', t, 0) - 0.65 * heroH * s;
+      const s = layerVal(l, 'scale', t, 1), facing = l.facing === -1 ? -1 : 1;
+      const hx = layerVal(l, 'x', t, 0) + hand[0] * s * facing;
+      const hy = layerVal(l, 'y', t, 0) + hand[1] * s;
       for (const o of objs) {
-        const ox = layerVal(o, 'x', t, 0) + (o.type === 'rect' ? num(o.w, 0) / 2 : 0), oy = layerVal(o, 'y', t, 0) + (o.type === 'rect' ? num(o.h, 0) / 2 : 0);
+        const ox = layerVal(o, 'x', t, 0) + (o.type === 'rect' || o.type === 'cup' ? num(o.w, 0) / 2 : 0);
+        const oy = layerVal(o, 'y', t, 0) + (o.type === 'rect' || o.type === 'cup' ? num(o.h, 0) / 2 : 0);
         best = Math.min(best, Math.hypot(ox - hx, oy - hy) / (heroH * s));
       }
     }
-    if (best > REACH_RANGE) add('warn', 'reach-too-far', 'hero reaches but the nearest story object is ' + best.toFixed(1) + ' hero-heights away (limit ' + REACH_RANGE + '); the hand must visibly meet the object.');
+    if (best > REACH_RANGE) add('warn', 'reach-too-far', 'hand anchor is ' + best.toFixed(2) + ' hero-heights from the nearest story object (limit ' + REACH_RANGE + '); align the hand with the prop or add an explicit contact pose.');
   }
 
   // ---- camera -----------------------------------------------------------------------------------------------
