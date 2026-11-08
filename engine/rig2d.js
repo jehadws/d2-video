@@ -220,12 +220,11 @@ function parts(g, o, p, of, ink, far, pass, grow = 0) {
   const sil = pass === 'sil', L = 12.5 + grow, A = 11 + grow, T = 15 + grow, HR = 26 + grow * 0.6;
   const sl = sleeve(of);
   // far leg + far arm
-  seg(g, [p.hip, p.kB, p.fB, [p.fB[0] + 12, p.fB[1]]], L - 1, sil ? ink : of.legs ? shade(of.legs, -0.35) : far);
+  seg(g, [p.hip, p.kB, p.fB, [p.fB[0] + 12, p.fB[1]]], L - 1, sil ? ink : of.legs ? shade(of.legs, -0.14) : far);
   seg(g, [p.sh, p.eB, p.hB], A - 1, sil ? ink : far);
   if (!sil && sl) seg(g, sl === 'long' ? [p.sh, p.eB, [lerp(p.eB[0], p.hB[0], 0.7), lerp(p.eB[1], p.hB[1], 0.7)]] : [p.sh, [lerp(p.sh[0], p.eB[0], 0.75), lerp(p.sh[1], p.eB[1], 0.75)]], 16, sleeveColor(of, true));
   if (of.gloves) circle(g, p.hB[0], p.hB[1], 8.5 + grow, sil ? ink : shade(of.gloves, -0.2));
   // hair / hood behind head
-  if (of.top === 'hoodie' && of.head !== 'hood') { g.fillStyle = sil ? ink : shade(of.color || '#d64a33', -0.28); g.beginPath(); g.ellipse(p.sh[0] - 9, p.sh[1] - 6, 15 + grow, 11 + grow, -0.3, 0, Math.PI * 2); g.fill(); }
   if (of.head === 'hood') { const c = of.headColor || of.color || '#d64a33'; circle(g, p.head[0] - 6, p.head[1] + 2, HR * 1.22, sil ? ink : shade(c, -0.12)); }
   if (['ponytail', 'bun'].includes(of.head)) drawHeadwear(g, of, p.head[0], p.head[1], HR, pass);
   // torso
