@@ -19,7 +19,7 @@ python audio/mix.py --project projects/my-video        # builds music + SFX, mix
 
 ## QC checklist (run on every contact sheet)
 - [ ] No `MISSING SHOT` or red `ERROR` frames, and the console printed no shot errors.
-- [ ] The `[visual lint]` lines printed before the render show no errors (or run `node lint-visual.mjs projects/<slug>`). Characters are at least 42% of frame height in wides and 60% in mediums and interactions, feet and heads are inside the visible frame, and story objects are at least 10% of frame height.
+- [ ] The `[visual lint]` lines printed before the render show no errors (or run `node lint-visual.mjs projects/<slug>`). Rendering aborts automatically on lint errors. Characters are at least 42% of frame height in wides and 60% in mediums and interactions, feet and heads are inside the visible frame, and story objects are at least 10% of frame height.
 - [ ] Each picture matches its `line`, and the key action lands on the key word.
 - [ ] Characters are readable: rim light present, staged against brighter areas, not cut off at the edges, not overlapping text.
 - [ ] Outfits and screen direction are consistent within a scene, and every character has a contact shadow or is grounded.
@@ -32,7 +32,7 @@ python audio/mix.py --project projects/my-video        # builds music + SFX, mix
 
 ## Troubleshooting
 - **Fonts look like serif defaults** → the `@fontsource` packages are missing. Run `npm install` in aitrends-2d-studio.
-- **`[visual lint] ERROR character-too-small` / `feet-cropped` / `story-object-small`** → raise the hero `scale`, add a `camera.y` track, or enlarge the prop, using the formulas in `visual-composition-system.md` (*Scale and framing rules*). Move any props held by the hero when you rescale it. Use `--strict-lint` to stop a render on these errors.
+- **`[visual lint] ERROR character-too-small` / `feet-cropped` / `story-object-small`** → raise the hero `scale`, add a `camera.y` track, or enlarge the prop, using the formulas in `visual-composition-system.md` (*Scale and framing rules*). Move any props held by the hero when you rescale it. The renderer now stops automatically on lint errors; warnings remain non-blocking.
 - **`Player failed to boot`** → read the message. Usually it's a JSON syntax error in shots.json/config.json or an import path in a scene. Scene import errors are listed at the end of a render.
 - **WebGL or 3D shot black** → add `--gl swiftshader`, and check the console for Three.js errors (a misspelt builder or a missing `return {stage}` in init).
 - **Out of memory or crashes at 4K** → use `--workers 1` or `2`, and avoid huge blur amounts on 4K (blur cost scales with resolution).
