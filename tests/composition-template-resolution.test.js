@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DEFAULT_COMPOSITION_TEMPLATES, applyCompositionTemplate, resolveTemplatedComposition } from '../engine/composition-templates/resolve.js';
 import { lintCompositionFraming } from '../engine/visual-lint.js';
+import { getEntityGeometry } from '../engine/geometry/index.js';
 
 const entity = (id, type = 'hero', x = 0) => ({
   id, type, pose: 'stand', geometry: type === 'cup' ? { width: 8, height: 10 } : undefined,
@@ -83,4 +84,30 @@ test('over-the-shoulder template places the foreground role in front', () => {
   const expanded = applyCompositionTemplate(spec);
   assert.ok(expanded.relationships.some(x => x.type === 'in_front_of' && x.subject === 'foreground' && x.target === 'target'));
   assert.equal(resolveTemplatedComposition(spec).valid, true);
+});
+
+test('close-up template centers the camera on the primary head anchor', () => {
+  const hero = entity('hero', 'hero', 14);
+  hero.transform.position.y = 24;
+  const spec = { version: 2, id: 's007', entities: [hero], relationships: [],
+    composition: { template: 'close-up', roles: { primary: 'hero' } } };
+  const expanded = applyCompositionTemplate(spec);
+  const head = getEntityGeometry(hero).anchors['head.center'];
+  assert.equal(expanded.camera.x, head.x);
+  assert.equal(expanded.camera.y, head.y);
+  const overridden = applyCompositionTemplate({ ...spec, composition: {
+    ...spec.composition, overrides: { camera: { x: 99, y: -12 } },
+  } });
+  assert.equal(overridden.camera.x, 99);
+  assert.equal(overridden.camera.y, -12);
+});
+
+test('tracking camera follows animated movement while preserving explicit axes', () => {
+  const hero = entity('hero');
+  hero.animate = { x: [{ at: 0, value: 0 }, { at: 2, value: 20, ease: 'linear' }] };
+  const spec = { version: 2, id: 's008', entities: [hero], relationships: [],
+    composition: { template: 'tracking', roles: { primary: 'hero' }, overrides: { camera: { y: 7 } } } };
+  const expanded = applyCompositionTemplate(spec, 1);
+  assert.equal(expanded.camera.x, 10);
+  assert.equal(expanded.camera.y, 7);
 });
