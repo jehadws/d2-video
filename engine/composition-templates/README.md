@@ -1,89 +1,108 @@
-# Composition template contracts (Phase 3)
+# Composition templates (Phase 3)
 
-This module introduces the reusable-template metadata contract and an isolated registry. It does not resolve layouts or alter rendering.
+Composition templates add reusable shot intent and role binding to DSL v2. They expand into ordinary camera, framing, and relationship fields before the existing geometry solver runs. The geometry engine remains the only spatial placement authority.
 
-## Responsibilities
+## Built-in templates
 
-- **Template definition:** declares semantic roles, accepted entity types, cardinality, metadata and allowed override namespaces.
-- **Registry:** stores validated definitions and returns defensive copies.
-- **Request validation:** validates a shot's optional \`composition\` block against a registered definition and its entity list.
-- **Geometry engine:** remains the sole authority for spatial constraint resolution.
+| Template | Required roles | Behavior |
+|---|---|---|
+| `establishing-wide` | primary | Wide environmental framing |
+| `medium-single` | primary | Character-focused framing |
+| `close-up` | primary | Head-anchor camera focus and close framing |
+| `two-shot` | primary, secondary | Adds a left/right relationship |
+| `over-the-shoulder` | primary, secondary | Places primary in front of the conversational target |
+| `object-interaction` | primary, one object | Aligns the object with the primary near hand |
+| `insert` | one or more objects | Object-led framing; character is optional |
+| `reaction` | primary | Head-anchor camera focus for a reaction beat |
+| `tracking` | primary | Follows the primary entity's animated x/y position |
 
-No built-in templates are registered in Phase 3.1. Establishing and medium definitions arrive with the first template implementation, after the resolution lifecycle is designed.
-
-## Template definition
-
-\`\`\`js
-{
-  schemaVersion: 1,
-  id: 'medium',
-  name: 'Medium Shot',
-  description: 'A character-focused composition for gestures and readable action.',
-  roles: {
-    primary: { min: 1, max: 1, types: ['hero', 'figure'] },
-    secondary: { min: 0, max: 1, types: ['hero', 'figure'] },
-    objects: { min: 0, max: 3, types: ['rect', 'circle', 'cup'] },
-  },
-  allowedOverrides: ['camera', 'framing'],
-  defaults: {},
-}
-\`\`\`
-
-The \`primary\` role is required in every template definition. Other roles are optional unless their \`min\` is greater than zero. A role's \`types\` list must use entity types supported by the Phase 2 geometry engine.
-
-Supported composition role names are \`primary\`, \`secondary\`, \`objects\`, and \`environment\`. The primary binding is one entity ID; all other role bindings are arrays of entity IDs.
+The over-the-shoulder preset sets draw order and conversational framing; it does not synthesize silhouette masks or crop a foreground character automatically. Templates supply starting composition rules, not a substitute for shot-specific art direction.
 
 ## Shot request
 
-A DSL v2 shot may opt into a template with a namespaced \`composition\` property:
+A DSL v2 shot opts in with a namespaced `composition` property:
 
-\`\`\`json
+```json
 {
   "version": 2,
   "id": "s012",
   "composition": {
-    "template": "medium",
+    "template": "two-shot",
     "intent": {
-      "focus": "hero",
+      "focus": "heroA",
       "emotion": "curiosity",
-      "purpose": "character notices something"
+      "purpose": "two characters begin a conversation"
     },
     "roles": {
-      "primary": "hero",
-      "secondary": [],
-      "objects": ["phone"]
+      "primary": "heroA",
+      "secondary": ["heroB"]
     },
     "overrides": {
-      "camera": {
-        "headroom": "comfortable"
-      }
+      "camera": { "zoom": 1.08 }
     }
   },
   "entities": [
-    { "id": "hero", "type": "hero", "pose": "stand" },
-    { "id": "phone", "type": "rect", "geometry": { "width": 5, "height": 9 } }
+    { "id": "heroA", "type": "hero", "pose": "stand" },
+    { "id": "heroB", "type": "figure", "pose": "stand" }
   ],
   "relationships": []
 }
-\`\`\`
+```
 
-The example is the target request shape, not a currently renderable template shot. Override payloads are opaque objects in Phase 3.1; later template/camera milestones will define and validate their detailed fields.
+The primary binding is one entity ID. Other role bindings are arrays. Supported roles are `primary`, `secondary`, `objects`, and `environment`. `intent.focus`, when supplied, must point to an entity assigned to one of those roles.
+
+Explicit shot camera/framing values take precedence over template defaults. Values in `composition.overrides` take precedence over both, and only namespaces listed in the template's `allowedOverrides` are accepted. Templates are opt-in: v1 shots and v2 shots without a `composition` block retain their existing behavior.
+
+## Template definition
+
+Custom definitions use schema version 1:
+
+```js
+{
+  schemaVersion: 1,
+  id: 'custom-conversation',
+  name: 'Custom Conversation',
+  description: 'A custom two-character composition.',
+  roles: {
+    primary: { min: 1, max: 1, types: ['hero', 'figure'] },
+    secondary: { min: 1, max: 1, types: ['hero', 'figure'] }
+  },
+  allowedOverrides: ['camera', 'framing'],
+  defaults: {
+    framing: 'two_shot',
+    camera: { zoom: 1 }
+  },
+  relationships: [
+    { type: 'left_of', subjectRole: 'primary', targetRole: 'secondary', gap: 6 }
+  ]
+}
+```
+
+Register a custom definition through the exported default registry before registering shots:
+
+```js
+import { DEFAULT_COMPOSITION_TEMPLATES } from './resolve.js';
+DEFAULT_COMPOSITION_TEMPLATES.register(customDefinition);
+```
+
+Relationship rules refer to role names and are expanded into normal Phase 2 relationships. The resolver does not implement a second layout algorithm.
 
 ## API
 
-- \`validateTemplateDefinition(definition)\` returns an array of validation messages.
-- \`createTemplateRegistry(definitions = [])\` returns \`register\`, \`get\`, \`has\`, and sorted \`list\` methods.
-- \`validateTemplateRequest(spec, registry)\` validates an optional template request and its role/entity bindings.
-- \`TEMPLATE_SCHEMA_VERSION\` and \`COMPOSITION_ROLES\` expose the contract version and canonical role names.
+- `validateTemplateDefinition(definition)` validates a template definition.
+- `createTemplateRegistry(definitions = [])` creates an isolated registry with `register`, `get`, `has`, and sorted `list`.
+- `validateTemplateRequest(spec, registry)` validates template IDs, role bindings, entity types, intent focus, and override namespaces.
+- `applyCompositionTemplate(spec, time, registry)` returns a cloned, expanded v2 shot. It does not mutate the source.
+- `resolveTemplatedComposition(spec, time, frame, registry)` expands the request and delegates to the canonical geometry solver.
+- `DEFAULT_COMPOSITION_TEMPLATES` is the registry used by the renderer and project linter.
+- `TEMPLATE_SCHEMA_VERSION` and `COMPOSITION_ROLES` expose the contract version and canonical role names.
 
-Definitions are cloned when registered and when returned, preventing callers from mutating registry state through retrieved objects. Duplicate IDs are rejected.
-
-## Integration boundary
-
-Phase 3.1 deliberately does not modify \`engine/visual-dsl.js\`, \`engine/geometry/index.js\`, or \`lint-visual.mjs\`. Existing DSL v1 and v2 behavior remains unchanged until the next milestone wires request validation and resolution into the v2 lifecycle.
+The renderer validates and expands templates at registration/draw time. Project lint validates the request, resolves the expanded composition, and checks semantic framing against the solver's geometry bounds.
 
 ## Tests
 
-\`\`\`bash
-node --test tests/composition-templates.test.js
-\`\`\`
+```bash
+node --test tests/composition-templates.test.js tests/composition-template-resolution.test.js
+node --test tests/geometry-composition.test.js tests/visual-contact-lint.test.js
+node lint-visual.mjs projects/composition-lab
+```
