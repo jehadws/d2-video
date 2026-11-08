@@ -5,6 +5,7 @@
 // Optional metadata a DSL shot may carry (the renderer ignores both):
 //   spec.framing  : one of FRAMING keys below ("wide", "medium", "two_shot", "interaction", "insert", "reveal")
 //   layer.role    : "story_object" on the prop/ball/phone that carries the story beat
+//   layer.contact: { hand: "F", from, to, target?, tolerance? } declares a shot-local contact interval
 //
 // Measured on the real rig (1080p logical frame): one hero scale unit is ~242 px tall, i.e. 22.4% of frame
 // height, for stand / reach / phone poses. On-screen height = HERO_H * layer.scale * camera.zoom.
