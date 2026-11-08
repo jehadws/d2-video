@@ -13,7 +13,7 @@ Run the complete Phase 5 suite, including rendered-frame inspection:
     node qa.mjs --project projects/composition-lab --rendered
 
 The rendered check uses the real headless Chromium player and renderer. It samples
-three interior timestamps per implemented story shot (20%, 50%, and 80%), captures
+five timestamps per implemented story shot (the first visible frame, 20%, 50%, 80%, and the last visible frame before the cut). This includes boundary-adjacent evidence for transition review, and captures
 PNG evidence frames, and builds contact sheets under:
 
     projects/<project>/build/qa/frames/

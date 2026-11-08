@@ -125,7 +125,9 @@ async function renderQaFrames() {
   const findings = [];
   const frames = [];
   const seenErrors = new Set();
-  const ratios = [0.2, 0.5, 0.8];
+  // Include each shot's first and last visible frames so cuts/transitions are reviewed,
+  // not just three isolated interior moments.
+  const ratios = [0, 0.2, 0.5, 0.8, 1];
 
   for (const scene of shots) {
     if (!scene.ok) {
@@ -172,7 +174,7 @@ async function renderQaFrames() {
       const framePath = path.join(dir, filename);
       fs.writeFileSync(framePath, image);
       const evidence = path.relative(PROJECT, framePath).replace(/\\/g, '/');
-      frames.push({ sceneId: scene.id, localTime: Number(localTime.toFixed(4)), globalTime: Number(globalTime.toFixed(4)), frame: frameIndex, evidence, metrics });
+      frames.push({ sceneId: scene.id, sampleRatio: ratio, sampleType: ratio === 0 || ratio === 1 ? 'boundary' : 'interior', localTime: Number(localTime.toFixed(4)), globalTime: Number(globalTime.toFixed(4)), frame: frameIndex, evidence, metrics });
 
       if (metrics.meanLuminance < 3 && metrics.luminanceStdDev < 1.2) {
         findings.push({

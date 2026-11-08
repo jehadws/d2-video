@@ -114,6 +114,42 @@ function validateProjectTimeline(story, findings) {
   }
 }
 
+function validateTranscriptTimeline(projectDir, findings) {
+  const wordsPath = path.join(projectDir, 'timeline', 'words.json');
+  if (!fs.existsSync(wordsPath)) return;
+  let payload;
+  try { payload = JSON.parse(fs.readFileSync(wordsPath, 'utf8')); }
+  catch (error) {
+    findings.push(createFinding({ severity: 'error', category: 'timeline', code: 'transcript-json-invalid', message: 'Unable to parse timeline/words.json: ' + error.message, detector: 'static.transcript' }));
+    return;
+  }
+  const words = payload?.words;
+  if (!Array.isArray(words) || !words.length) {
+    findings.push(createFinding({ severity: 'error', category: 'timeline', code: 'transcript-words-invalid', message: 'timeline/words.json must contain a non-empty words array.', detector: 'static.transcript' }));
+    return;
+  }
+  let config = {};
+  try { config = JSON.parse(fs.readFileSync(path.join(projectDir, 'config.json'), 'utf8')); } catch {}
+  const duration = Number(config.duration);
+  const tolerance = 1.5;
+  let previousStart = -Infinity;
+  for (let i = 0; i < words.length; i++) {
+    const word = words[i];
+    if (!word || !Number.isFinite(word.start) || !Number.isFinite(word.end) || word.start < 0 || word.end <= word.start) {
+      findings.push(createFinding({ sceneId: null, severity: 'error', category: 'timeline', code: 'transcript-word-time-invalid', message: 'Transcript word ' + (i + 1) + ' must have finite non-negative start and end times, with end after start.', detector: 'static.transcript' }));
+      continue;
+    }
+    if (word.start + 1e-3 < previousStart) {
+      findings.push(createFinding({ severity: 'error', category: 'timeline', code: 'transcript-word-order-invalid', message: 'Transcript word timings are not sorted by start time at word ' + (i + 1) + '.', detector: 'static.transcript' }));
+    }
+    previousStart = word.start;
+    if (Number.isFinite(duration) && duration > 0 && word.end > duration + tolerance) {
+      findings.push(createFinding({ severity: 'error', category: 'timeline', code: 'transcript-exceeds-voiceover', message: 'Transcript ends at ' + word.end.toFixed(2) + 's, beyond voiceover duration ' + duration.toFixed(2) + 's (allowed tolerance ' + tolerance.toFixed(1) + 's).', detector: 'static.transcript' }));
+      break;
+    }
+  }
+}
+
 export function runStaticChecks(projectDir) {
   const findings = [];
   const storyPath = path.join(projectDir, 'story', 'shots.json');
@@ -149,6 +185,7 @@ export function runStaticChecks(projectDir) {
   }
 
   validateProjectTimeline(story, findings);
+  validateTranscriptTimeline(projectDir, findings);
 
   const visualFiles = collectFiles(path.join(projectDir, 'scenes', 'visual'), '.json');
   const scriptFiles = collectFiles(path.join(projectDir, 'scenes'), '.js');
