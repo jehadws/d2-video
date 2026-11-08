@@ -52,7 +52,7 @@ function sampleLinear(track, t, fallback) {
     const a = track[i - 1], b = track[i];
     if (t <= b.at) {
       const raw = (t - a.at) / Math.max(1e-6, b.at - a.at);
-      const eased = (lintEase[b.ease] || lintEase.linear)(raw);
+      const eased = (lintEase[b.ease || 'inOut'] || lintEase.inOut)(raw);
       return a.value + (b.value - a.value) * eased;
     }
   }
