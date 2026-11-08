@@ -26,7 +26,7 @@ export const BUILTIN_TEMPLATE_DEFINITIONS = Object.freeze([
   define('close-up', 'Close-up', 'Prioritizes the primary character’s face and expression.', {
     primary: { min: 1, max: 1, types: character },
     objects: { min: 0, max: 2, types: objects },
-  }, { framing: 'close_up', camera: { zoom: 2.0 } }),
+  }, { framing: 'close_up', camera: { zoom: 1.6 }, focus: { role: 'primary', anchor: 'head.center' } }),
   define('two-shot', 'Two-shot', 'Frames two characters together with a clear left-to-right relationship.', {
     primary: { min: 1, max: 1, types: character },
     secondary: { min: 1, max: 1, types: character },
@@ -53,11 +53,11 @@ export const BUILTIN_TEMPLATE_DEFINITIONS = Object.freeze([
   }, { framing: 'insert', camera: { zoom: 1.8 } }),
   define('reaction', 'Reaction', 'Isolates the primary character’s response as a distinct story beat.', {
     primary: { min: 1, max: 1, types: character },
-  }, { framing: 'reaction', camera: { zoom: 1.7 } }),
+  }, { framing: 'reaction', camera: { zoom: 1.4 }, focus: { role: 'primary', anchor: 'head.center' } }),
   define('tracking', 'Tracking', 'Keeps the primary character near frame center as its animated position changes.', {
     primary: { min: 1, max: 1, types: character },
     secondary: { min: 0, max: 2, types: character },
     objects: { min: 0, max: 6, types: objects },
-  }, { framing: 'medium', camera: { zoom: 1.08 }, tracking: { role: 'primary', smoothing: 1 } }),
+  }, { framing: 'medium', camera: { zoom: 1.08 }, tracking: { role: 'primary' } }),
 ]);
 
