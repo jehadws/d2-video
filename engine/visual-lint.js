@@ -239,6 +239,39 @@ export function lintVisualShot(spec, opts = {}) {
   return out;
 }
 
+
+/**
+ * Check semantic DSL v2 character scale against the same framing vocabulary
+ * used by the v1 linter. Geometry bounds are already transformed by the
+ * canonical composition solver, so this function does not duplicate geometry.
+ */
+export function lintCompositionFraming(spec, compositionResult) {
+  const out = [];
+  if (!spec || !Array.isArray(spec.entities) || !compositionResult?.geometry || !spec.framing) return out;
+  const rule = FRAMING[spec.framing];
+  if (!rule) {
+    out.push({ level: 'warn', code: 'framing-unknown', message: 'unknown framing "' + spec.framing + '"; expected one of ' + Object.keys(FRAMING).join(', ') + '.' });
+    return out;
+  }
+  const view = compositionResult.viewport;
+  const viewHeight = view ? view.bottom - view.top : 100;
+  const geometryById = new Map(compositionResult.geometry.map(item => [item.id, item]));
+  for (const entity of spec.entities.filter(item => item && (item.type === 'hero' || item.type === 'figure'))) {
+    const geometry = geometryById.get(entity.id);
+    if (!geometry) continue;
+    const fraction = geometry.bounds.height / Math.max(1e-6, viewHeight);
+    if (fraction + 1e-6 < rule.min) {
+      out.push({ level: 'error', code: 'character-too-small', entity: entity.id,
+        message: 'character "' + entity.id + '" is ' + Math.round(fraction * 100) + '% of frame height; ' + spec.framing + ' needs at least ' + Math.round(rule.min * 100) + '%.' });
+    }
+    if (fraction > rule.max + 1e-6) {
+      out.push({ level: 'warn', code: 'character-too-large', entity: entity.id,
+        message: 'character "' + entity.id + '" reaches ' + Math.round(fraction * 100) + '% of frame height; ' + spec.framing + ' is meant to stay under ' + Math.round(rule.max * 100) + '%.' });
+    }
+  }
+  return out;
+}
+
 /**
  * Sequence rules across a whole project.
  * @param {{id:string, spec:object}[]} shots in timeline order
