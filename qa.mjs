@@ -32,9 +32,12 @@ export function main(argv = process.argv.slice(2)) {
   const checks = selected.length ? selected : ['static', 'geometry'];
   try {
     const { report, artifacts } = runQA(path.resolve(String(args.project)), { checks });
-    console.log(formatReport(report));
-    if (artifacts.json) console.log('\nJSON report: ' + artifacts.json);
-    if (artifacts.text) console.log('Text report: ' + artifacts.text);
+    if (args.json) console.log(JSON.stringify(report, null, 2));
+    else {
+      console.log(formatReport(report));
+      if (artifacts.json) console.log('\nJSON report: ' + artifacts.json);
+      if (artifacts.text) console.log('Text report: ' + artifacts.text);
+    }
     const threshold = args['fail-on'] || 'error';
     const rank = { info: 1, warning: 2, error: 3 };
     if (!(threshold in rank)) {

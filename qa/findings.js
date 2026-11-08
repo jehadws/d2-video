@@ -25,8 +25,8 @@ export function createFinding(input) {
 
 const CATEGORY_BY_CODE = [
   [/asset|manifest/, 'assets'],
-  [/template|composition|framing|caption|overlap/, 'composition'],
-  [/contact|relationship|constraint|entity-outside|collision/, 'geometry'],
+  [/template|composition|framing|caption/, 'composition'],
+  [/contact|relationship|constraint|entity-outside|collision|overlap/, 'geometry'],
   [/scene|shot|json|story/, 'project'],
 ];
 
