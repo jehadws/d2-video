@@ -73,6 +73,7 @@
       "scale": 3,
       "pose": "reachBall",
       "expression": "determined",
+      "contact": { "hand": "F", "from": 1.5, "to": 3 },
       "prop": {
         "type": "ball",
         "style": "orange",
