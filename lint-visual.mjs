@@ -59,6 +59,8 @@ export function lintProject(projectDir) {
         try { expanded = resolveCompositionTemplate(expanded, 0, { width: W, height: H }, DEFAULT_COMPOSITION_TEMPLATES).spec; }
         catch (error) { findings.push({ shot: id, level: 'error', code: 'composition-template-invalid', message: error.message }); }
       }
+      // Include semantic DSL v2 shots in sequence-level framing analysis too.
+      shots.push({ id, spec: expanded });
       const result = lintComposition(expanded, {
         frame: { width: W, height: H },
         // A configured caption-safe area is meaningful only when captions are enabled.
