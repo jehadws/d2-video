@@ -101,8 +101,9 @@ Read `references/sound-design.md`. Fill `story/shots.json` → `music` (contiguo
 Read `references/render-qc.md`.
 1. Preview: `node render.mjs --project projects/<slug> --from 0 --to 30 --scale 0.5`. Show the user the preview or a contact sheet before the long render.
 2. Final: `node render.mjs --project projects/<slug>`. Run it in the background for long videos and poll the log. The log prints fps and ETA, so share the estimate.
-3. Run `python audio/mix.py --project projects/<slug>`, which generates music and SFX, ducks the music under the voice, normalises to −14 LUFS and muxes `out/<title>.mp4`.
-4. QC the final file: duration matches, audio is present, and a 1-frame-per-10-s contact sheet looks right. Deliver the MP4 (send the file), then give the location in plain words and one line on what to tweak next if needed.
+3. Run `node qa.mjs --project projects/<slug> --production` and fix all errors. Then run `node render.mjs --project projects/<slug> --production`; the production flag enforces the 5–8 minute delivery contract in addition to static and geometry preflight.
+4. Run `python audio/mix.py --project projects/<slug>`, which first rejects voiceover/story duration differences above 1.5 seconds by default, then generates music and SFX, ducks the music under the voice, normalises to −14 LUFS and muxes `out/<title>.mp4`.
+5. QC the final file: duration matches, audio is present, and a 1-frame-per-10-s contact sheet looks right. Deliver the MP4 (send the file), then give the location in plain words and one line on what to tweak next if needed.
 
 ## Defaults and judgement calls
 - When unsure about a visual, choose the more literal, more cinematic option: a close-up for emotion, an insert for objects, a blueprint for mechanisms, 3D for big spaces.
