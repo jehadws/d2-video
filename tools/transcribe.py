@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from common import load_audio, load_json, norm_word, sentences_from_words, write_timeline
 
 
-def align_script(script_text, wwords):
+def align_script(script_text, wwords, min_match=0.9):
     """Map script tokens onto whisper words with difflib; interpolate the gaps."""
     toks = [t for t in re.findall(r"\S+", script_text)]
     a = [norm_word(t) for t in toks]
@@ -39,7 +39,10 @@ def align_script(script_text, wwords):
             times[k] = (t0 + span * (k - i), t0 + span * (k - i + 1))
         i = j
     matched = sum(b.size for b in sm.get_matching_blocks())
-    print(f"script alignment: {matched}/{len(toks)} script words matched to audio ({100 * matched / max(1, len(toks)):.0f}%)")
+    ratio = matched / max(1, len(toks))
+    print(f"script alignment: {matched}/{len(toks)} script words matched to audio ({100 * ratio:.0f}%)")
+    if ratio < min_match:
+        raise SystemExit(f"Script/audio alignment is below the required {min_match:.0%}. Fix the script or audio before building captions.")
     return [{"word": t, "start": round(s, 3), "end": round(e, 3)} for t, (s, e) in zip(toks, times)]
 
 
@@ -50,6 +53,7 @@ def main():
     ap.add_argument("--model", default="small", help="tiny|base|small|medium|large-v3 (bigger = slower, more accurate)")
     ap.add_argument("--lang", default=None, help="e.g. en (auto-detect if omitted)")
     ap.add_argument("--script", help="plain-text script to align (keeps exact wording)")
+    ap.add_argument("--min-match", type=float, default=0.9, help="minimum script/audio word match ratio (default: 0.90)")
     a = ap.parse_args()
     cfg = load_json(os.path.join(a.project, "config.json"))
     audio_path = a.audio or os.path.join(a.project, cfg["voiceover"])
@@ -76,7 +80,7 @@ def main():
     if script and os.path.exists(script):
         txt = open(script, encoding="utf-8").read()
         txt = re.sub(r"^\s*#.*$", "", txt, flags=re.M)  # drop markdown headings
-        words = align_script(txt, words)
+        words = align_script(txt, words, a.min_match)
         source += "+script"
     write_timeline(os.path.join(a.project, "timeline"), words, sentences_from_words(words), source)
 
