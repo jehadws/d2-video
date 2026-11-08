@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "id": "s009",
+  "background": { "color": "#E8E4DC" },
+  "camera": { "zoom": 1 },
+  "entities": [
+    { "id": "hero", "type": "hero", "pose": "reach", "transform": { "position": { "x": -18, "y": 40 }, "scale": 3.1 }, "facing": 1 },
+    { "id": "cup", "type": "cup", "geometry": { "width": 8, "height": 11 }, "transform": { "position": { "x": 0, "y": 0 } }, "style": { "fill": "#C7D5DC", "handle": "#C7D5DC", "rim": "#F0E9DF" } },
+    { "id": "table", "type": "surface", "geometry": { "width": 55, "height": 5 }, "transform": { "position": { "x": 8, "y": 35, "z": -1 } }, "style": { "fill": "#76604E" } }
+  ],
+  "relationships": [
+    { "type": "held_by", "subject": "cup", "target": "hero", "subjectAnchor": "grip", "targetAnchor": "hand.near", "priority": 100 },
+    { "type": "inside_frame", "subject": "hero", "priority": 90 },
+    { "type": "inside_frame", "subject": "cup", "priority": 90 },
+    { "type": "behind", "subject": "table", "target": "hero", "priority": 50 }
+  ]
+}

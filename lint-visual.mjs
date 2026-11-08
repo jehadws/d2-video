@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { lintVisualShot, lintVisualSequence, BARS } from './engine/visual-lint.js';
+import { lintComposition } from './engine/geometry/index.js';
 
 const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 const dimsFor = (aspect) => (aspect === '9:16' ? { W: 1080, H: 1920, vertical: true } : { W: 1920, H: 1080, vertical: false });
@@ -35,8 +36,19 @@ export function lintProject(projectDir) {
     const meta = story.shots.find((s) => s.id === id);
     const bars = barPx(meta && meta.bars !== undefined && meta.bars !== null ? meta.bars : cfg.bars, vertical);
     const duration = meta ? meta.end - meta.start : undefined;
-    for (const x of lintVisualShot(spec, { W, H, bars, duration })) findings.push({ shot: id, ...x });
-    shots.push({ id, spec });
+    if (spec.version === 2) {
+      const result = lintComposition(spec, {
+        frame: { width: W, height: H },
+        captionSafe: bars > 0,
+        captionHeight: (bars / H) * 100,
+      });
+      for (const x of result.diagnostics) findings.push({
+        shot: id, level: x.level, code: x.code, message: x.message,
+      });
+    } else {
+      for (const x of lintVisualShot(spec, { W, H, bars, duration })) findings.push({ shot: id, ...x });
+      shots.push({ id, spec });
+    }
   }
   shots.sort((a, b) => (order.get(a.id) ?? 1e9) - (order.get(b.id) ?? 1e9));
   findings.push(...lintVisualSequence(shots));

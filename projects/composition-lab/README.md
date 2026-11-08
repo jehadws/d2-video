@@ -1,6 +1,6 @@
 # Visual Composition Lab
 
-A silent, 24-second visual test for the composition system. It uses the canonical off-white protagonist, three distinct environments, four recurring props, six JSON DSL shots, and two advanced JavaScript shots.
+A silent, 33-second visual test for the composition system. It uses the canonical off-white protagonist, three distinct environments, four recurring props, nine JSON DSL shots, and two advanced JavaScript shots.
 
 ## Render
 
@@ -40,6 +40,9 @@ node --test tests/visual-contact-lint.test.js
 | s006 | Office | Character–object interaction (cup) | JSON DSL |
 | s007 | Bedroom | Giant face close-up | JavaScript |
 | s008 | Street | Over-the-shoulder | JavaScript |
+| s009 | Neutral | Semantic held-object relationship | DSL v2 JSON |
+| s010 | Neutral | Semantic object-on-surface relationship | DSL v2 JSON |
+| s011 | Neutral | Semantic two-character composition | DSL v2 JSON |
 
 Reusable environment and prop drawings live in `scenes/sets/visual-assets.js`: bedroom, street, office, door, ball, cup, and phone. DSL shots can attach supported props to rig hand anchors with `hero.prop` (including animated anchor offsets), use a semantic `cup` layer for a recognizable cup silhouette, and declare a time-bounded hand contact window:
 
@@ -71,3 +74,17 @@ Review the sheet at both full size and at a phone-sized preview:
 7. Adjacent shots have distinct framing while preserving screen direction and identity.
 
 Do not migrate a full-length video until these shots pass visual review. Record specific shot IDs and defects before changing the DSL or adding renderer features.
+
+
+## Semantic composition (DSL v2)
+
+The lab includes an initial semantic example at `compositions/semantic-drinking.json`. It uses the frame-relative world coordinate system and `held_by`, `inside_frame`, and `behind` relationships. V2 JSON shots are registered through the existing `registerVisualShot()` entry point; relationships are resolved at each shot-local time. Project lint routes v2 files through `lintComposition()` while preserving v1 lint and sequence checks.
+
+Run both geometry and contact regressions:
+
+```bash
+node --test tests/geometry-composition.test.js tests/visual-contact-lint.test.js
+node lint-visual.mjs projects/composition-lab
+```
+
+Shots s009–s011 are now part of the timed lab sequence. They exercise `held_by`, `on_surface`, `left_of`, `behind`, and `inside_frame` through the real visual-shot registration path. They are integration fixtures, not visual sign-off: inspect their contact-sheet frames and motion before accepting Phase 2.

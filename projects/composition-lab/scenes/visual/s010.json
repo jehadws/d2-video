@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "id": "s010",
+  "background": { "color": "#252B37" },
+  "camera": { "zoom": 1 },
+  "entities": [
+    { "id": "table", "type": "surface", "geometry": { "width": 64, "height": 5 }, "transform": { "position": { "x": 8, "y": 24, "z": -1 } }, "style": { "fill": "#8B6D59" } },
+    { "id": "cup", "type": "cup", "geometry": { "width": 8, "height": 11 }, "transform": { "position": { "x": 8, "y": -5, "z": 1 } }, "style": { "fill": "#D9D0C5", "handle": "#D9D0C5" } }
+  ],
+  "relationships": [
+    { "type": "on_surface", "subject": "cup", "target": "table", "subjectAnchor": "bottom", "targetAnchor": "top", "priority": 100 },
+    { "type": "inside_frame", "subject": "table" },
+    { "type": "inside_frame", "subject": "cup" }
+  ]
+}

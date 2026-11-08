@@ -1,6 +1,6 @@
 {
   "title": "Visual Composition Lab",
-  "duration": 24,
+  "duration": 33,
   "shots": [
     {
       "id": "s001",
@@ -85,6 +85,39 @@
       "end": 24,
       "line": "Over the shoulder",
       "scene": "Over-the-shoulder — friend in foreground, protagonist and ball in focus",
+      "in": {
+        "type": "cut"
+      },
+      "bars": null
+    },
+    {
+      "id": "s009",
+      "start": 24,
+      "end": 27,
+      "line": "Semantic held-object relationship",
+      "scene": "Semantic composition — cup grip resolves to the protagonist's near hand",
+      "in": {
+        "type": "cut"
+      },
+      "bars": null
+    },
+    {
+      "id": "s010",
+      "start": 27,
+      "end": 30,
+      "line": "Semantic surface placement",
+      "scene": "Semantic composition — cup rests on the table surface",
+      "in": {
+        "type": "cut"
+      },
+      "bars": null
+    },
+    {
+      "id": "s011",
+      "start": 30,
+      "end": 33,
+      "line": "Semantic two-character composition",
+      "scene": "Semantic composition — two characters resolve into a readable two-shot",
       "in": {
         "type": "cut"
       },

@@ -2,6 +2,7 @@
 import { E, registerShot, ease, clamp, rr, circle, seg, text, FONTS } from './core.js';
 import { drawHero } from './characters.js';
 import { drawFigure, POSES } from './rig2d.js';
+import { validateComposition, resolveComposition } from './geometry/index.js';
 
 const TYPES = new Set(['hero', 'figure', 'rect', 'circle', 'cup', 'line', 'text']);
 const ACTOR_TRACKS = new Set(['x', 'y', 'scale', 'rotation', 'alpha']);
@@ -73,6 +74,7 @@ export function validateVisualShot(spec) {
 }
 
 function sample(track, t, fallback) {
+  if (number(track)) return track;
   if (!track || !track.length) return fallback;
   if (t <= track[0].at) return track[0].value;
   for (let i = 1; i < track.length; i++) {
@@ -108,28 +110,34 @@ function drawLayer(g, item, t) {
       outfit: item.type === 'figure' ? (item.outfit || {}) : undefined, prop: propAt(item.prop, t), contact: item.contact };
     if (item.type === 'hero') drawHero(g, options); else drawFigure(g, options);
   } else if (item.type === 'rect') {
-    g.fillStyle = item.fill; if (item.radius > 0) { rr(g, x, y, item.w, item.h, item.radius); g.fill(); } else g.fillRect(x, y, item.w, item.h);
+    if (item.originCenter) { g.translate(x, y); if (rotation) g.rotate(rotation); }
+    g.fillStyle = item.fill;
+    const rx = item.originCenter ? -item.w / 2 : x, ry = item.originCenter ? -item.h / 2 : y;
+    if (item.radius > 0) { rr(g, rx, ry, item.w, item.h, item.radius); g.fill(); } else g.fillRect(rx, ry, item.w, item.h);
   } else if (item.type === 'circle') {
-    circle(g, x, y, item.radius, item.fill);
+    if (item.originCenter) { g.translate(x, y); if (rotation) g.rotate(rotation); circle(g, 0, 0, item.radius, item.fill); }
+    else circle(g, x, y, item.radius, item.fill);
   } else if (item.type === 'cup') {
-    const w = item.w, h = item.h, top = y - h / 2, bottom = y + h / 2;
+    if (item.originCenter) { g.translate(x, y); if (rotation) g.rotate(rotation); }
+    const cx = item.originCenter ? 0 : x, cy = item.originCenter ? 0 : y;
+    const w = item.w, h = item.h, top = cy - h / 2, bottom = cy + h / 2;
     g.save();
     g.fillStyle = item.fill;
     g.beginPath();
-    g.moveTo(x - w * 0.48, top + h * 0.12);
-    g.lineTo(x + w * 0.48, top + h * 0.12);
-    g.lineTo(x + w * 0.34, bottom);
-    g.quadraticCurveTo(x, bottom + h * 0.035, x - w * 0.34, bottom);
+    g.moveTo(cx - w * 0.48, top + h * 0.12);
+    g.lineTo(cx + w * 0.48, top + h * 0.12);
+    g.lineTo(cx + w * 0.34, bottom);
+    g.quadraticCurveTo(cx, bottom + h * 0.035, cx - w * 0.34, bottom);
     g.closePath();
     g.fill();
     g.strokeStyle = item.handle || item.fill;
     g.lineWidth = Math.max(4, w * 0.11);
     g.beginPath();
-    g.ellipse(x + w * 0.48, y + h * 0.02, w * 0.23, h * 0.2, 0, -Math.PI * 0.42, Math.PI * 0.42);
+    g.ellipse(cx + w * 0.48, cy + h * 0.02, w * 0.23, h * 0.2, 0, -Math.PI * 0.42, Math.PI * 0.42);
     g.stroke();
     g.fillStyle = item.rim || '#F0E9DF';
     g.beginPath();
-    g.ellipse(x, top + h * 0.12, w * 0.49, h * 0.075, 0, 0, Math.PI * 2);
+    g.ellipse(cx, top + h * 0.12, w * 0.49, h * 0.075, 0, 0, Math.PI * 2);
     g.fill();
     g.restore();
   } else if (item.type === 'line') {
@@ -141,7 +149,57 @@ function drawLayer(g, item, t) {
   g.restore();
 }
 
+function compositionLayer(entity, frame) {
+  const ppu = frame.height / 100;
+  const p = entity.transform?.position || entity.position || { x: 0, y: 0 };
+  const x = frame.width / 2 + p.x * ppu, y = frame.height / 2 + p.y * ppu;
+  const scale = entity.transform?.scale ?? 1;
+  const renderScale = (entity.type === 'hero' || entity.type === 'figure') ? scale * frame.height / 1080 : scale;
+  const base = { x, y, rotation: entity.transform?.rotation || 0, scale: renderScale, alpha: entity.opacity ?? 1 };
+  const style = entity.style || {}, geometry = entity.geometry || {};
+  if (entity.type === 'hero' || entity.type === 'figure') {
+    return { ...base, type: entity.type, pose: entity.pose || 'stand', facing: entity.facing,
+      expression: entity.expression, look: entity.look, rim: entity.rim, outfit: entity.outfit };
+  }
+  if (entity.type === 'circle') return { ...base, type: 'circle', originCenter: true, radius: geometry.radius * ppu * scale, fill: style.fill || '#D6A85F' };
+  if (entity.type === 'cup') return { ...base, type: 'cup', originCenter: true, w: geometry.width * ppu * scale, h: geometry.height * ppu * scale,
+    fill: style.fill || '#C7D5DC', handle: style.handle, rim: style.rim };
+  if (entity.type === 'rect' || entity.type === 'surface') {
+    const w = geometry.width * ppu * scale, h = geometry.height * ppu * scale;
+    return { ...base, type: 'rect', originCenter: true, w, h,
+      fill: style.fill || (entity.type === 'surface' ? '#76604E' : '#9AA0A6'), radius: (geometry.radius || 0) * ppu * scale };
+  }
+  return null;
+}
+
+export function registerComposedShot(spec) {
+  const errors = validateComposition(spec);
+  if (errors.length) throw new Error('Visual DSL v2 ' + (spec && spec.id || '<unknown>') + ': ' + errors.join('; '));
+  registerShot(spec.id, {
+    kind: '2d',
+    draw(g, t) {
+      const resolved = resolveComposition(spec, t, { width: E.W, height: E.H });
+      const failures = resolved.diagnostics.filter(x => x.level === 'error');
+      if (failures.length) throw new Error('Composition ' + spec.id + ': ' + failures.map(x => x.message).join('; '));
+      g.save();
+      const camera = spec.camera || {};
+      const cx = sample(camera.x, t, 0) * E.H / 100;
+      const cy = sample(camera.y, t, 0) * E.H / 100;
+      const zoom = Math.max(0.01, sample(camera.zoom, t, 1));
+      g.translate(E.W / 2, E.H / 2); g.scale(zoom, zoom); g.translate(-E.W / 2 - cx, -E.H / 2 - cy);
+      if (spec.background) { g.fillStyle = spec.background.color; g.fillRect(0, 0, E.W, E.H); }
+      const layers = resolved.entities
+        .sort((a, b) => (a.transform?.z ?? a.z ?? 0) - (b.transform?.z ?? b.z ?? 0))
+        .map(entity => compositionLayer(entity, E)).filter(Boolean);
+      for (const layer of layers) drawLayer(g, layer, t);
+      g.restore();
+    },
+  });
+  return spec.id;
+}
+
 export function registerVisualShot(spec) {
+  if (spec && spec.version === 2) return registerComposedShot(spec);
   const errors = validateVisualShot(spec);
   if (errors.length) throw new Error('Visual DSL ' + (spec && spec.id || '<unknown>') + ': ' + errors.join('; '));
   registerShot(spec.id, {
