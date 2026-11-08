@@ -59,12 +59,17 @@ export function applyCompositionTemplate(spec, time = 0, registry = DEFAULT_COMP
     const focusId = request.intent?.focus || roleIds(request, follow.role)[0];
     const focusEntity = out.entities.find(entity => entity.id === focusId);
     if (focusEntity) {
-      const p = follow.anchor
-        ? (getEntityGeometry(focusEntity).anchors[follow.anchor] || entityPosition(focusEntity, time))
-        : entityPosition(focusEntity, time);
-      // Explicit camera coordinates always win over template focus defaults.
-      if (out.camera?.x == null) camera.x = p.x;
-      if (out.camera?.y == null) camera.y = p.y;
+      let p = entityPosition(focusEntity, time);
+      if (follow.anchor) {
+        const anchor = getEntityGeometry(focusEntity).anchors[follow.anchor];
+        if (anchor) {
+          const base = entityPosition(focusEntity, 0);
+          p = { x: anchor.x + p.x - base.x, y: anchor.y + p.y - base.y };
+        }
+      }
+      // Explicit shot camera values and template overrides always win.
+      if (camera.x == null) camera.x = p.x;
+      if (camera.y == null) camera.y = p.y;
     }
   }
   out.camera = camera;
