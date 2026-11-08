@@ -107,7 +107,7 @@ DSL v2 shots can opt into a reusable template through a `composition` block. The
 
 Built-ins: `establishing-wide`, `medium-single`, `close-up`, `two-shot`, `over-the-shoulder`, `object-interaction`, `insert`, `reaction`, and `tracking`. Role bindings use entity IDs; `primary` is a single ID, while other roles are arrays. Templates are opt-in, so existing v1 and v2 shots without a `composition` block keep their previous behavior.
 
-The over-the-shoulder preset establishes foreground draw order and conversational framing, but does not synthesize a silhouette mask or automatic foreground crop. Tracking follows the primary entity's animated position at each sampled shot time. The renderer continues to call the canonical geometry solver after template expansion.
+The close-up and reaction presets center the camera on the primary character's head anchor. The over-the-shoulder preset establishes foreground draw order and conversational framing, but does not synthesize a silhouette mask or automatic foreground crop. Tracking follows the primary entity's animated position at each sampled shot time. The renderer continues to call the canonical geometry solver after template expansion.
 
 Run template contract and resolution tests:
 
