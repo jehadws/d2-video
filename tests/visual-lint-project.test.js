@@ -25,7 +25,7 @@ function makeProject(t, { captions, bars }) {
     entities: [{
       id: 'hero',
       type: 'hero',
-      pose: 'stand',
+      pose: 'reach',
       transform: { position: { x: -18, y: 40 }, scale: 3.1 },
     }],
     relationships: [],
