@@ -155,9 +155,9 @@
     {
       "type": "hero",
       "x": 700,
-      "y": 1061,
+      "y": 990,
       "scale": 3,
-      "pose": "reach",
+      "pose": "reachBall",
       "expression": "determined"
     }
   ]
