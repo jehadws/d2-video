@@ -7,7 +7,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { lintVisualShot, lintVisualSequence, lintCompositionFraming, BARS } from './engine/visual-lint.js';
 import { lintComposition } from './engine/geometry/index.js';
-import { DEFAULT_COMPOSITION_TEMPLATES, applyCompositionTemplate } from './engine/composition-templates/resolve.js';
+import { DEFAULT_COMPOSITION_TEMPLATES, resolveCompositionTemplate } from './engine/composition-templates/resolve.js';
 import { validateTemplateRequest } from './engine/composition-templates/index.js';
 
 const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
@@ -43,7 +43,7 @@ export function lintProject(projectDir) {
       for (const message of templateErrors) findings.push({ shot: id, level: 'error', code: 'composition-template-invalid', message });
       let expanded = spec;
       if (!templateErrors.length && spec.composition) {
-        try { expanded = applyCompositionTemplate(spec, 0, DEFAULT_COMPOSITION_TEMPLATES); }
+        try { expanded = resolveCompositionTemplate(spec, 0, { width: W, height: H }, DEFAULT_COMPOSITION_TEMPLATES).spec; }
         catch (error) { findings.push({ shot: id, level: 'error', code: 'composition-template-invalid', message: error.message }); }
       }
       const result = lintComposition(expanded, {
