@@ -163,3 +163,41 @@ test('rendered QA report includes frame counts, evidence, and contact sheets', (
   assert.match(formatted, /s001_0p20s\.png/);
   assert.match(formatted, /contact-sheet-01\.png/);
 });
+
+test('static QA rejects gaps and overlaps in the production shot timeline', t => {
+  const root = project(t, [
+    { id: 's001', start: 0, end: 2 },
+    { id: 's002', start: 2.25, end: 4 },
+    { id: 's003', start: 3.9, end: 5 },
+  ]);
+  const { report } = runQA(root, { checks: ['static'], write: false });
+  assert.ok(report.findings.some(item => item.code === 'timeline-gap' && item.sceneId === 's002'));
+  assert.ok(report.findings.some(item => item.code === 'timeline-overlap' && item.sceneId === 's003'));
+});
+
+test('static QA enforces zero start and story duration matching the final shot', t => {
+  const root = project(t, [
+    { id: 's001', start: 0.1, end: 2 },
+    { id: 's002', start: 2, end: 4 },
+  ]);
+  fs.writeFileSync(path.join(root, 'story', 'shots.json'), JSON.stringify({
+    duration: 4.5,
+    shots: [{ id: 's001', start: 0.1, end: 2 }, { id: 's002', start: 2, end: 4 }],
+  }));
+  const { report } = runQA(root, { checks: ['static'], write: false });
+  assert.ok(report.findings.some(item => item.code === 'timeline-start-not-zero'));
+  assert.ok(report.findings.some(item => item.code === 'timeline-duration-mismatch'));
+});
+
+test('static QA accepts a contiguous timeline with a matching declared duration', t => {
+  const root = project(t, [
+    { id: 's001', start: 0, end: 2 },
+    { id: 's002', start: 2, end: 4 },
+  ]);
+  fs.writeFileSync(path.join(root, 'story', 'shots.json'), JSON.stringify({
+    duration: 4,
+    shots: [{ id: 's001', start: 0, end: 2 }, { id: 's002', start: 2, end: 4 }],
+  }));
+  const { report } = runQA(root, { checks: ['static'], write: false });
+  assert.ok(!report.findings.some(item => item.category === 'timeline' && item.severity === 'error'));
+});
