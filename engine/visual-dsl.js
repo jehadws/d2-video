@@ -3,7 +3,7 @@ import { E, registerShot, ease, clamp, rr, circle, seg, text, FONTS } from './co
 import { drawHero } from './characters.js';
 import { drawFigure, POSES } from './rig2d.js';
 
-const TYPES = new Set(['hero', 'figure', 'rect', 'circle', 'line', 'text']);
+const TYPES = new Set(['hero', 'figure', 'rect', 'circle', 'cup', 'line', 'text']);
 const ACTOR_TRACKS = new Set(['x', 'y', 'scale', 'rotation', 'alpha']);
 const EASINGS = new Set(Object.keys(ease));
 
@@ -44,9 +44,14 @@ export function validateVisualShot(spec) {
       }
     }
     if ((layer.type === 'hero' || layer.type === 'figure') && layer.pose && !POSES[layer.pose]) errors.push(p + '.pose is not a known pose');
+    if ((layer.type === 'hero' || layer.type === 'figure') && layer.prop != null) {
+      const propType = typeof layer.prop === 'string' ? layer.prop : layer.prop && layer.prop.type;
+      if (!['phone', 'ball', 'cup', 'paper', 'paddle', 'pointer', 'tablet', 'flashlight'].includes(propType)) errors.push(p + '.prop must be a supported prop name or { type } object');
+    }
     if ((layer.type === 'hero' || layer.type === 'figure') && layer.scale != null && !number(layer.scale)) errors.push(p + '.scale must be a finite number');
     if (layer.type === 'rect' && (!number(layer.w) || !number(layer.h) || typeof layer.fill !== 'string')) errors.push(p + ' rect needs numeric w/h and a fill color');
     if (layer.type === 'circle' && (!number(layer.radius) || typeof layer.fill !== 'string')) errors.push(p + ' circle needs numeric radius and a fill color');
+    if (layer.type === 'cup' && (!number(layer.w) || !number(layer.h) || typeof layer.fill !== 'string')) errors.push(p + ' cup needs numeric w/h and a fill color');
     if (layer.type === 'line' && (!number(layer.x2) || !number(layer.y2) || !number(layer.width) || typeof layer.color !== 'string')) errors.push(p + ' line needs x2/y2/width and a color');
     if (layer.type === 'text' && (typeof layer.value !== 'string' || !number(layer.size) || typeof layer.color !== 'string')) errors.push(p + ' text needs value, size and color');
   });
@@ -79,12 +84,33 @@ function drawLayer(g, item, t) {
     const options = { x: 0, y: 0, s: scale, facing: item.facing === -1 ? -1 : 1,
       pose: POSES[item.pose || 'stand'], expr: item.expression || 'neutral',
       look: item.look, rim: item.rim === false ? false : (item.rim || undefined),
-      outfit: item.type === 'figure' ? (item.outfit || {}) : undefined };
+      outfit: item.type === 'figure' ? (item.outfit || {}) : undefined, prop: item.prop };
     if (item.type === 'hero') drawHero(g, options); else drawFigure(g, options);
   } else if (item.type === 'rect') {
     g.fillStyle = item.fill; if (item.radius > 0) { rr(g, x, y, item.w, item.h, item.radius); g.fill(); } else g.fillRect(x, y, item.w, item.h);
   } else if (item.type === 'circle') {
     circle(g, x, y, item.radius, item.fill);
+  } else if (item.type === 'cup') {
+    const w = item.w, h = item.h, top = y - h / 2, bottom = y + h / 2;
+    g.save();
+    g.fillStyle = item.fill;
+    g.beginPath();
+    g.moveTo(x - w * 0.48, top + h * 0.12);
+    g.lineTo(x + w * 0.48, top + h * 0.12);
+    g.lineTo(x + w * 0.34, bottom);
+    g.quadraticCurveTo(x, bottom + h * 0.035, x - w * 0.34, bottom);
+    g.closePath();
+    g.fill();
+    g.strokeStyle = item.handle || item.fill;
+    g.lineWidth = Math.max(4, w * 0.11);
+    g.beginPath();
+    g.ellipse(x + w * 0.48, y + h * 0.02, w * 0.23, h * 0.2, 0, -Math.PI * 0.42, Math.PI * 0.42);
+    g.stroke();
+    g.fillStyle = item.rim || '#F0E9DF';
+    g.beginPath();
+    g.ellipse(x, top + h * 0.12, w * 0.49, h * 0.075, 0, 0, Math.PI * 2);
+    g.fill();
+    g.restore();
   } else if (item.type === 'line') {
     seg(g, [[x, y], [item.x2, item.y2]], item.width, item.color);
   } else if (item.type === 'text') {
