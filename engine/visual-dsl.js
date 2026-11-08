@@ -3,7 +3,7 @@ import { E, registerShot, ease, clamp, rr, circle, seg, text, FONTS } from './co
 import { drawHero } from './characters.js';
 import { drawFigure, POSES } from './rig2d.js';
 import { validateComposition, resolveComposition } from './geometry/index.js';
-import { DEFAULT_COMPOSITION_TEMPLATES, applyCompositionTemplate } from './composition-templates/resolve.js';
+import { DEFAULT_COMPOSITION_TEMPLATES, resolveCompositionTemplate } from './composition-templates/resolve.js';
 import { validateTemplateRequest } from './composition-templates/index.js';
 
 const TYPES = new Set(['hero', 'figure', 'rect', 'circle', 'cup', 'line', 'text']);
@@ -181,8 +181,7 @@ export function registerComposedShot(spec) {
   registerShot(spec.id, {
     kind: '2d',
     draw(g, t) {
-      const expanded = applyCompositionTemplate(spec, t, DEFAULT_COMPOSITION_TEMPLATES);
-      const resolved = resolveComposition(expanded, t, { width: E.W, height: E.H });
+      const { spec: expanded, resolved } = resolveCompositionTemplate(spec, t, { width: E.W, height: E.H }, DEFAULT_COMPOSITION_TEMPLATES);
       const failures = resolved.diagnostics.filter(x => x.level === 'error');
       if (failures.length) throw new Error('Composition ' + spec.id + ': ' + failures.map(x => x.message).join('; '));
       g.save();
