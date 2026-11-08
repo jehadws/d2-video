@@ -9,7 +9,7 @@ import { lintVisualShot, lintVisualSequence, lintCompositionFraming, BARS } from
 import { lintComposition } from './engine/geometry/index.js';
 import { DEFAULT_COMPOSITION_TEMPLATES, resolveCompositionTemplate } from './engine/composition-templates/resolve.js';
 import { validateTemplateRequest } from './engine/composition-templates/index.js';
-import { validateAssetReferences, resolveAssetReferences } from './engine/assets/index.js';
+import { ASSET_REGISTRY, createAssetRegistry, registerAssets, validateAssetReferences, resolveAssetReferences } from './engine/assets/index.js';
 
 const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 const dimsFor = (aspect) => (aspect === '9:16' ? { W: 1080, H: 1920, vertical: true } : { W: 1920, H: 1080, vertical: false });
@@ -32,6 +32,12 @@ export function lintProject(projectDir) {
   const order = new Map(story.shots.map((s, i) => [s.id, i]));
   const files = fs.readdirSync(dir).filter((f) => f.endsWith('.json') && !f.startsWith('_')).sort();
   const shots = [];
+  const assetRegistry = createAssetRegistry(ASSET_REGISTRY.list());
+  const assetManifestPath = path.join(projectDir, 'assets.json');
+  if (fs.existsSync(assetManifestPath)) {
+    try { registerAssets(readJson(assetManifestPath), assetRegistry); }
+    catch (error) { findings.push({ shot: 'assets.json', level: 'error', code: 'asset-manifest-invalid', message: error.message }); }
+  }
   for (const f of files) {
     let spec;
     try { spec = readJson(path.join(dir, f)); } catch (e) { findings.push({ shot: f, level: 'error', code: 'json-parse', message: e.message }); continue; }
@@ -40,11 +46,11 @@ export function lintProject(projectDir) {
     const bars = barPx(meta && meta.bars !== undefined && meta.bars !== null ? meta.bars : cfg.bars, vertical);
     const duration = meta ? meta.end - meta.start : undefined;
     if (spec.version === 2) {
-      const assetErrors = validateAssetReferences(spec);
+      const assetErrors = validateAssetReferences(spec, assetRegistry);
       for (const message of assetErrors) findings.push({ shot: id, level: 'error', code: 'asset-reference-invalid', message });
       let expanded = spec;
       if (!assetErrors.length) {
-        try { expanded = resolveAssetReferences(spec); }
+        try { expanded = resolveAssetReferences(spec, assetRegistry); }
         catch (error) { findings.push({ shot: id, level: 'error', code: 'asset-reference-invalid', message: error.message }); }
       }
       const templateErrors = validateTemplateRequest(expanded, DEFAULT_COMPOSITION_TEMPLATES);

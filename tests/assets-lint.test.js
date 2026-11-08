@@ -40,3 +40,21 @@ test('project lint resolves valid character, prop, material, environment and lig
   assert.equal(result.findings.filter(item => item.code === 'asset-reference-invalid').length, 0);
   assert.equal(result.errors, 0);
 });
+
+test('project assets.json registers reusable custom assets for lint and resolution', t => {
+  const root = project(t, {
+    version: 2, id: 's001',
+    entities: [{ id: 'customCup', assetId: 'prop.custom-cup' }],
+    relationships: [],
+  });
+  fs.writeFileSync(path.join(root, 'assets.json'), JSON.stringify({
+    schemaVersion: 1,
+    assets: [{
+      schemaVersion: 1, id: 'prop.custom-cup', kind: 'prop', version: 1, name: 'Custom cup',
+      render: { type: 'cup' }, geometry: { width: 7, height: 9 }, material: 'material.ceramic',
+    }],
+  }));
+  const result = lintProject(root);
+  assert.equal(result.findings.filter(item => item.code === 'asset-reference-invalid' || item.code === 'asset-manifest-invalid').length, 0);
+  assert.equal(result.errors, 0);
+});

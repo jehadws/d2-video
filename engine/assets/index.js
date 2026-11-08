@@ -72,3 +72,22 @@ export function resolveAssetReferences(spec, registry = ASSET_REGISTRY) {
 }
 
 export function listAssets(kind) { return ASSET_REGISTRY.list(kind); }
+
+/** Register a project's optional assets.json manifest without partially mutating the registry on failure. */
+export function registerAssets(manifest, registry = ASSET_REGISTRY) {
+  const definitions = Array.isArray(manifest) ? manifest : manifest?.assets;
+  if (!Array.isArray(definitions)) throw new TypeError('asset manifest must be an array or an object with an assets array');
+  if (!Array.isArray(manifest) && manifest.schemaVersion !== ASSET_SCHEMA_VERSION) {
+    throw new TypeError(`asset manifest schemaVersion must be ${ASSET_SCHEMA_VERSION}`);
+  }
+  const ids = new Set();
+  const errors = [];
+  for (const definition of definitions) {
+    errors.push(...validateAssetDefinition(definition).map(message => `${definition?.id || '<unknown>'}: ${message}`));
+    if (definition?.id && (ids.has(definition.id) || registry.has(definition.id))) errors.push(`duplicate asset id "${definition.id}"`);
+    if (definition?.id) ids.add(definition.id);
+  }
+  if (errors.length) throw new TypeError('Invalid asset manifest: ' + errors.join('; '));
+  for (const definition of definitions) registry.register(definition);
+  return registry;
+}

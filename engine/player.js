@@ -4,6 +4,7 @@ import { E, V, setStyle, getShot, clamp, ease, prog, alpha, text, FONTS } from '
 import { STYLES } from './styles.js';
 import { captions } from './ui2d.js';
 import { registerVisualShot } from './visual-dsl.js';
+import { registerAssets } from './assets/index.js';
 
 const q = new URLSearchParams(location.search);
 const PROJ = '/project';
@@ -22,6 +23,11 @@ async function boot() {
   const cfg = await (await fetch(`${PROJ}/config.json`)).json();
   const story = await (await fetch(`${PROJ}/story/shots.json`)).json();
   let words = []; try { const r = await fetch(`${PROJ}/timeline/words.json`); if (r.ok) words = await r.json(); } catch {}
+  try {
+    const assetResponse = await fetch(`${PROJ}/assets.json`);
+    if (assetResponse.ok) registerAssets(await assetResponse.json());
+    else if (assetResponse.status !== 404) throw new Error(`HTTP ${assetResponse.status}`);
+  } catch (error) { errors.push(`project assets: ${error.message}`); throw error; }
   const vertical = (cfg.aspect || '16:9') === '9:16';
   const short = RES[cfg.resolution || '1080p'] || 1080, long = Math.round((short * 16) / 9 / 2) * 2;
   const scale = +(q.get('scale') || 1);

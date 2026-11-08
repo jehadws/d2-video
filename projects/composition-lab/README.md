@@ -144,7 +144,7 @@ Supported built-in asset families:
 - Environments: bedroom, office, and street. Environments are composed from normalized screen-space primitives and drawn before semantic entities.
 - Lighting: soft daylight, warm/cool interiors, golden hour, dusk, night, and neutral studio. The selected lighting tint is applied subtly to the environment; character identity colors remain owned by the character rig and the existing style grade remains global.
 
-A custom asset can be added by creating a definition with `schemaVersion: 1`, a namespaced ID, kind, version, and the kind-specific fields, then registering it through `createAssetRegistry()`. Do not duplicate a built-in ID. Increment an asset's `version` when its public geometry or visual contract changes; shots may pin `assetVersion` to detect stale references.
+A custom project asset can be added in `projects/<project>/assets.json` using `{ "schemaVersion": 1, "assets": [...] }`. Each definition needs `schemaVersion: 1`, a namespaced ID, kind, version, and the kind-specific fields. The renderer registers this manifest before loading scene modules, and project lint builds an isolated registry from the same manifest. Do not duplicate a built-in ID or another project asset ID. Increment an asset's `version` when its public geometry or visual contract changes; shots may pin `assetVersion` to detect stale references.
 
 Asset references are resolved before template expansion and geometry validation. The renderer and project linter share the same registry and resolver. Missing IDs, wrong asset kinds, conflicting entity types, and stale pinned versions are lint errors. Existing DSL v1 shots and DSL v2 shots without asset references remain unchanged.
 
