@@ -96,26 +96,16 @@
       "type": "hero",
       "x": 940,
       "y": 1000,
-      "scale": 3.0,
+      "scale": 3,
       "pose": "phone",
-      "expression": "thinking"
-    },
-    {
-      "type": "rect",
-      "role": "story_object",
-      "x": 1111,
-      "y": 417,
-      "w": 62,
-      "h": 130,
-      "fill": "#D9D0C5",
-      "radius": 12
-    },
-    {
-      "type": "circle",
-      "x": 1142,
-      "y": 434,
-      "radius": 5,
-      "fill": "#25324A"
+      "expression": "thinking",
+      "prop": {
+        "type": "phone",
+        "offsetX": 0,
+        "offsetY": 0,
+        "w": 18,
+        "h": 30
+      }
     },
     {
       "type": "text",
