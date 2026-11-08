@@ -122,6 +122,22 @@ test('conflicting relationships produce an unsatisfied-constraint diagnostic',()
   assert.ok(r.diagnostics.some(d=>d.code==='constraint-unsatisfied'));
 });
 
+test('inside_frame runs after relationships that move the same entity',()=>{
+  const spec={version:2,id:'s013',camera:{zoom:2},entities:[
+    {id:'subject',type:'circle',geometry:{radius:3},transform:{position:{x:0,y:0}}},
+    {id:'target',type:'circle',geometry:{radius:3},transform:{position:{x:-41,y:0}}},
+  ],relationships:[
+    {type:'inside_frame',subject:'subject',priority:0},
+    {type:'left_of',subject:'subject',target:'target',gap:2,priority:100},
+    {type:'inside_frame',subject:'target',priority:0},
+  ]};
+  const r=resolveComposition(spec,0,{width:1920,height:1080});
+  const subject=r.geometry.find(g=>g.id==='subject');
+  assert.ok(subject.bounds.left>=r.viewport.left-1e-4);
+  assert.ok(subject.bounds.right<=r.viewport.right+1e-4);
+  assert.ok(r.diagnostics.some(d=>d.code==='constraint-unsatisfied'&&d.relationship==='left_of'));
+});
+
 test('camera keyframe easing is shared with the renderer',()=>{
   const spec={version:2,id:'s012',camera:{x:[{at:0,value:0},{at:1,value:20,ease:'linear'}]},entities:[
     {id:'ball',type:'circle',geometry:{radius:2}},
