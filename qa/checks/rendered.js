@@ -37,7 +37,7 @@ export async function runRenderedChecks(projectDir, options = {}) {
     findings,
     checkedFrames: Number(raw.checkedFrames) || 0,
     artifacts: {
-      report: path.relative(absolute, reportPath).replace(/\\\\/g, '/'),
+      report: path.relative(absolute, reportPath).replace(/\\/g, '/'),
       contactSheets: raw.artifacts?.contactSheets || [],
       frames: (raw.frames || []).map(frame => frame.evidence),
     },
