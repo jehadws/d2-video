@@ -56,8 +56,14 @@ export function runGeometryChecks(projectDir) {
   const storyPath = path.join(projectDir, 'story', 'shots.json');
   if (!fs.existsSync(storyPath)) return findings;
 
-  const config = fs.existsSync(configPath) ? readJson(configPath) : {};
-  const story = readJson(storyPath);
+  let config = {}, story;
+  try {
+    config = fs.existsSync(configPath) ? readJson(configPath) : {};
+    story = readJson(storyPath);
+  } catch {
+    return findings; // Static checks report malformed project metadata.
+  }
+  if (!Array.isArray(story.shots)) return findings;
   const frame = dimensions(config.aspect);
   const fps = config.fps || 24;
   const registry = createAssetRegistry(ASSET_REGISTRY.list());
@@ -68,7 +74,7 @@ export function runGeometryChecks(projectDir) {
     catch { registryReady = false; }
   }
 
-  for (const shot of story.shots || []) {
+  for (const shot of story.shots) {
     const file = path.join(projectDir, 'scenes', 'visual', shot.id + '.json');
     if (!fs.existsSync(file)) continue;
     let original;

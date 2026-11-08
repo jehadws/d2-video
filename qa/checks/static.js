@@ -75,7 +75,15 @@ export function runStaticChecks(projectDir) {
     }
   }
 
-  const lint = lintProject(projectDir);
-  findings.push(...lint.findings.map(normalizeLintFinding));
+  try {
+    const lint = lintProject(projectDir);
+    findings.push(...lint.findings.map(normalizeLintFinding));
+  } catch (error) {
+    findings.push(createFinding({
+      severity: 'error', category: 'project', code: 'static-lint-failed',
+      message: 'Static visual lint could not complete: ' + error.message,
+      detector: 'static.visual-lint',
+    }));
+  }
   return findings;
 }
