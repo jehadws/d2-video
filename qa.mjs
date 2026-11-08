@@ -54,7 +54,7 @@ export async function main(argv = process.argv.slice(2)) {
     else {
       console.log(formatReport(report));
       const outputDir = path.join(projectDir, 'build', 'qa');
-      console.log('\\nJSON report: ' + path.join(outputDir, 'report.json'));
+      console.log('\nJSON report: ' + path.join(outputDir, 'report.json'));
       console.log('Text report: ' + path.join(outputDir, 'report.txt'));
       if (args.rendered) console.log('Contact sheets: ' + path.join(outputDir, 'frames'));
     }
