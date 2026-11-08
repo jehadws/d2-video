@@ -19,10 +19,12 @@ export const BARS = { none: 0, wide: 60, scope: 138, thin: 30 }; // 16:9 letterb
 export const FRAMING = {
   wide:        { min: 0.42, max: 0.65, note: 'establishing wide: character still readable, environment still visible' },
   medium:      { min: 0.60, max: 0.85, note: 'medium single: character is the subject' },
+  close_up:    { min: 0.78, max: 1.00, note: 'close-up: facial expression dominates the frame' },
   two_shot:    { min: 0.50, max: 0.75, note: 'two-shot: every character must be large enough to read' },
   interaction: { min: 0.60, max: 0.85, note: 'character-object interaction: actor, object and contact all visible' },
   insert:      { min: 0,    max: 0.65, note: 'insert/macro: the object is the subject; characters optional' },
   reveal:      { min: 0.30, max: 1.00, note: 'dramatic reveal: framing follows the reveal' },
+  reaction:    { min: 0.72, max: 1.00, note: 'reaction: character response is the visual focus' },
 };
 export const UNSET_FRAMING_MIN = 0.40; // universal floor when a shot does not declare framing
 export const STORY_OBJECT_MIN = 0.10;  // longest dimension of a story object, as a fraction of frame height
