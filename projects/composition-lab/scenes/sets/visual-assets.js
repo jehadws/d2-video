@@ -64,12 +64,23 @@ export function drawBall(g, x, y, radius = 34) {
 
 export function drawCup(g, x, y, scale = 1) {
   g.save(); g.translate(x, y); g.scale(scale, scale);
-  g.fillStyle = '#D9D0C5'; rr(g, -22, -52, 44, 52, 7); g.fill();
-  g.fillStyle = '#805239'; g.fillRect(-18, -48, 36, 8);
-  g.strokeStyle = '#D9D0C5'; g.lineWidth = 7; g.beginPath(); g.arc(25, -29, 15, -Math.PI / 2, Math.PI / 2); g.stroke();
+  const w = 44, h = 52, top = -h;
+  // Tapered ceramic body with a visible elliptical rim and open handle.
+  g.fillStyle = PALETTE.ivory;
+  g.beginPath();
+  g.moveTo(-w * 0.48, top + 5);
+  g.lineTo(w * 0.48, top + 5);
+  g.lineTo(w * 0.34, 0);
+  g.quadraticCurveTo(0, 3, -w * 0.34, 0);
+  g.closePath(); g.fill();
+  g.strokeStyle = PALETTE.ivory; g.lineWidth = 7;
+  g.beginPath(); g.ellipse(w * 0.48, -h * 0.48, 13, 15, 0, -Math.PI * 0.43, Math.PI * 0.43); g.stroke();
+  g.fillStyle = '#805239';
+  g.beginPath(); g.ellipse(0, top + 5, w * 0.47, 5.5, 0, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = '#F0E9DF'; g.lineWidth = 2;
+  g.beginPath(); g.ellipse(0, top + 5, w * 0.38, 3, 0, 0, Math.PI * 2); g.stroke();
   g.restore();
 }
-
 export function drawPhone(g, x, y, scale = 1) {
   g.save(); g.translate(x, y); g.scale(scale, scale);
   g.fillStyle = '#172033'; rr(g, -22, -42, 44, 84, 7); g.fill();
