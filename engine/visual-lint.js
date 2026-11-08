@@ -132,8 +132,8 @@ export function lintVisualShot(spec, opts = {}) {
       const hx = layerVal(l, 'x', t, 0) + hand[0] * s * facing;
       const hy = layerVal(l, 'y', t, 0) + hand[1] * s;
       for (const o of objs) {
-        const ox = layerVal(o, 'x', t, 0) + (o.type === 'rect' || o.type === 'cup' ? num(o.w, 0) / 2 : 0);
-        const oy = layerVal(o, 'y', t, 0) + (o.type === 'rect' || o.type === 'cup' ? num(o.h, 0) / 2 : 0);
+        const ox = layerVal(o, 'x', t, 0) + (o.type === 'rect' ? num(o.w, 0) / 2 : 0);
+        const oy = layerVal(o, 'y', t, 0) + (o.type === 'rect' ? num(o.h, 0) / 2 : 0);
         best = Math.min(best, Math.hypot(ox - hx, oy - hy) / (heroH * s));
       }
     }
