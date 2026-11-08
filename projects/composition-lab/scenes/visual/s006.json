@@ -1,6 +1,7 @@
 {
   "version": 1,
   "id": "s006",
+  "framing": "interaction",
   "background": { "color": "#252B37" },
   "camera": {
     "x": [
@@ -25,6 +26,7 @@
     { "type": "hero", "x": 700, "y": 1010, "scale": 3.0, "pose": "reach", "expression": "determined" },
     {
       "type": "rect",
+      "role": "story_object",
       "x": 962,
       "y": 469,
       "w": 133,

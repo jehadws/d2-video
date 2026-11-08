@@ -4,6 +4,7 @@
 //   node render.mjs --project P --sheet                               one still per shot -> build/sheets/*.png
 //   node render.mjs --project P --stills 3.5,12,40                    stills at times -> build/stills
 //   node render.mjs --project P --styles dusk,midnight,golden,neon --at 3.5,12,40   style comparison grid
+// Visual DSL framing lint runs before every render (warnings only); add --strict-lint to abort on lint errors.
 // Options: --workers N  --scale K  --style ID  --debug  --format png|jpeg  --crf 18  --gl auto|gpu|swiftshader  --out FILE
 import http from 'node:http';
 import fs from 'node:fs';
@@ -12,6 +13,7 @@ import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { lintProject, printFindings } from './lint-visual.mjs';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const args = {}; { const a = process.argv.slice(2); for (let i = 0; i < a.length; i++) { if (a[i].startsWith('--')) { const k = a[i].slice(2); const v = a[i + 1] && !a[i + 1].startsWith('--') ? a[++i] : true; args[k] = v; } } }
@@ -36,6 +38,7 @@ const LAUNCH = { args: ['--ignore-gpu-blocklist', '--enable-unsafe-swiftshader',
 const FORMAT = args.format === 'jpeg' ? 'jpeg' : 'png';
 const CFG = JSON.parse(fs.readFileSync(path.join(PROJECT, 'config.json'), 'utf8'));
 const FPS = CFG.fps || 24;
+{ const lint = lintProject(PROJECT); printFindings(lint); if (lint.errors && args['strict-lint']) { console.error('Aborting: visual lint errors (--strict-lint). Fix the framing or run without the flag.'); process.exit(1); } }
 
 async function openPlayer(browser, style) {
   const qs = new URLSearchParams(); if (args.scale) qs.set('scale', args.scale); if (style || args.style) qs.set('style', style || args.style); if (args.debug) qs.set('debug', '1');

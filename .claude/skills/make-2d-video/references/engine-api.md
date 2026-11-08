@@ -64,6 +64,7 @@ Layers are drawn in array order, back to front. Supported types: hero, figure, r
 - hero uses the canonical off-white protagonist from characters.js. figure uses the existing rig and accepts an outfit object.
 - Camera tracks support x, y, and zoom. Element tracks support x, y, scale, rotation (radians), and alpha.
 - Animation keyframes use { at: seconds, value: number, ease: linear|in|out|inOut|sine|outBack|outElastic }. Times are local to the shot and must increase strictly.
+- Optional authoring metadata, ignored by the renderer and read by `lint-visual.mjs`: top-level `framing` (`wide`, `medium`, `two_shot`, `interaction`, `insert`, `reveal`), layer `role: "story_object"`, and hero/figure `crop: true` for an intentional off-frame crop. Set `framing` on every shot. Thresholds and the measured hero height (about 242 px per scale unit at 1080p) are in `visual-composition-system.md`.
 - Keep timing in story/shots.json; the DSL controls only what is drawn.
 - Use JavaScript registerShot() for visuals outside this intentionally small v1 vocabulary, especially custom canvas work and 3D.
 - Invalid DSL is reported with the file path and shot id; it is never evaluated as executable code.

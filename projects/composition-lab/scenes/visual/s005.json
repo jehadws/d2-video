@@ -1,6 +1,7 @@
 {
   "version": 1,
   "id": "s005",
+  "framing": "wide",
   "background": { "color": "#252B37" },
   "camera": {
     "x": [
@@ -10,6 +11,10 @@
     "zoom": [
       { "at": 0, "value": 1.02 },
       { "at": 3, "value": 1.06, "ease": "sine" }
+    ],
+    "y": [
+      { "at": 0, "value": 12 },
+      { "at": 3, "value": 14, "ease": "sine" }
     ]
   },
   "layers": [

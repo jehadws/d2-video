@@ -21,7 +21,7 @@ Every shot plan must identify:
 - **Continuity:** facing direction, screen position, outfit, prop ownership, and light direction carried over from adjacent shots.
 - **Motion:** one motivated camera move and one meaningful subject/prop movement; avoid motion added only to satisfy a checklist.
 
-Use percentages in planning. Convert to logical coordinates only when authoring the DSL. Keep important content inside the central 80% of the frame, and leave the lower caption-safe area clear when captions are enabled.
+Use percentages in planning. Convert to logical coordinates only when authoring the DSL, using the measured numbers in *Scale and framing rules* below. Keep important content inside the central 80% of the frame, and leave the lower caption-safe area clear when captions are enabled.
 
 ## Shot template catalog
 
@@ -30,7 +30,7 @@ Use percentages in planning. Convert to logical coordinates only when authoring 
 **Purpose:** establish location, geography, time of day, and where the characters are.
 
 - One dominant environmental landmark or light source.
-- Main character occupies about 15–25% of frame height.
+- Main character occupies about 45–60% of frame height (hero scale about 2.0–2.7 at zoom 1.0). Never below 42%: smaller than that reads as a speck at phone size.
 - Place the character near a third, not automatically at dead center.
 - Include a foreground or midground cue only when it adds depth or scale.
 - Use a slow push or lateral drift.
@@ -40,7 +40,7 @@ Use percentages in planning. Convert to logical coordinates only when authoring 
 
 **Purpose:** show one character acting or reacting while retaining enough environment to orient the viewer.
 
-- Character occupies about 35–55% of frame height.
+- Character occupies about 65–80% of frame height (hero scale about 2.9–3.6 at zoom 1.0). Never below 60%.
 - Keep the head and hands/action area unobstructed.
 - Reserve negative space in the direction of gaze or movement.
 - Use a gentle push-in for realization, or a small lateral drift for observation.
@@ -49,7 +49,7 @@ Use percentages in planning. Convert to logical coordinates only when authoring 
 
 **Purpose:** make a relationship or exchange immediately understandable.
 
-- Both characters must be large enough to read; avoid shrinking both to fit the environment.
+- Both characters must be large enough to read; avoid shrinking both to fit the environment. Each is at least 50% of frame height (scale about 2.3 or more at zoom 1.0).
 - Keep a clear gap between silhouettes unless contact is the point of the shot.
 - Establish left/right screen positions and preserve them through the exchange.
 - Their gaze and body orientation must connect.
@@ -77,7 +77,7 @@ Use percentages in planning. Convert to logical coordinates only when authoring 
 
 **Purpose:** show the small object or detail that carries the story information.
 
-- The object should be large enough to identify instantly.
+- The object should be large enough to identify instantly: at least 25% of frame height.
 - Remove unrelated characters and decoration.
 - Keep the action area near the center of attention.
 - Use DSL shapes for simple symbolic objects; use JS when the shot needs hands, fingers, detailed props, or physically convincing contact.
@@ -88,7 +88,7 @@ Use percentages in planning. Convert to logical coordinates only when authoring 
 
 - Show the actor, the object, and the point of interaction together whenever possible.
 - The actor's hand/arm must visibly reach the object; do not rely on narration to explain an invisible connection.
-- The object must be large enough to track across the action.
+- The object must be large enough to track across the action: its longest side is at least 10% of frame height (about 110 px in the 1080p logical frame), and the actor is 60–85% of frame height.
 - Preserve object position and direction across consecutive shots.
 - Use DSL only for simple interactions that its existing figure/shape vocabulary can express. Use JS for detailed hand poses, prop attachment, or contact animation.
 
@@ -100,6 +100,64 @@ Use percentages in planning. Convert to logical coordinates only when authoring 
 - Give the revealed subject the strongest contrast or scale.
 - Use a motivated pull-out, push-in, or light change.
 - Avoid stacking multiple title cards, glows, and graphic accents on the same beat.
+
+## Scale and framing rules (measured, enforced by lint)
+
+These numbers come from rendering the real rig, not from estimates. In the 1080p logical frame, **one hero scale unit is about 242 px tall (22.4% of frame height)** for the stand, reach and phone poses. On-screen height is `242 × scale × camera.zoom`.
+
+| Framing | Character height (% of frame) | Hero `scale` at zoom 1.0 | Lint |
+|---|---|---|---|
+| `wide` (establishing) | 42–65, aim 45–60 | 1.9–2.9, aim 2.0–2.7 | below min = error |
+| `medium` (single) | 60–85, aim 65–80 | 2.7–3.8, aim 2.9–3.6 | below min = error |
+| `two_shot` (each character) | 50–75 | 2.2–3.4 | below min = error |
+| `interaction` (actor) | 60–85 | 2.7–3.8 | below min = error |
+| `insert` | object is the subject | n/a | object rule below |
+| `reveal` | 30–100 | follows the reveal | below min = error |
+
+Going above the maximum is a warning. If a shot cannot be made to read at these sizes, change the framing (cut to a close-up or insert) instead of shrinking the character.
+
+**Keep the whole figure in the visible frame.** Camera zoom is applied about the frame centre, so zooming in pushes the feet down and off screen. The default 16:9 letterbox bars take 60 px at the top and bottom, so the usable height is 60–1020. A character's feet must stay at or above about y = 1010 and the top of the head at or below y = 60 on screen. Screen position of a point is `(y − 540 − camera.y) × zoom + 540`. To land the feet at screen y = 990, give every zoom keyframe a matching `camera.y` keyframe:
+
+```
+camera.y = hero.y − 540 − 450 / zoom
+```
+
+Example: hero at y = 1000 with zoom 1.06 → 1.13 needs `camera.y` 35 → 62 on the same `at` times and the same `ease`. Only a deliberate crop (a foreground over-the-shoulder figure) may leave the frame, and it must carry `"crop": true` on that layer.
+
+**Make the story object unmistakable.** The ball, phone or cup that the beat is about must have its longest side at least 10% of frame height (a circle's radius is at least 55 px at zoom 1.0). A dot of 10–20 px is decoration, not a story object. Tag it with `"role": "story_object"`.
+
+**Rescaling a hero moves everything attached to it.** When you change a hero's `scale`, move and resize the props in its hand and the hand highlight too: `p' = hero + (p − hero) × (newScale / oldScale)`, applied to every keyframe of an animated prop. Otherwise the hand and object stop touching. A `reach` pose needs a story object within about 0.8 hero-heights of the chest.
+
+**Work in this order for every DSL shot:** pick the framing → set the scale from the table → set the zoom → compute `camera.y` for the feet → place and size the story object → tag `framing` and `role` → run the lint → render the sheet.
+
+### Metadata the DSL accepts (ignored by the renderer)
+
+| Key | Where | Values |
+|---|---|---|
+| `framing` | top level of the shot | `wide`, `medium`, `two_shot`, `interaction`, `insert`, `reveal` |
+| `role` | any layer | `story_object` |
+| `crop` | `hero` / `figure` layer | `true` for an intentional off-frame crop |
+
+These are authoring metadata for the lint, not renderer features. Always set `framing` on every DSL shot.
+
+### Lint
+
+`node lint-visual.mjs projects/<name>` checks every `scenes/visual/*.json`. `render.mjs` runs the same check before each render and prints the findings; add `--strict-lint` to make errors abort the render. Thresholds live in one table, `engine/visual-lint.js`. Fix every error before opening the contact sheet; treat warnings as review prompts.
+
+| Code | Level | Meaning |
+|---|---|---|
+| `character-too-small` | error | Character below the minimum for its framing |
+| `character-too-large` | warn | Character above the maximum for its framing |
+| `feet-cropped`, `head-cropped` | error | Figure leaves the visible frame at some point in the shot |
+| `off-centre` | warn | Character leaves the central 80% of the width |
+| `story-object-small` | error | A `story_object` is under 10% of frame height |
+| `reach-no-target`, `reach-too-far` | warn | A reaching hero has no story object within range |
+| `interaction-no-object` | warn | Interaction framing with no `story_object` tagged |
+| `no-camera-motion` | warn | The camera never moves |
+| `framing-missing`, `framing-unknown` | warn | `framing` unset or not recognised |
+| `framing-repeat` | warn | More than 3 consecutive shots with the same framing |
+
+The lint cannot judge whether a shot is good. It only removes the failures that a measurement can catch, so the contact-sheet review can spend its time on story and design.
 
 ## DSL vs. JavaScript decision
 
@@ -119,8 +177,9 @@ Do not weaken a shot to force it into JSON. A clear JS shot is better than an un
 
 Review the rendered frame, not only the JSON:
 
+0. Does `node lint-visual.mjs` report no errors?
 1. Can the viewer identify the subject within one second?
-2. Is the important character/object large enough at phone size?
+2. Is the important character/object large enough at phone size? (Character at least 42% of frame height in a wide, 60% in a medium; story object at least 10%.)
 3. Is the action or relationship clear without reading the narration?
 4. Is the focal point distinct from the background?
 5. Is there a visible cause-and-effect connection for interactions?

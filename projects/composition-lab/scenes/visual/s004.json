@@ -1,6 +1,7 @@
 {
   "version": 1,
   "id": "s004",
+  "framing": "interaction",
   "background": { "color": "#202734" },
   "camera": {
     "x": [
@@ -24,6 +25,7 @@
     { "type": "hero", "x": 700, "y": 990, "scale": 3.0, "pose": "reach", "expression": "determined" },
     {
       "type": "circle",
+      "role": "story_object",
       "x": 909,
       "y": 467,
       "radius": 87,

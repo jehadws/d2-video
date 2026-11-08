@@ -1,6 +1,7 @@
 {
   "version": 1,
   "id": "s001",
+  "framing": "wide",
   "background": {
     "color": "#242936"
   },

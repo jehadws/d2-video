@@ -1,6 +1,7 @@
 {
   "version": 1,
   "id": "s002",
+  "framing": "medium",
   "background": {
     "color": "#242936"
   },
@@ -101,6 +102,7 @@
     },
     {
       "type": "rect",
+      "role": "story_object",
       "x": 1111,
       "y": 417,
       "w": 62,

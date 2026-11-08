@@ -1,6 +1,7 @@
 {
   "version": 1,
   "id": "s003",
+  "framing": "wide",
   "background": { "color": "#202734" },
   "camera": {
     "x": [
@@ -30,7 +31,7 @@
     { "type": "circle", "x": 1518, "y": 260, "radius": 88, "fill": "#796C62" },
     { "type": "circle", "x": 1518, "y": 260, "radius": 54, "fill": "#D9B77F" },
     { "type": "rect", "x": 1410, "y": 690, "w": 210, "h": 80, "fill": "#363B48", "radius": 8 },
-    { "type": "circle", "x": 930, "y": 820, "radius": 78, "fill": "#C9794D" },
+    { "type": "circle", "role": "story_object", "x": 930, "y": 820, "radius": 78, "fill": "#C9794D" },
     { "type": "circle", "x": 913, "y": 803, "radius": 19, "fill": "#E6B18A" },
     { "type": "hero", "x": 690, "y": 960, "scale": 2.4, "pose": "stand", "expression": "thinking" },
     { "type": "text", "x": 960, "y": 90, "value": "QUIET CITY STREET", "size": 34, "color": "#D9D0C5", "weight": 600 }
