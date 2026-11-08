@@ -1,15 +1,68 @@
 {
   "version": 2,
   "id": "s011",
-  "background": { "color": "#303846" },
-  "camera": { "zoom": 1 },
+  "background": {
+    "color": "#303846"
+  },
+  "camera": {
+    "zoom": 1
+  },
   "entities": [
-    { "id": "heroA", "type": "hero", "pose": "stand", "facing": 1, "transform": { "position": { "x": -24, "y": 38 }, "scale": 2.6 } },
-    { "id": "heroB", "type": "figure", "pose": "stand", "facing": -1, "outfit": { "top": "hoodie", "color": "#3A6C83" }, "transform": { "position": { "x": 24, "y": 38 }, "scale": 2.6 } }
+    {
+      "id": "heroA",
+      "type": "hero",
+      "pose": "stand",
+      "facing": 1,
+      "transform": {
+        "position": {
+          "x": -24,
+          "y": 38
+        },
+        "scale": 2.6
+      }
+    },
+    {
+      "id": "heroB",
+      "type": "figure",
+      "pose": "stand",
+      "facing": -1,
+      "outfit": {
+        "top": "hoodie",
+        "color": "#3A6C83"
+      },
+      "transform": {
+        "position": {
+          "x": 24,
+          "y": 38
+        },
+        "scale": 2.6
+      }
+    }
   ],
   "relationships": [
-    { "type": "left_of", "subject": "heroA", "target": "heroB", "gap": 4, "priority": 100 },
-    { "type": "inside_frame", "subject": "heroA" },
-    { "type": "inside_frame", "subject": "heroB" }
-  ]
+    {
+      "type": "left_of",
+      "subject": "heroA",
+      "target": "heroB",
+      "gap": 4,
+      "priority": 100
+    },
+    {
+      "type": "inside_frame",
+      "subject": "heroA"
+    },
+    {
+      "type": "inside_frame",
+      "subject": "heroB"
+    }
+  ],
+  "composition": {
+    "template": "two-shot",
+    "roles": {
+      "primary": "heroA",
+      "secondary": [
+        "heroB"
+      ]
+    }
+  }
 }
