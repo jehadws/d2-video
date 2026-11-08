@@ -121,7 +121,8 @@ export function lintVisualShot(spec, opts = {}) {
     let zMin = Infinity; for (const t of ts) zMin = Math.min(zMin, camAt(spec, t, W, H).z);
     if (dim * zMin < STORY_OBJECT_MIN * H) add('error', 'story-object-small', 'story object (' + o.type + ' at ' + num(o.x, 0) + ',' + num(o.y, 0) + ') is ' + Math.round(dim * zMin) + 'px at its smallest; it needs at least ' + Math.round(STORY_OBJECT_MIN * H) + 'px (' + STORY_OBJECT_MIN * 100 + '% of frame height) to read as an important object.');
   }
-  if (framing === 'interaction' && !objs.length) add('warn', 'interaction-no-object', 'interaction framing but no layer has "role": "story_object"; tag the ball/phone/cup that the action is about.');
+  const hasAttachedProp = chars.some((l) => !!l.prop);
+  if (framing === 'interaction' && !objs.length && !hasAttachedProp) add('warn', 'interaction-no-object', 'interaction framing but no story_object layer or hand-attached prop is declared.');
   for (const l of chars) {
     const hand = HAND_ANCHORS[l.pose];
     if (!hand) continue;
