@@ -306,10 +306,13 @@ export function bigFace(g, cx, cy, r, o = {}) {
   const top = of.top || 'none', cc = top === 'labcoat' ? '#ebe7f0' : of.color || ink;
   g.fillStyle = top === 'none' ? ink : cc; g.beginPath(); g.ellipse(0, r * 1.65, r * 1.25, r * 0.85, 0, Math.PI, Math.PI * 2); g.fill();
   if (of.head === 'hood') { const hc = of.headColor || of.color || '#d64a33'; circle(g, side * -r * 0.04, r * 0.06, r * 1.2, shade(hc, -0.15)); g.strokeStyle = alpha(shade(hc, 0.4), 0.7); g.lineWidth = r * 0.05; g.beginPath(); g.arc(-r * 0.05, 0, r * 1.12, Math.PI * 1.1, Math.PI * 1.5); g.stroke(); }
-  // rim crescent on the lit side (chiaroscuro)
+  // A narrow rim stroke stays attached to the head silhouette; avoid a detached crescent.
   g.save();
   g.shadowColor = rc; g.shadowBlur = o.rimGlow === 0 ? 0 : (o.rimGlow ?? r * 0.14);
-  g.beginPath(); g.arc(0, 0, r + r * 0.08, 0, Math.PI * 2); g.arc(side * r * 0.09, r * 0.02, r, 0, Math.PI * 2, true); g.fillStyle = rc; g.fill('evenodd');
+  g.strokeStyle = rc; g.lineWidth = Math.max(2, r * 0.055); g.lineCap = 'round';
+  g.beginPath();
+  g.arc(0, 0, r + r * 0.025, side < 0 ? Math.PI * 0.52 : -Math.PI * 0.48, side < 0 ? Math.PI * 1.48 : Math.PI * 0.48);
+  g.stroke();
   g.restore();
   const headGrad = g.createLinearGradient(side * -r, 0, side * r, 0);
   headGrad.addColorStop(0, shade(ink, 0.06));
