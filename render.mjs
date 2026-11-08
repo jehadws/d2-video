@@ -4,7 +4,7 @@
 //   node render.mjs --project P --sheet                               one still per shot -> build/sheets/*.png
 //   node render.mjs --project P --stills 3.5,12,40                    stills at times -> build/stills
 //   node render.mjs --project P --styles dusk,midnight,golden,neon --at 3.5,12,40   style comparison grid
-// Visual DSL framing lint runs before every render (warnings only); add --strict-lint to abort on lint errors.
+// Visual DSL lint runs before every render; errors always abort, warnings are non-blocking.
 // Options: --workers N  --scale K  --style ID  --debug  --format png|jpeg  --crf 18  --gl auto|gpu|swiftshader  --out FILE
 import http from 'node:http';
 import fs from 'node:fs';
@@ -38,7 +38,7 @@ const LAUNCH = { args: ['--ignore-gpu-blocklist', '--enable-unsafe-swiftshader',
 const FORMAT = args.format === 'jpeg' ? 'jpeg' : 'png';
 const CFG = JSON.parse(fs.readFileSync(path.join(PROJECT, 'config.json'), 'utf8'));
 const FPS = CFG.fps || 24;
-{ const lint = lintProject(PROJECT); printFindings(lint); if (lint.errors && args['strict-lint']) { console.error('Aborting: visual lint errors (--strict-lint). Fix the framing or run without the flag.'); process.exit(1); } }
+{ const lint = lintProject(PROJECT); printFindings(lint); if (lint.errors) { console.error('Aborting: visual lint errors. Fix the scene before rendering.'); process.exit(1); } }
 
 async function openPlayer(browser, style) {
   const qs = new URLSearchParams(); if (args.scale) qs.set('scale', args.scale); if (style || args.style) qs.set('style', style || args.style); if (args.debug) qs.set('debug', '1');
