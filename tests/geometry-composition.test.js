@@ -122,6 +122,20 @@ test('conflicting relationships produce an unsatisfied-constraint diagnostic',()
   assert.ok(r.diagnostics.some(d=>d.code==='constraint-unsatisfied'));
 });
 
+test('target placement resolves before dependent positional relationships',()=>{
+  const spec={version:2,id:'s014',entities:[
+    {id:'a',type:'circle',geometry:{radius:2}},
+    {id:'b',type:'circle',geometry:{radius:2}},
+    {id:'c',type:'circle',geometry:{radius:2},transform:{position:{x:20,y:0}}},
+  ],relationships:[
+    {type:'left_of',subject:'a',target:'b',gap:2},
+    {type:'left_of',subject:'b',target:'c',gap:2},
+  ]};
+  const r=resolveComposition(spec);
+  assert.equal(r.valid,true);
+  assert.equal(r.diagnostics.filter(d=>d.code==='constraint-unsatisfied').length,0);
+});
+
 test('inside_frame runs after relationships that move the same entity',()=>{
   const spec={version:2,id:'s013',camera:{zoom:2},entities:[
     {id:'subject',type:'circle',geometry:{radius:3},transform:{position:{x:0,y:0}}},
