@@ -68,13 +68,6 @@
     },
     {
       "type": "circle",
-      "x": 760,
-      "y": 900,
-      "radius": 105,
-      "fill": "#242A35"
-    },
-    {
-      "type": "circle",
       "role": "story_object",
       "x": 909,
       "y": 467,
