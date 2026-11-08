@@ -8,6 +8,7 @@ import { buildReport, formatReport } from '../qa/report.js';
 import { runQA } from '../qa/index.js';
 import { _testing } from '../qa/checks/geometry.js';
 import { parseQaArgs } from '../qa.mjs';
+import { isNearBlankFrame } from '../qa/checks/rendered.js';
 import { lintProject } from '../lint-visual.mjs';
 
 function project(t, shots = []) {
@@ -129,4 +130,17 @@ test('static QA does not accept a descriptive JavaScript filename without shot r
   fs.writeFileSync(path.join(shotsDir, '07_closeup.js'), 'export {};');
   const { report } = runQA(root, { checks: ['static'], write: false });
   assert.ok(report.findings.some(item => item.code === 'scene-implementation-missing' && item.sceneId === 's007'));
+});
+
+
+test('rendered QA CLI flag is parsed as an enabled check', () => {
+  const args = parseQaArgs(['--project', 'projects/demo', '--rendered', '--scale', '0.5']);
+  assert.equal(args.rendered, true);
+  assert.equal(args.scale, '0.5');
+});
+
+test('rendered QA near-blank detector flags only uniformly near-black samples', () => {
+  assert.equal(isNearBlankFrame({ meanLuminance: 0.4, luminanceStdDev: 0.2 }), true);
+  assert.equal(isNearBlankFrame({ meanLuminance: 24, luminanceStdDev: 8 }), false);
+  assert.equal(isNearBlankFrame({ meanLuminance: 1.5, luminanceStdDev: 4 }), false);
 });
