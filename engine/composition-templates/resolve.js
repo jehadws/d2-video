@@ -1,4 +1,4 @@
-import { resolveComposition, getEntityGeometry } from '../geometry/index.js';
+import { resolveComposition } from '../geometry/index.js';
 import { ease } from '../core.js';
 import { createTemplateRegistry, validateTemplateRequest } from './index.js';
 import { BUILTIN_TEMPLATE_DEFINITIONS } from './builtins.js';
@@ -59,15 +59,9 @@ export function applyCompositionTemplate(spec, time = 0, registry = DEFAULT_COMP
     const focusId = request.intent?.focus || roleIds(request, follow.role)[0];
     const focusEntity = out.entities.find(entity => entity.id === focusId);
     if (focusEntity) {
-      let p = entityPosition(focusEntity, time);
-      if (follow.anchor) {
-        const anchor = getEntityGeometry(focusEntity).anchors[follow.anchor];
-        if (anchor) {
-          const base = entityPosition(focusEntity, 0);
-          p = { x: anchor.x + p.x - base.x, y: anchor.y + p.y - base.y };
-        }
-      }
-      // Explicit shot camera values and template overrides always win.
+      const p = entityPosition(focusEntity, time);
+      // This is the first-pass camera estimate. The final camera is refined
+      // from solver-resolved anchors in resolveCompositionTemplate().
       if (camera.x == null) camera.x = p.x;
       if (camera.y == null) camera.y = p.y;
     }
@@ -91,6 +85,38 @@ export function applyCompositionTemplate(spec, time = 0, registry = DEFAULT_COMP
   return out;
 }
 
+/**
+ * Resolve in two passes when a template follows a semantic focus. The first
+ * pass solves relationships; the second centers the camera on the resolved
+ * entity origin or anchor, then re-runs geometry against the final viewport.
+ */
+export function resolveCompositionTemplate(spec, time = 0, frame = { width: 1920, height: 1080 }, registry = DEFAULT_COMPOSITION_TEMPLATES) {
+  const expanded = applyCompositionTemplate(spec, time, registry);
+  let resolved = resolveComposition(expanded, time, frame);
+  if (!spec.composition || !resolved.valid) return { spec: expanded, resolved };
+
+  const definition = registry.get(spec.composition.template);
+  const follow = definition?.defaults?.tracking || definition?.defaults?.focus;
+  if (!follow) return { spec: expanded, resolved };
+
+  const focusId = spec.composition.intent?.focus || roleIds(spec.composition, follow.role)[0];
+  const geometry = resolved.geometry.find(item => item.id === focusId);
+  if (!geometry) return { spec: expanded, resolved };
+
+  const point = follow.anchor ? geometry.anchors[follow.anchor] : geometry.position;
+  if (!point) return { spec: expanded, resolved };
+
+  const explicitCamera = {
+    x: spec.camera?.x != null || spec.composition.overrides?.camera?.x != null,
+    y: spec.camera?.y != null || spec.composition.overrides?.camera?.y != null,
+  };
+  let changed = false;
+  if (!explicitCamera.x && expanded.camera.x !== point.x) { expanded.camera.x = point.x; changed = true; }
+  if (!explicitCamera.y && expanded.camera.y !== point.y) { expanded.camera.y = point.y; changed = true; }
+  if (changed) resolved = resolveComposition(expanded, time, frame);
+  return { spec: expanded, resolved };
+}
+
 export function resolveTemplatedComposition(spec, time = 0, frame = { width: 1920, height: 1080 }, registry = DEFAULT_COMPOSITION_TEMPLATES) {
-  return resolveComposition(applyCompositionTemplate(spec, time, registry), time, frame);
+  return resolveCompositionTemplate(spec, time, frame, registry).resolved;
 }
