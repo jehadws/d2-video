@@ -125,7 +125,10 @@
       "pose": "reachDown",
       "expression": "neutral",
       "contact": {
-        "hand": "F"
+        "hand": "F",
+        "from": 1.2,
+        "to": 3,
+        "target": 4
       }
     }
   ]
