@@ -21,7 +21,8 @@ export function formatReport(report) {
     'Visual QA: ' + report.status.toUpperCase(),
     'Project: ' + report.project,
     'Scenes: ' + report.summary.scenes + ' | Errors: ' + report.summary.errors +
-      ' | Warnings: ' + report.summary.warnings + ' | Info: ' + report.summary.info,
+      ' | Warnings: ' + report.summary.warnings + ' | Info: ' + report.summary.info +
+      (report.summary.checkedFrames ? ' | Frames checked: ' + report.summary.checkedFrames : ''),
     'Checks: ' + (report.checks.length ? report.checks.join(', ') : 'none'),
     '',
   ];
