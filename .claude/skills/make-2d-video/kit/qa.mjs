@@ -20,7 +20,7 @@ export function parseQaArgs(argv) {
 export async function main(argv = process.argv.slice(2)) {
   const args = parseQaArgs(argv);
   if (!args.project) {
-    console.error('usage: node qa.mjs --project projects/<name> [--static] [--geometry] [--rendered] [--fail-on error|warning|info]');
+    console.error('usage: node qa.mjs --project projects/<name> [--static] [--geometry] [--production] [--rendered] [--fail-on error|warning|info]');
     return 2;
   }
   if (args.temporal || args.continuity) {
@@ -30,6 +30,7 @@ export async function main(argv = process.argv.slice(2)) {
   const selected = [];
   if (args.static) selected.push('static');
   if (args.geometry) selected.push('geometry');
+  if (args.production) selected.push('production');
   const checks = selected.length ? selected : ['static', 'geometry'];
   const projectDir = path.resolve(String(args.project));
   try {

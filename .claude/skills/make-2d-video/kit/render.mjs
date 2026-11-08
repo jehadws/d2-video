@@ -40,7 +40,7 @@ const LAUNCH = { args: ['--ignore-gpu-blocklist', '--enable-unsafe-swiftshader',
 const FORMAT = args.format === 'jpeg' ? 'jpeg' : 'png';
 const CFG = JSON.parse(fs.readFileSync(path.join(PROJECT, 'config.json'), 'utf8'));
 const FPS = CFG.fps || 24;
-{ const preflight = runQA(PROJECT, { checks: ['static', 'geometry'] }); console.log(formatReport(preflight.report)); if (preflight.report.status === 'failed') { console.error('Aborting: production preflight found critical errors. Fix the timeline, assets, scenes, or geometry before rendering.'); process.exit(1); } }
+{ const preflight = runQA(PROJECT, { checks: args.production ? ['static', 'geometry', 'production'] : ['static', 'geometry'] }); console.log(formatReport(preflight.report)); if (preflight.report.status === 'failed') { console.error('Aborting: production preflight found critical errors. Fix the timeline, assets, scenes, or geometry before rendering.'); process.exit(1); } }
 
 async function openPlayer(browser, style) {
   const qs = new URLSearchParams(); if (args.scale) qs.set('scale', args.scale); if (style || args.style) qs.set('style', style || args.style); if (args.debug) qs.set('debug', '1');

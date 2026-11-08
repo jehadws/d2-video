@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { runStaticChecks } from './checks/static.js';
 import { runGeometryChecks } from './checks/geometry.js';
+import { runProductionChecks } from './checks/production.js';
 import { buildReport, writeReport } from './report.js';
 
 function sceneCount(projectDir) {
@@ -23,6 +24,10 @@ export function runQA(projectDir, options = {}) {
   if (selected.includes('geometry')) {
     findings.push(...runGeometryChecks(absolute));
     checks.push('geometry');
+  }
+  if (selected.includes('production')) {
+    findings.push(...runProductionChecks(absolute));
+    checks.push('production');
   }
   const unique = new Map();
   for (const finding of findings) unique.set(finding.id, finding);
