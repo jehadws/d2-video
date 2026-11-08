@@ -3,6 +3,8 @@ import { E, registerShot, ease, clamp, rr, circle, seg, text, FONTS } from './co
 import { drawHero } from './characters.js';
 import { drawFigure, POSES } from './rig2d.js';
 import { validateComposition, resolveComposition } from './geometry/index.js';
+import { DEFAULT_COMPOSITION_TEMPLATES, applyCompositionTemplate } from './composition-templates/resolve.js';
+import { validateTemplateRequest } from './composition-templates/index.js';
 
 const TYPES = new Set(['hero', 'figure', 'rect', 'circle', 'cup', 'line', 'text']);
 const ACTOR_TRACKS = new Set(['x', 'y', 'scale', 'rotation', 'alpha']);
@@ -173,16 +175,18 @@ function compositionLayer(entity, frame) {
 }
 
 export function registerComposedShot(spec) {
-  const errors = validateComposition(spec);
+  const templateErrors = validateTemplateRequest(spec, DEFAULT_COMPOSITION_TEMPLATES);
+  const errors = [...templateErrors, ...validateComposition(spec)];
   if (errors.length) throw new Error('Visual DSL v2 ' + (spec && spec.id || '<unknown>') + ': ' + errors.join('; '));
   registerShot(spec.id, {
     kind: '2d',
     draw(g, t) {
-      const resolved = resolveComposition(spec, t, { width: E.W, height: E.H });
+      const expanded = applyCompositionTemplate(spec, t, DEFAULT_COMPOSITION_TEMPLATES);
+      const resolved = resolveComposition(expanded, t, { width: E.W, height: E.H });
       const failures = resolved.diagnostics.filter(x => x.level === 'error');
       if (failures.length) throw new Error('Composition ' + spec.id + ': ' + failures.map(x => x.message).join('; '));
       g.save();
-      const camera = spec.camera || {};
+      const camera = expanded.camera || {};
       const cx = sample(camera.x, t, 0) * E.H / 100;
       const cy = sample(camera.y, t, 0) * E.H / 100;
       const zoom = Math.max(0.01, sample(camera.zoom, t, 1));
