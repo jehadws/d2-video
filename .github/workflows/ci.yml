@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - feat/visual-composition-system
+  pull_request:
+    branches:
+      - main
+      - feat/visual-composition-system
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Node and Python checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Check JavaScript syntax
+        run: |
+          node --check render.mjs
+          node --check qa.mjs
+          node --check lint-visual.mjs
+
+      - name: Run Node test suite
+        run: npm test
+
+      - name: Run audio validation tests
+        run: python -m unittest discover -s tests -p "test_*.py"
