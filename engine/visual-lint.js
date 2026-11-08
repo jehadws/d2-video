@@ -158,8 +158,13 @@ export function lintVisualShot(spec, opts = {}) {
       : objs;
     if (window && (!targets.length || !targets[0] || targets[0].role !== 'story_object')) continue;
 
-    let best = Infinity, worst = 0, worstAt = window ? window.from : 0;
-    for (const t of sampleTimes) {
+    const targetKeyTimes = targets.flatMap((o) => Object.values(o.animate || {}).flatMap((track) => Array.isArray(track) ? track.map((kf) => kf.at) : []));
+    const actorKeyTimes = Object.values(l.animate || {}).flatMap((track) => Array.isArray(track) ? track.map((kf) => kf.at) : []);
+    const contactSamples = window
+      ? [...new Set([...sampleTimes, ...targetKeyTimes, ...actorKeyTimes, window.from, window.to].filter((t) => t >= window.from && t <= window.to))].sort((a, b) => a - b)
+      : sampleTimes;
+    let worst = 0, worstAt = window ? window.from : 0;
+    for (const t of contactSamples) {
       const s = layerVal(l, 'scale', t, 1), facing = l.facing === -1 ? -1 : 1;
       const hx = layerVal(l, 'x', t, 0) + hand[0] * s * facing;
       const hy = layerVal(l, 'y', t, 0) + hand[1] * s;
@@ -169,7 +174,6 @@ export function lintVisualShot(spec, opts = {}) {
         const oy = layerVal(o, 'y', t, 0) + (o.type === 'rect' ? num(o.h, 0) / 2 : 0);
         nearest = Math.min(nearest, Math.hypot(ox - hx, oy - hy) / (heroH * s));
       }
-      best = Math.min(best, nearest);
       if (nearest > worst) { worst = nearest; worstAt = t; }
     }
 
@@ -203,9 +207,10 @@ export function lintVisualShot(spec, opts = {}) {
     if (hasOffsetMotion && !window) {
       add('error', 'prop-contact-window-missing', 'attached ' + (p.type || 'prop') + ' has animated hand offsets but no declared contact window; specify contact.from/contact.to for the interval when it must remain gripped.');
     }
+    const propKeyTimes = offsetTracks.flatMap((track) => track.map((kf) => kf.at));
     const sampleTimes = window
-      ? [...new Set([...ts, window.from, window.to].filter((t) => t >= window.from && t <= window.to))].sort((a, b) => a - b)
-      : ts;
+      ? [...new Set([...ts, ...propKeyTimes, window.from, window.to].filter((t) => t >= window.from && t <= window.to))].sort((a, b) => a - b)
+      : [...new Set([...ts, ...propKeyTimes].filter((t) => t >= 0 && t <= dur))].sort((a, b) => a - b);
     if (window && window.to > dur + 1e-6) add('error', 'contact-window-out-of-range', 'contact window ends at ' + window.to.toFixed(2) + 's, after the shot duration ' + dur.toFixed(2) + 's.');
     let worst = 0, worstAt = sampleTimes[0] || dur;
     for (const t of sampleTimes) {
