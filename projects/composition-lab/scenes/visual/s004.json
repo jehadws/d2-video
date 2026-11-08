@@ -2,27 +2,77 @@
   "version": 1,
   "id": "s004",
   "framing": "interaction",
-  "background": { "color": "#202734" },
+  "background": {
+    "color": "#202734"
+  },
   "camera": {
     "x": [
-      { "at": 0, "value": -15 },
-      { "at": 3, "value": 20, "ease": "inOut" }
+      {
+        "at": 0,
+        "value": -15
+      },
+      {
+        "at": 3,
+        "value": 20,
+        "ease": "inOut"
+      }
     ],
     "zoom": [
-      { "at": 0, "value": 1.12 },
-      { "at": 3, "value": 1.16, "ease": "inOut" }
+      {
+        "at": 0,
+        "value": 1.12
+      },
+      {
+        "at": 3,
+        "value": 1.16,
+        "ease": "inOut"
+      }
     ],
     "y": [
-      { "at": 0, "value": 48 },
-      { "at": 3, "value": 62, "ease": "inOut" }
+      {
+        "at": 0,
+        "value": 48
+      },
+      {
+        "at": 3,
+        "value": 62,
+        "ease": "inOut"
+      }
     ]
   },
   "layers": [
-    { "type": "rect", "x": 0, "y": 0, "w": 1920, "h": 760, "fill": "#303747" },
-    { "type": "rect", "x": 0, "y": 760, "w": 1920, "h": 320, "fill": "#282C36" },
-    { "type": "line", "x": 0, "y": 930, "x2": 1920, "y2": 930, "width": 4, "color": "#8D8290" },
-    { "type": "circle", "x": 760, "y": 900, "radius": 105, "fill": "#242A35" },
-    { "type": "hero", "x": 700, "y": 990, "scale": 3.0, "pose": "reach", "expression": "determined" },
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 0,
+      "w": 1920,
+      "h": 760,
+      "fill": "#303747"
+    },
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 760,
+      "w": 1920,
+      "h": 320,
+      "fill": "#282C36"
+    },
+    {
+      "type": "line",
+      "x": 0,
+      "y": 930,
+      "x2": 1920,
+      "y2": 930,
+      "width": 4,
+      "color": "#8D8290"
+    },
+    {
+      "type": "circle",
+      "x": 760,
+      "y": 900,
+      "radius": 105,
+      "fill": "#242A35"
+    },
     {
       "type": "circle",
       "role": "story_object",
@@ -32,14 +82,34 @@
       "fill": "#C9794D",
       "animate": {
         "x": [
-          { "at": 0, "value": 1363 },
-          { "at": 1.5, "value": 909, "ease": "inOut" },
-          { "at": 3, "value": 874 }
+          {
+            "at": 0,
+            "value": 1363
+          },
+          {
+            "at": 1.5,
+            "value": 909,
+            "ease": "inOut"
+          },
+          {
+            "at": 3,
+            "value": 874
+          }
         ],
         "y": [
-          { "at": 0, "value": 170 },
-          { "at": 1.5, "value": 467, "ease": "inOut" },
-          { "at": 3, "value": 449 }
+          {
+            "at": 0,
+            "value": 170
+          },
+          {
+            "at": 1.5,
+            "value": 467,
+            "ease": "inOut"
+          },
+          {
+            "at": 3,
+            "value": 449
+          }
         ]
       }
     },
@@ -51,16 +121,44 @@
       "fill": "#E6B18A",
       "animate": {
         "x": [
-          { "at": 0, "value": 1338 },
-          { "at": 1.5, "value": 885, "ease": "inOut" },
-          { "at": 3, "value": 850 }
+          {
+            "at": 0,
+            "value": 1338
+          },
+          {
+            "at": 1.5,
+            "value": 885,
+            "ease": "inOut"
+          },
+          {
+            "at": 3,
+            "value": 850
+          }
         ],
         "y": [
-          { "at": 0, "value": 142 },
-          { "at": 1.5, "value": 439, "ease": "inOut" },
-          { "at": 3, "value": 421 }
+          {
+            "at": 0,
+            "value": 142
+          },
+          {
+            "at": 1.5,
+            "value": 439,
+            "ease": "inOut"
+          },
+          {
+            "at": 3,
+            "value": 421
+          }
         ]
       }
+    },
+    {
+      "type": "hero",
+      "x": 700,
+      "y": 1061,
+      "scale": 3,
+      "pose": "reach",
+      "expression": "determined"
     }
   ]
 }
