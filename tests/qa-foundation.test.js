@@ -144,3 +144,22 @@ test('rendered QA near-blank detector flags only uniformly near-black samples', 
   assert.equal(isNearBlankFrame({ meanLuminance: 24, luminanceStdDev: 8 }), false);
   assert.equal(isNearBlankFrame({ meanLuminance: 1.5, luminanceStdDev: 4 }), false);
 });
+
+
+test('rendered QA report includes frame counts, evidence, and contact sheets', () => {
+  const report = buildReport({
+    projectDir: '/tmp/demo',
+    checkedFrames: 3,
+    checks: ['static', 'geometry', 'rendered'],
+    findings: [createFinding({
+      sceneId: 's001', severity: 'warning', category: 'rendering',
+      code: 'rendered-frame-near-blank', message: 'Near blank',
+      evidence: 'build/qa/frames/s001_0p20s.png',
+    })],
+  });
+  report.artifacts.contactSheets = ['build/qa/frames/contact-sheet-01.png'];
+  const formatted = formatReport(report);
+  assert.match(formatted, /Frames checked: 3/);
+  assert.match(formatted, /s001_0p20s\.png/);
+  assert.match(formatted, /contact-sheet-01\.png/);
+});
