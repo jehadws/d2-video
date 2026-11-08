@@ -28,10 +28,11 @@ export async function main(argv = process.argv.slice(2)) {
     return 2;
   }
   const selected = [];
-  if (args.static) selected.push('static');
-  if (args.geometry) selected.push('geometry');
+  const hasExplicitBaseCheck = !!(args.static || args.geometry);
+  if (args.static || !hasExplicitBaseCheck) selected.push('static');
+  if (args.geometry || !hasExplicitBaseCheck) selected.push('geometry');
   if (args.production) selected.push('production');
-  const checks = selected.length ? selected : ['static', 'geometry'];
+  const checks = selected;
   const projectDir = path.resolve(String(args.project));
   try {
     const { report } = runQA(projectDir, { checks });
