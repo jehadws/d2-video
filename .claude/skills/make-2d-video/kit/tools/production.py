@@ -252,6 +252,13 @@ def claim_batch(project: Path, worker: str, lease_seconds: int) -> dict[str, Any
         for item in expired:
             append_event(project, "shot-generation", "expired", item["batch"],
                          "Worker lease expired; batch returned to pending", item["worker"])
+        plan_path = production_dir(project) / "plan.json"
+        plan = read_json(plan_path)
+        if plan.get("scan_errors") or plan.get("duplicate_implementations"):
+            save_state(project, state)
+            return {"claimed": False, "reason": "plan-validation-failed",
+                    "scan_errors": plan.get("scan_errors", []),
+                    "duplicate_implementations": plan.get("duplicate_implementations", {})}
         active = sum(batch["status"] == "running" for batch in state["batches"])
         if active >= state["max_concurrency"]:
             save_state(project, state)
@@ -298,6 +305,54 @@ def update_lease(project: Path, batch_id: str, worker: str, token: str,
         return {"batch": batch_id, "status": batch["status"],
                 "lease_expires_at": batch.get("lease_expires_at")}
 
+
+
+def retry_batch(project: Path, batch_id: str) -> dict[str, Any]:
+    with state_lock(project):
+        state = load_state(project)
+        batch = next((item for item in state["batches"] if item["id"] == batch_id), None)
+        if batch is None:
+            raise ValueError(f"Unknown batch: {batch_id}")
+        if batch["status"] != "failed":
+            raise ValueError(f"Only failed batches can be retried (current status: {batch['status']})")
+        batch.update(status="pending", worker=None, token=None, lease_expires_at=None)
+        batch.pop("note", None)
+        save_state(project, state)
+        return {"batch": batch_id, "status": "pending"}
+
+
+def check_shot_gate(project: Path) -> dict[str, Any]:
+    shots = load_timeline(project)
+    expected = {shot["id"] for shot in shots}
+    scan = scan_implementations(project, expected)
+    problems = []
+    if scan["missing_ids"]:
+        problems.append(f"{len(scan['missing_ids'])} shots are not implemented")
+    if scan["duplicate_implementations"]:
+        problems.append("duplicate shot implementations exist")
+    if scan["scan_errors"]:
+        problems.append("one or more scene files could not be inspected")
+    state_path = production_dir(project) / "state.json"
+    batch_counts = {}
+    if state_path.is_file():
+        state = read_json(state_path)
+        batch_counts = {
+            status: sum(item["status"] == status for item in state["batches"])
+            for status in ("pending", "running", "failed", "completed")
+        }
+        if any(batch_counts.get(status, 0) for status in ("pending", "running", "failed")):
+            problems.append("scheduler still has pending, running, or failed batches")
+    return {
+        "stage": "shots",
+        "passed": not problems,
+        "timeline_shot_count": len(shots),
+        "implemented_shot_count": len(scan["implemented_ids"]),
+        "missing_ids": scan["missing_ids"],
+        "duplicate_implementations": scan["duplicate_implementations"],
+        "scan_errors": scan["scan_errors"],
+        "batch_counts": batch_counts,
+        "problems": problems,
+    }
 
 def summarize_events(project: Path) -> dict[str, Any]:
     log_path = production_dir(project) / "events.jsonl"
@@ -366,6 +421,14 @@ def main() -> int:
     finish.add_argument("--status", required=True, choices=["completed", "failed"])
     finish.add_argument("--note")
 
+    retry = sub.add_parser("retry", help="requeue one failed batch")
+    retry.add_argument("--project", required=True)
+    retry.add_argument("--batch", required=True)
+
+    gate = sub.add_parser("gate", help="check a production stage acceptance gate")
+    gate.add_argument("--project", required=True)
+    gate.add_argument("--stage", required=True, choices=["shots"])
+
     report = sub.add_parser("report", help="show scheduler state and telemetry")
     report.add_argument("--project", required=True)
 
@@ -400,6 +463,13 @@ def main() -> int:
         elif args.command == "heartbeat":
             print(json.dumps(update_lease(project, args.batch, args.worker, args.token,
                                           args.lease_seconds, note=args.note), indent=2))
+        elif args.command == "retry":
+            print(json.dumps(retry_batch(project, args.batch), indent=2))
+        elif args.command == "gate":
+            result = check_shot_gate(project)
+            print(json.dumps(result, indent=2, ensure_ascii=False))
+            if not result["passed"]:
+                return 2
         elif args.command == "finish":
             print(json.dumps(update_lease(project, args.batch, args.worker, args.token,
                                           300, args.status, args.note), indent=2))
