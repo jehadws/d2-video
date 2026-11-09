@@ -26,7 +26,7 @@ Tell the user, in one short list, what is being installed and why: ffmpeg (video
 
 ## 4. Check and self-test
 1. `python tools/doctor.py`. Use `python3` where `python` isn't Python 3, and `py -3` on some Windows setups. Repeat until every line is OK. `python tools/doctor.py --install` runs the npm, playwright and pip fixes automatically.
-2. Run the production helper tests from the kit root: `python -m unittest tests.test_production`.
+2. Run the production helper tests from the kit root: `python -m unittest discover -s tests -p "test_production.py"`.
 3. Self-test: `node render.mjs --project examples/reaction-time --sheet --scale 0.3`. It should write `examples/reaction-time/build/sheets/sheet_01.png` with 14 finished frames (café scenes, giant faces, a 3D orbit, blueprint charts, a title card) and print no errors. Open the PNG to confirm, then delete `examples/reaction-time/build/`.
 3. Whisper downloads its model the first time it runs (~75 MB for `base`, ~500 MB for `small`). That needs internet access to huggingface.co.
 
