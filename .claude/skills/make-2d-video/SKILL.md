@@ -36,6 +36,7 @@ Stage commands from this plugin re-run one stage: `/new-video` (stages 1–4), `
 4. **Draft, look, fix, then render.** Open contact sheets and stills yourself (read the PNGs) before any full render. Rendering is slow; looking is fast.
 5. **Three user checkpoints:** setup choices, style choice from rendered samples, and the preview before the final render. If the user is away, take the defaults, state what was assumed, and continue.
 6. **Files are the truth.** Each video lives in `aitrends-2d-studio/projects/<slug>/`, and `story/shots.json` owns all timing.
+7. **Measure production work.** Use the production plan and append-only telemetry commands below. Never report an estimated speedup as measured.
 
 ## Stage 1: Intake
 Ask once (AskUserQuestion when available) for:
@@ -74,13 +75,23 @@ node render.mjs --project projects/<slug> --styles cinematic,dusk,midnight,golde
 Open `build/styles/style_grid.png`, then show it with one line per style: **dusk** (mauve shadows, amber key, cream rim), **midnight** (cold navy, blue-white rims, sodium practicals), **golden** (warm orange and teal), **neon** (deep blacks, magenta and teal), **storybook** (soft pastel, low contrast). Save the pick in `config.json` → `style`. For tweaks, add a custom entry to `STYLES` in `engine/styles.js` (moods overrides plus the `grade` lift/gamma/gain, sat, contrast, vignette, grain, bloom) and re-render that row.
 
 ## Stage 6: Build every shot
-Read `references/engine-api.md`, `references/visual-composition-system.md`, and the example scenes in `examples/reaction-time/scenes/` once. Prefer the Structured Visual DSL for standard 2D shots: write `scenes/visual/<shot-id>.json`, validate it through the renderer, and use the existing JavaScript `registerShot()` API only when the shot needs capabilities outside DSL v1. Keep 3D shots and specialized Canvas work in JavaScript. JSON DSL files override a JS shot with the same id, enabling gradual migration. Work in batches of 8–12 shots:
+Read `references/engine-api.md`, `references/visual-composition-system.md`, and the example scenes in `examples/reaction-time/scenes/` once per production run. Keep one shared brief containing style, cast, frozen assets, renderer constraints, shot IDs, and batch ownership; do not re-open and re-summarize the same references for every shot.
+
+Before generating shots, create and freeze shared cast, sets, props, and reusable assets. Shared asset changes must be serialized; never let concurrent batches edit the same registry, cast file, project manifest, or shared asset.
+
+Create the deterministic batch manifest after `story/shots.json` is stable:
+```bash
+python tools/production.py plan --project projects/<slug> --batch-size 10 --max-concurrency 3
+```
+This writes `build/production/plan.json`. Use its batch ownership as the source of truth. Re-run only when the shot list or batch settings change. Default to 8–12 shots per batch and at most 3 concurrent batches; lower concurrency when resources are constrained.
+
+If the agent environment supports concurrent subagents, run up to the manifest's concurrency limit. Each worker receives the same frozen brief and may write only its assigned shot IDs. If concurrency is unavailable, process the same batches sequentially without repeating per-shot research/setup. Prefer the Structured Visual DSL for standard 2D shots: write `scenes/visual/<shot-id>.json`, validate it through the renderer, and use the existing JavaScript `registerShot()` API only when the shot needs capabilities outside DSL v1. Keep 3D shots and specialized Canvas work in JavaScript. JSON DSL files override a JS shot with the same id, enabling gradual migration.
 
 Before writing each shot, choose one composition template (establishing wide, medium single, medium two-shot, over-the-shoulder, close-up, insert, character–object interaction, or dramatic reveal). Record the subject, action/state, supporting element, and intended framing in the shot's scene description or planning notes. Do not select a template just to satisfy variety; it must serve the story beat.
 
 Size and place every character from the measured table in `references/visual-composition-system.md` (*Scale and framing rules*), not by eye: hero `scale` about 2.0–2.7 in a wide and 2.9–3.6 in a medium or interaction shot (one scale unit is about 22% of frame height); the key story object at least 10% of frame height; feet inside the visible frame, using a `camera.y` track whenever the camera zooms in. Set `"framing"` on every DSL shot and `"role": "story_object"` on the prop the beat is about. Run `node lint-visual.mjs projects/<slug>` and fix every error before rendering a sheet. `render.mjs` prints the same lint before each render, and `--strict-lint` makes lint errors abort it.
 
-1. For standard 2D shots, write `scenes/visual/<shot-id>.json` using DSL v1. For simple physical interactions, attach supported props with `hero.prop` and use hand-contact poses such as `reachBall` or `reachDown`; do not position a separate prop primitive near an unrelated hand. Add reusable `scenes/sets/<location>.js` only when a custom environment is needed; use `scenes/shots/NN_<name>.js` with `registerShot('<id>', {...})` for advanced Canvas work and all 3D shots. Keep reusable sets anchored to `GY = E.H * V(0.8, 0.68)` and `CX = E.W/2`, with walls, floor and sky extended past the frame.
+1. Record each batch start/completion/failure with `python tools/production.py record --project projects/<slug> --stage shot-generation --status started --batch batch-001` and the matching `completed` or `failed` event. Generate all shots in a batch in one focused pass. Retry only failed shots; never regenerate accepted shots or silently continue after the assigned batch is complete. Every worker reports completed/failed IDs, files changed, validation result, and blockers. For standard 2D shots, write `scenes/visual/<shot-id>.json` using DSL v1. For simple physical interactions, attach supported props with `hero.prop` and use hand-contact poses such as `reachBall` or `reachDown`; do not position a separate prop primitive near an unrelated hand. Add reusable `scenes/sets/<location>.js` only when a custom environment is needed; use `scenes/shots/NN_<name>.js` with `registerShot('<id>', {...})` for advanced Canvas work and all 3D shots. Keep reusable sets anchored to `GY = E.H * V(0.8, 0.68)` and `CX = E.W/2`, with walls, floor and sky extended past the frame.
 2. Run `node render.mjs --project projects/<slug> --sheet --scale 0.5` (the visual lint runs first; fix its errors). Open every `build/sheets/sheet_XX.png` and check it against the QC checklist in `references/render-qc.md` and the composition review checklist in `references/visual-composition-system.md`. Fix any MISSING shots, errors printed by the renderer, and composition problems.
 3. Check motion with `--stills t1,t2,t3` or `--from A --to B --scale 0.5` (writes `build/preview.mp4`).
 
@@ -103,6 +114,7 @@ Read `references/render-qc.md`.
 2. Final: `node render.mjs --project projects/<slug>`. Run it in the background for long videos and poll the log. The log prints fps and ETA, so share the estimate.
 3. Run `node qa.mjs --project projects/<slug> --production` and fix all errors. Then run `node render.mjs --project projects/<slug> --production`; the production flag enforces the 5–8 minute delivery contract in addition to static and geometry preflight.
 4. Run `python audio/mix.py --project projects/<slug>`, which first rejects voiceover/story duration differences above 1.5 seconds by default, then generates music and SFX, ducks the music under the voice, normalises to −14 LUFS and muxes `out/<title>.mp4`.
+5. At delivery, run `python tools/production.py report --project projects/<slug>` and include measured stage durations, failures, and unmatched starts in the production summary. Never infer agent time from render time.
 5. QC the final file: duration matches, audio is present, and a 1-frame-per-10-s contact sheet looks right. Deliver the MP4 (send the file), then give the location in plain words and one line on what to tweak next if needed.
 
 ## Defaults and judgement calls

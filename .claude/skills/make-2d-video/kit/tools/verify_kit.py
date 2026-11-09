@@ -22,6 +22,7 @@ REQUIRED = [
     "audio/validation.py",
     "audio/mix.py",
     "tools/transcribe.py",
+    "tools/production.py",
 ]
 
 missing = [rel for rel in REQUIRED if not (ROOT / rel).is_file()]
@@ -38,6 +39,7 @@ checks = [
     ("qa/checks/production.js", "production-duration-out-of-range"),
     ("audio/mix.py", "validate_voiceover_duration"),
     ("tools/transcribe.py", "min_match=0.9"),
+    ("tools/production.py", "parallelize_only_disjoint_batch_write_scopes"),
 ]
 failed = []
 for rel, marker in checks:
