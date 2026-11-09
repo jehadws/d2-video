@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - feat/visual-composition-system
+      - feat/production-orchestration
   pull_request:
     branches:
       - main
@@ -46,3 +47,7 @@ jobs:
 
       - name: Run audio validation tests
         run: python -m unittest discover -s tests -p "test_*.py"
+
+      - name: Run production orchestration tests
+        working-directory: .claude/skills/make-2d-video/kit
+        run: python -m unittest discover -s tests -p "test_production.py"
