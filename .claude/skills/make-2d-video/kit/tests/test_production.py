@@ -65,6 +65,26 @@ class ProductionPlanningTests(unittest.TestCase):
         self.assertNotIn("s003", plan["missing_shot_ids"])
         self.assertEqual(plan["batches"][0]["shot_ids"][0], "s004")
 
+
+    def test_dsl_overrides_js_without_being_reported_as_duplicate(self):
+        shots_dir = self.project / "scenes" / "shots"
+        visual_dir = self.project / "scenes" / "visual"
+        shots_dir.mkdir(parents=True)
+        visual_dir.mkdir(parents=True)
+        (shots_dir / "01.js").write_text(
+            "registerShot('s001', {});", encoding="utf-8"
+        )
+        (visual_dir / "s001.json").write_text(
+            json.dumps({"id": "s001"}), encoding="utf-8"
+        )
+        plan = build_plan(self.project, 10, 2)
+        self.assertNotIn("s001", plan["missing_shot_ids"])
+        self.assertEqual(plan["duplicate_implementations"], {})
+        self.assertEqual(
+            plan["implementation_files"]["s001"]["effective"],
+            "scenes/visual/s001.json",
+        )
+
     def test_plan_can_explicitly_include_existing_shots(self):
         shots_dir = self.project / "scenes" / "shots"
         shots_dir.mkdir(parents=True)
