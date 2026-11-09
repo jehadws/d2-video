@@ -40,6 +40,10 @@ checks = [
     ("audio/mix.py", "validate_voiceover_duration"),
     ("tools/transcribe.py", "min_match=0.9"),
     ("tools/production.py", "parallelize_only_disjoint_batch_write_scopes"),
+    ("tools/production.py", "def scan_implementations("),
+    ("tools/production.py", "def claim_batch("),
+    ("tools/production.py", "def check_shot_gate("),
+    ("tools/production.py", "lease_expires_at"),
 ]
 failed = []
 for rel, marker in checks:
