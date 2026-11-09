@@ -41,22 +41,32 @@ def production_dir(project: Path) -> Path:
 
 
 def scan_implementations(project: Path, expected_ids: set[str]) -> dict[str, Any]:
-    """Find literal JS registrations and DSL JSON shots without executing project code."""
-    implementations: dict[str, list[str]] = defaultdict(list)
+    """Find literal JS registrations and DSL JSON shots without executing project code.
+
+    DSL definitions intentionally override a JS registration with the same ID.
+    Duplicate files within the same implementation format remain an error.
+    """
+    implementations: dict[str, dict[str, list[str]]] = defaultdict(
+        lambda: {"js": [], "dsl": []}
+    )
     errors: list[str] = []
     scenes = project / "scenes"
 
     if scenes.is_dir():
-        for path in sorted((scenes / "shots").rglob("*.js")) if (scenes / "shots").is_dir() else []:
-            try:
-                source = path.read_text(encoding="utf-8")
-            except (OSError, UnicodeError) as exc:
-                errors.append(f"{path.relative_to(project).as_posix()}: {exc}")
-                continue
-            for match in SHOT_CALL.finditer(source):
-                shot_id = match.group(2).strip()
-                if shot_id in expected_ids:
-                    implementations[shot_id].append(path.relative_to(project).as_posix())
+        shots_root = scenes / "shots"
+        if shots_root.is_dir():
+            for path in sorted(shots_root.rglob("*.js")):
+                try:
+                    source = path.read_text(encoding="utf-8")
+                except (OSError, UnicodeError) as exc:
+                    errors.append(f"{path.relative_to(project).as_posix()}: {exc}")
+                    continue
+                for match in SHOT_CALL.finditer(source):
+                    shot_id = match.group(2).strip()
+                    if shot_id in expected_ids:
+                        implementations[shot_id]["js"].append(
+                            path.relative_to(project).as_posix()
+                        )
 
         visual_root = scenes / "visual"
         if visual_root.is_dir():
@@ -64,7 +74,9 @@ def scan_implementations(project: Path, expected_ids: set[str]) -> dict[str, Any
                 try:
                     payload = read_json(path)
                 except (OSError, UnicodeError, json.JSONDecodeError) as exc:
-                    errors.append(f"{path.relative_to(project).as_posix()}: invalid DSL JSON: {exc}")
+                    errors.append(
+                        f"{path.relative_to(project).as_posix()}: invalid DSL JSON: {exc}"
+                    )
                     continue
                 shot_id = None
                 if isinstance(payload, dict):
@@ -76,19 +88,33 @@ def scan_implementations(project: Path, expected_ids: set[str]) -> dict[str, Any
                 if shot_id is None and path.stem in expected_ids:
                     shot_id = path.stem
                 if shot_id in expected_ids:
-                    implementations[shot_id].append(path.relative_to(project).as_posix())
+                    implementations[shot_id]["dsl"].append(
+                        path.relative_to(project).as_posix()
+                    )
 
-    duplicates = {
-        shot_id: paths for shot_id, paths in implementations.items() if len(paths) > 1
-    }
+    duplicates = {}
+    for shot_id, formats in implementations.items():
+        repeated = {
+            kind: paths for kind, paths in formats.items() if len(paths) > 1
+        }
+        if repeated:
+            duplicates[shot_id] = repeated
+
+    implemented_ids = sorted(implementations)
     return {
-        "implemented_ids": sorted(implementations),
-        "missing_ids": sorted(expected_ids - set(implementations)),
+        "implemented_ids": implemented_ids,
+        "missing_ids": sorted(expected_ids - set(implemented_ids)),
         "duplicate_implementations": duplicates,
         "scan_errors": errors,
-        "implementation_files": dict(implementations),
+        "implementation_files": {
+            shot_id: {
+                "effective": formats["dsl"][-1] if formats["dsl"] else formats["js"][-1],
+                "js": formats["js"],
+                "dsl": formats["dsl"],
+            }
+            for shot_id, formats in implementations.items()
+        },
     }
-
 
 def load_timeline(project: Path) -> list[dict[str, Any]]:
     source = project / "story" / "shots.json"
