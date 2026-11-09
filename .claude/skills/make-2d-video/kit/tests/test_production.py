@@ -4,8 +4,8 @@ import unittest
 from pathlib import Path
 
 from tools.production import (
-    append_event, build_plan, claim_batch, production_dir, read_json,
-    save_state, summarize_events, update_lease, write_json,
+    append_event, build_plan, check_shot_gate, claim_batch, production_dir,
+    read_json, retry_batch, save_state, summarize_events, update_lease, write_json,
 )
 
 
@@ -124,6 +124,30 @@ class ProductionPlanningTests(unittest.TestCase):
             update_lease(
                 self.project, first["batch"]["id"], "worker-1", first["token"], 30
             )
+
+
+    def test_failed_batch_requires_explicit_retry(self):
+        self.install_plan(batch_size=5, concurrency=1)
+        claimed = claim_batch(self.project, "worker-1", 30)
+        update_lease(
+            self.project, claimed["batch"]["id"], "worker-1", claimed["token"],
+            30, finish_status="failed", note="validation failed",
+        )
+        retried = retry_batch(self.project, claimed["batch"]["id"])
+        self.assertEqual(retried["status"], "pending")
+
+    def test_shot_gate_fails_when_shots_are_missing_and_passes_when_complete(self):
+        failed = check_shot_gate(self.project)
+        self.assertFalse(failed["passed"])
+        shots_dir = self.project / "scenes" / "shots"
+        shots_dir.mkdir(parents=True)
+        (shots_dir / "all.js").write_text(
+            "\\n".join(f"registerShot('{shot['id']}', {{}});" for shot in self.shots),
+            encoding="utf-8",
+        )
+        passed = check_shot_gate(self.project)
+        self.assertTrue(passed["passed"])
+        self.assertEqual(passed["implemented_shot_count"], 23)
 
     def test_telemetry_pairs_worker_events_and_reports_unmatched_starts(self):
         append_event(self.project, "shot-generation", "started", "batch-001", None, "w1")
