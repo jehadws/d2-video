@@ -404,6 +404,15 @@ def main() -> int:
     plan.add_argument("--include-existing", action="store_true",
                       help="explicitly schedule every timeline shot, including implemented shots")
 
+    record = sub.add_parser("record", help="append telemetry for a non-batch production stage")
+    record.add_argument("--project", required=True)
+    record.add_argument("--stage", required=True)
+    record.add_argument("--status", required=True,
+                        choices=["started", "heartbeat", "completed", "failed"])
+    record.add_argument("--batch")
+    record.add_argument("--worker")
+    record.add_argument("--note")
+
     claim = sub.add_parser("claim", help="claim one pending batch under the concurrency limit")
     claim.add_argument("--project", required=True)
     claim.add_argument("--worker", required=True)
@@ -458,6 +467,9 @@ def main() -> int:
                 "duplicate_implementations": result["duplicate_implementations"],
                 "scan_errors": result["scan_errors"],
             }, indent=2))
+        elif args.command == "record":
+            print(json.dumps(append_event(project, args.stage, args.status,
+                                          args.batch, args.note, args.worker), indent=2))
         elif args.command == "claim":
             print(json.dumps(claim_batch(project, args.worker, args.lease_seconds), indent=2))
         elif args.command == "heartbeat":
