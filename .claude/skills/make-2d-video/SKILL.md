@@ -83,17 +83,35 @@ Create the deterministic batch manifest after `story/shots.json` is stable:
 ```bash
 python tools/production.py plan --project projects/<slug> --batch-size 10 --max-concurrency 3
 ```
-This writes `build/production/plan.json`. Use its batch ownership as the source of truth. Re-run only when the shot list or batch settings change. Default to 8–12 shots per batch and at most 3 concurrent batches; lower concurrency when resources are constrained.
+The planner scans literal JS `registerShot()` calls and DSL files before scheduling. **By default it schedules only missing shots**, so an interrupted project is resumed instead of regenerated. Use `--include-existing` only when the user explicitly requests a full rebuild. It writes `build/production/plan.json` and scheduler state in `build/production/state.json`. Inspect the reported missing IDs, duplicate implementations, and scan errors before launching workers. Fix scan errors or duplicate registrations and re-plan before proceeding. Re-run the plan only when the timeline, implementation files, or batch settings change. Default to 8–12 shots per batch and at most 3 concurrent batches; lower concurrency when resources are constrained.
 
-If the agent environment supports concurrent subagents, run up to the manifest's concurrency limit. Each worker receives the same frozen brief and may write only its assigned shot IDs. If concurrency is unavailable, process the same batches sequentially without repeating per-shot research/setup. Prefer the Structured Visual DSL for standard 2D shots: write `scenes/visual/<shot-id>.json`, validate it through the renderer, and use the existing JavaScript `registerShot()` API only when the shot needs capabilities outside DSL v1. Keep 3D shots and specialized Canvas work in JavaScript. JSON DSL files override a JS shot with the same id, enabling gradual migration.
+The scheduler enforces the concurrency limit through atomic batch claims. Do not launch workers directly from the plan file. A coordinator should request one batch per worker:
+```bash
+python tools/production.py claim --project projects/<slug> --worker worker-01 --lease-seconds 300
+```
+A successful claim returns the batch IDs and a private lease token. Give that worker only the claimed shot IDs. The worker must renew its lease at least once per minute while active:
+```bash
+python tools/production.py heartbeat --project projects/<slug> --batch batch-001 --worker worker-01 --token <token> --lease-seconds 300
+```
+When validation passes, finish the batch:
+```bash
+python tools/production.py finish --project projects/<slug> --batch batch-001 --worker worker-01 --token <token> --status completed --note "syntax, imports, references and lint passed"
+```
+Use `--status failed` when validation fails. A worker that stops heartbeating loses its lease; the next claim/report requeues the expired batch. Retry an explicitly failed batch only after inspecting its failure:
+```bash
+python tools/production.py retry --project projects/<slug> --batch batch-001
+python tools/production.py report --project projects/<slug>
+```
+The lease token prevents an expired worker from completing a batch after another worker has reclaimed it. Never share tokens between workers. If concurrency is unavailable, use one worker and claim sequentially. Prefer the Structured Visual DSL for standard 2D shots: write `scenes/visual/<shot-id>.json`, validate it through the renderer, and use the existing JavaScript `registerShot()` API only when the shot needs capabilities outside DSL v1. Keep 3D shots and specialized Canvas work in JavaScript. JSON DSL files override a JS shot with the same id, enabling gradual migration.
 
 Before writing each shot, choose one composition template (establishing wide, medium single, medium two-shot, over-the-shoulder, close-up, insert, character–object interaction, or dramatic reveal). Record the subject, action/state, supporting element, and intended framing in the shot's scene description or planning notes. Do not select a template just to satisfy variety; it must serve the story beat.
 
 Size and place every character from the measured table in `references/visual-composition-system.md` (*Scale and framing rules*), not by eye: hero `scale` about 2.0–2.7 in a wide and 2.9–3.6 in a medium or interaction shot (one scale unit is about 22% of frame height); the key story object at least 10% of frame height; feet inside the visible frame, using a `camera.y` track whenever the camera zooms in. Set `"framing"` on every DSL shot and `"role": "story_object"` on the prop the beat is about. Run `node lint-visual.mjs projects/<slug>` and fix every error before rendering a sheet. `render.mjs` prints the same lint before each render, and `--strict-lint` makes lint errors abort it.
 
-1. Record each batch start/completion/failure with `python tools/production.py record --project projects/<slug> --stage shot-generation --status started --batch batch-001` and the matching `completed` or `failed` event. Generate all shots in a batch in one focused pass. Retry only failed shots; never regenerate accepted shots or silently continue after the assigned batch is complete. Every worker reports completed/failed IDs, files changed, validation result, and blockers. For standard 2D shots, write `scenes/visual/<shot-id>.json` using DSL v1. For simple physical interactions, attach supported props with `hero.prop` and use hand-contact poses such as `reachBall` or `reachDown`; do not position a separate prop primitive near an unrelated hand. Add reusable `scenes/sets/<location>.js` only when a custom environment is needed; use `scenes/shots/NN_<name>.js` with `registerShot('<id>', {...})` for advanced Canvas work and all 3D shots. Keep reusable sets anchored to `GY = E.H * V(0.8, 0.68)` and `CX = E.W/2`, with walls, floor and sky extended past the frame.
+1. Claim, heartbeat, and finish every batch using the scheduler commands above. Generate all shots in a batch in one focused pass. Retry only failed batches after inspection; never regenerate accepted shots or silently continue after the assigned batch is complete. Every worker reports completed/failed IDs, files changed, validation result, and blockers. For standard 2D shots, write `scenes/visual/<shot-id>.json` using DSL v1. For simple physical interactions, attach supported props with `hero.prop` and use hand-contact poses such as `reachBall` or `reachDown`; do not position a separate prop primitive near an unrelated hand. Add reusable `scenes/sets/<location>.js` only when a custom environment is needed; use `scenes/shots/NN_<name>.js` with `registerShot('<id>', {...})` for advanced Canvas work and all 3D shots. Keep reusable sets anchored to `GY = E.H * V(0.8, 0.68)` and `CX = E.W/2`, with walls, floor and sky extended past the frame.
 2. Run `node render.mjs --project projects/<slug> --sheet --scale 0.5` (the visual lint runs first; fix its errors). Open every `build/sheets/sheet_XX.png` and check it against the QC checklist in `references/render-qc.md` and the composition review checklist in `references/visual-composition-system.md`. Fix any MISSING shots, errors printed by the renderer, and composition problems.
 3. Check motion with `--stills t1,t2,t3` or `--from A --to B --scale 0.5` (writes `build/preview.mp4`).
+4. Do not advance to visual QA until `python tools/production.py gate --project projects/<slug> --stage shots` passes. The gate verifies every timeline ID has exactly one discoverable implementation, all scene files scanned cleanly, and no planned batch remains pending, running, or failed.
 
 Non-negotiables from the style bible:
 - Rim light on every lit figure.
