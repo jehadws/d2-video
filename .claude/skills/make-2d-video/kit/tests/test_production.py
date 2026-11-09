@@ -103,11 +103,17 @@ class ProductionPlanningTests(unittest.TestCase):
 
     def test_plan_rejects_duplicate_timeline_ids(self):
         self.shots[1]["id"] = self.shots[0]["id"]
+        (self.project / "story" / "shots.json").write_text(
+            json.dumps({"shots": self.shots}), encoding="utf-8"
+        )
         with self.assertRaisesRegex(ValueError, "Duplicate shot id"):
             build_plan(self.project, 10, 2)
 
     def test_plan_rejects_invalid_timing(self):
         self.shots[0]["end"] = self.shots[0]["start"]
+        (self.project / "story" / "shots.json").write_text(
+            json.dumps({"shots": self.shots}), encoding="utf-8"
+        )
         with self.assertRaisesRegex(ValueError, "end > start"):
             build_plan(self.project, 10, 2)
 
