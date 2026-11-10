@@ -119,6 +119,7 @@ test('static and geometry QA accept a mixed JavaScript plus DSL v2 production fi
   const visualDir = path.join(project, 'scenes', 'visual');
   fs.mkdirSync(shotsDir, { recursive: true });
   fs.mkdirSync(visualDir, { recursive: true });
+  fs.mkdirSync(path.join(project, 'story'), { recursive: true });
 
   fs.writeFileSync(path.join(project, 'config.json'), JSON.stringify({
     aspect: '16:9', fps: 24, captions: false, bars: 'none',
