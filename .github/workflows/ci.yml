@@ -51,3 +51,17 @@ jobs:
       - name: Run production orchestration tests
         working-directory: .claude/skills/make-2d-video/kit
         run: python -m unittest discover -s tests -p "test_production.py"
+
+      - name: Install Chromium for rendered production QA
+        run: npx playwright install --with-deps chromium
+
+      - name: Render production visual QA evidence
+        run: node render.mjs --project projects/what-if-you-had-1000-iq --qa-rendered --scale 0.5
+
+      - name: Upload rendered production QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: what-if-you-had-1000-iq-rendered-qa
+          path: projects/what-if-you-had-1000-iq/build/qa/
+          if-no-files-found: warn
