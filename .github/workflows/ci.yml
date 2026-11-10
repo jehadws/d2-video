@@ -17,7 +17,7 @@ permissions:
 jobs:
   test:
     name: Node and Python checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
