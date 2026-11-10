@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "project": "what-if-you-had-1000-iq",
+  "status": "passed",
+  "summary": {
+    "scenes": 136,
+    "checkedFrames": 0,
+    "errors": 0,
+    "warnings": 0,
+    "info": 0
+  },
+  "checks": [
+    "static",
+    "geometry"
+  ],
+  "findings": [],
+  "artifacts": {}
+}

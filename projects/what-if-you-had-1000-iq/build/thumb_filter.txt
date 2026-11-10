@@ -1,0 +1,1 @@
+drawtext=fontfile=C\:/Windows/Fonts/segoeuib.ttf:text='WHAT IF YOU HAD':fontcolor=0xF1E8DC:fontsize=88:x=90:y=70,drawtext=fontfile=C\:/Windows/Fonts/segoeuib.ttf:text='1000 IQ?':fontcolor=0xE8C47A:fontsize=150:x=88:y=160,scale=1280:720:flags=lanczos

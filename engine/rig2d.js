@@ -338,7 +338,15 @@ export function bigFace(g, cx, cy, r, o = {}) {
   headGrad.addColorStop(1, shade(ink, -0.4));
   g.fillStyle = headGrad;
   g.beginPath(); g.arc(0, 0, r, 0, Math.PI * 2); g.fill();
-  if (of.head && !['hood', 'none'].includes(of.head)) drawHeadwear(g, { ...of, _ink: ink }, 0, 0, r, 'main');
+  if (of.head && !['hood', 'none'].includes(of.head)) {
+    g.save();
+    g.beginPath();                                    // head + crown zone: brims and tails stop at the silhouette
+    g.arc(0, 0, r, 0, Math.PI * 2);
+    g.ellipse(0, -r * 0.35, r * 1.05, r * 1.15, 0, 0, Math.PI * 2);
+    g.clip();
+    drawHeadwear(g, { ...of, _ink: ink }, 0, 0, r, 'main');
+    g.restore();
+  }
   face(g, 0, 0, r, { expr: o.expr, talk: o.talk, blink: o.blink, look: o.look, front: true, color: feature, override: o.face });
   if (of.face === 'glasses') { g.strokeStyle = feature; g.lineWidth = r * 0.06; for (const dx of [-0.34, 0.34]) { g.beginPath(); g.arc(dx * r, -r * 0.16, r * 0.26, 0, Math.PI * 2); g.stroke(); } }
   if (of.face === 'sunglasses') { g.fillStyle = '#05060a'; rr(g, -r * 0.66, -r * 0.34, r * 0.6, r * 0.4, r * 0.12); g.fill(); rr(g, r * 0.06, -r * 0.34, r * 0.6, r * 0.4, r * 0.12); g.fill(); g.fillStyle = 'rgba(160,230,255,.6)'; g.fillRect(-r * 0.55, -r * 0.28, r * 0.12, r * 0.05); }

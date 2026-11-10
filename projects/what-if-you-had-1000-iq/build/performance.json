@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "output": "build/video_silent.mp4",
+  "renderedFrames": 7888,
+  "renderedSeconds": 328.667,
+  "elapsedSeconds": 1185.479,
+  "averageFramesPerSecond": 6.65,
+  "workers": 8,
+  "fps": 24,
+  "resolution": "1080p",
+  "format": "mp4",
+  "preview": false
+}

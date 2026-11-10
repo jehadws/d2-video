@@ -1,0 +1,1094 @@
+{
+  "version": 2,
+  "project": "projects/what-if-you-had-1000-iq",
+  "created_at": 1794267138.8082902,
+  "timeline_shot_count": 136,
+  "implemented_shot_count": 129,
+  "selected_shot_count": 7,
+  "missing_shot_ids": [
+    "s122",
+    "s123",
+    "s124",
+    "s125",
+    "s126",
+    "s127",
+    "s128"
+  ],
+  "implemented_shot_ids": [
+    "s001",
+    "s002",
+    "s003",
+    "s004",
+    "s005",
+    "s006",
+    "s007",
+    "s008",
+    "s009",
+    "s010",
+    "s011",
+    "s012",
+    "s013",
+    "s014",
+    "s015",
+    "s016",
+    "s017",
+    "s018",
+    "s019",
+    "s020",
+    "s021",
+    "s022",
+    "s023",
+    "s024",
+    "s025",
+    "s026",
+    "s027",
+    "s028",
+    "s029",
+    "s030",
+    "s031",
+    "s032",
+    "s033",
+    "s034",
+    "s035",
+    "s036",
+    "s037",
+    "s038",
+    "s039",
+    "s040",
+    "s041",
+    "s042",
+    "s043",
+    "s044",
+    "s045",
+    "s046",
+    "s047",
+    "s048",
+    "s049",
+    "s050",
+    "s051",
+    "s052",
+    "s053",
+    "s054",
+    "s055",
+    "s056",
+    "s057",
+    "s058",
+    "s059",
+    "s060",
+    "s061",
+    "s062",
+    "s063",
+    "s064",
+    "s065",
+    "s066",
+    "s067",
+    "s068",
+    "s069",
+    "s070",
+    "s071",
+    "s072",
+    "s073",
+    "s074",
+    "s075",
+    "s076",
+    "s077",
+    "s078",
+    "s079",
+    "s080",
+    "s081",
+    "s082",
+    "s083",
+    "s084",
+    "s085",
+    "s086",
+    "s087",
+    "s088",
+    "s089",
+    "s090",
+    "s091",
+    "s092",
+    "s093",
+    "s094",
+    "s095",
+    "s096",
+    "s097",
+    "s098",
+    "s099",
+    "s100",
+    "s101",
+    "s102",
+    "s103",
+    "s104",
+    "s105",
+    "s106",
+    "s107",
+    "s108",
+    "s109",
+    "s110",
+    "s111",
+    "s112",
+    "s113",
+    "s114",
+    "s115",
+    "s116",
+    "s117",
+    "s118",
+    "s119",
+    "s120",
+    "s121",
+    "s129",
+    "s130",
+    "s131",
+    "s132",
+    "s133",
+    "s134",
+    "s135",
+    "s136"
+  ],
+  "duplicate_implementations": {},
+  "scan_errors": [],
+  "implementation_files": {
+    "s001": {
+      "effective": "scenes/shots/01_coldopen.js",
+      "js": [
+        "scenes/shots/01_coldopen.js"
+      ],
+      "dsl": []
+    },
+    "s002": {
+      "effective": "scenes/shots/01_coldopen.js",
+      "js": [
+        "scenes/shots/01_coldopen.js"
+      ],
+      "dsl": []
+    },
+    "s003": {
+      "effective": "scenes/shots/01_coldopen.js",
+      "js": [
+        "scenes/shots/01_coldopen.js"
+      ],
+      "dsl": []
+    },
+    "s004": {
+      "effective": "scenes/shots/01_coldopen.js",
+      "js": [
+        "scenes/shots/01_coldopen.js"
+      ],
+      "dsl": []
+    },
+    "s005": {
+      "effective": "scenes/shots/01_coldopen.js",
+      "js": [
+        "scenes/shots/01_coldopen.js"
+      ],
+      "dsl": []
+    },
+    "s006": {
+      "effective": "scenes/shots/01_coldopen.js",
+      "js": [
+        "scenes/shots/01_coldopen.js"
+      ],
+      "dsl": []
+    },
+    "s007": {
+      "effective": "scenes/shots/01_coldopen.js",
+      "js": [
+        "scenes/shots/01_coldopen.js"
+      ],
+      "dsl": []
+    },
+    "s008": {
+      "effective": "scenes/shots/01_coldopen.js",
+      "js": [
+        "scenes/shots/01_coldopen.js"
+      ],
+      "dsl": []
+    },
+    "s009": {
+      "effective": "scenes/shots/01_coldopen.js",
+      "js": [
+        "scenes/shots/01_coldopen.js"
+      ],
+      "dsl": []
+    },
+    "s010": {
+      "effective": "scenes/shots/01_coldopen.js",
+      "js": [
+        "scenes/shots/01_coldopen.js"
+      ],
+      "dsl": []
+    },
+    "s011": {
+      "effective": "scenes/shots/01_coldopen.js",
+      "js": [
+        "scenes/shots/01_coldopen.js"
+      ],
+      "dsl": []
+    },
+    "s012": {
+      "effective": "scenes/shots/01_coldopen.js",
+      "js": [
+        "scenes/shots/01_coldopen.js"
+      ],
+      "dsl": []
+    },
+    "s013": {
+      "effective": "scenes/shots/01_coldopen.js",
+      "js": [
+        "scenes/shots/01_coldopen.js"
+      ],
+      "dsl": []
+    },
+    "s014": {
+      "effective": "scenes/shots/01_coldopen.js",
+      "js": [
+        "scenes/shots/01_coldopen.js"
+      ],
+      "dsl": []
+    },
+    "s015": {
+      "effective": "scenes/shots/01_coldopen.js",
+      "js": [
+        "scenes/shots/01_coldopen.js"
+      ],
+      "dsl": []
+    },
+    "s016": {
+      "effective": "scenes/shots/01_coldopen.js",
+      "js": [
+        "scenes/shots/01_coldopen.js"
+      ],
+      "dsl": []
+    },
+    "s017": {
+      "effective": "scenes/shots/02_rule.js",
+      "js": [
+        "scenes/shots/02_rule.js"
+      ],
+      "dsl": []
+    },
+    "s018": {
+      "effective": "scenes/shots/02_rule.js",
+      "js": [
+        "scenes/shots/02_rule.js"
+      ],
+      "dsl": []
+    },
+    "s019": {
+      "effective": "scenes/shots/02_rule.js",
+      "js": [
+        "scenes/shots/02_rule.js"
+      ],
+      "dsl": []
+    },
+    "s020": {
+      "effective": "scenes/shots/02_rule.js",
+      "js": [
+        "scenes/shots/02_rule.js"
+      ],
+      "dsl": []
+    },
+    "s021": {
+      "effective": "scenes/shots/02_rule.js",
+      "js": [
+        "scenes/shots/02_rule.js"
+      ],
+      "dsl": []
+    },
+    "s022": {
+      "effective": "scenes/shots/02_rule.js",
+      "js": [
+        "scenes/shots/02_rule.js"
+      ],
+      "dsl": []
+    },
+    "s023": {
+      "effective": "scenes/shots/02_rule.js",
+      "js": [
+        "scenes/shots/02_rule.js"
+      ],
+      "dsl": []
+    },
+    "s024": {
+      "effective": "scenes/shots/02_rule.js",
+      "js": [
+        "scenes/shots/02_rule.js"
+      ],
+      "dsl": []
+    },
+    "s025": {
+      "effective": "scenes/shots/02_rule.js",
+      "js": [
+        "scenes/shots/02_rule.js"
+      ],
+      "dsl": []
+    },
+    "s026": {
+      "effective": "scenes/shots/02_rule.js",
+      "js": [
+        "scenes/shots/02_rule.js"
+      ],
+      "dsl": []
+    },
+    "s027": {
+      "effective": "scenes/shots/03_school.js",
+      "js": [
+        "scenes/shots/03_school.js"
+      ],
+      "dsl": []
+    },
+    "s028": {
+      "effective": "scenes/shots/03_school.js",
+      "js": [
+        "scenes/shots/03_school.js"
+      ],
+      "dsl": []
+    },
+    "s029": {
+      "effective": "scenes/shots/03_school.js",
+      "js": [
+        "scenes/shots/03_school.js"
+      ],
+      "dsl": []
+    },
+    "s030": {
+      "effective": "scenes/shots/03_school.js",
+      "js": [
+        "scenes/shots/03_school.js"
+      ],
+      "dsl": []
+    },
+    "s031": {
+      "effective": "scenes/shots/03_school.js",
+      "js": [
+        "scenes/shots/03_school.js"
+      ],
+      "dsl": []
+    },
+    "s034": {
+      "effective": "scenes/shots/04_lies_chess.js",
+      "js": [
+        "scenes/shots/04_lies_chess.js"
+      ],
+      "dsl": []
+    },
+    "s035": {
+      "effective": "scenes/shots/04_lies_chess.js",
+      "js": [
+        "scenes/shots/04_lies_chess.js"
+      ],
+      "dsl": []
+    },
+    "s036": {
+      "effective": "scenes/shots/04_lies_chess.js",
+      "js": [
+        "scenes/shots/04_lies_chess.js"
+      ],
+      "dsl": []
+    },
+    "s037": {
+      "effective": "scenes/shots/04_lies_chess.js",
+      "js": [
+        "scenes/shots/04_lies_chess.js"
+      ],
+      "dsl": []
+    },
+    "s038": {
+      "effective": "scenes/shots/04_lies_chess.js",
+      "js": [
+        "scenes/shots/04_lies_chess.js"
+      ],
+      "dsl": []
+    },
+    "s039": {
+      "effective": "scenes/shots/04_lies_chess.js",
+      "js": [
+        "scenes/shots/04_lies_chess.js"
+      ],
+      "dsl": []
+    },
+    "s040": {
+      "effective": "scenes/shots/04_lies_chess.js",
+      "js": [
+        "scenes/shots/04_lies_chess.js"
+      ],
+      "dsl": []
+    },
+    "s041": {
+      "effective": "scenes/shots/04_lies_chess.js",
+      "js": [
+        "scenes/shots/04_lies_chess.js"
+      ],
+      "dsl": []
+    },
+    "s042": {
+      "effective": "scenes/shots/04_lies_chess.js",
+      "js": [
+        "scenes/shots/04_lies_chess.js"
+      ],
+      "dsl": []
+    },
+    "s054": {
+      "effective": "scenes/shots/05_insomnia.js",
+      "js": [
+        "scenes/shots/05_insomnia.js"
+      ],
+      "dsl": []
+    },
+    "s055": {
+      "effective": "scenes/shots/05_insomnia.js",
+      "js": [
+        "scenes/shots/05_insomnia.js"
+      ],
+      "dsl": []
+    },
+    "s056": {
+      "effective": "scenes/shots/05_insomnia.js",
+      "js": [
+        "scenes/shots/05_insomnia.js"
+      ],
+      "dsl": []
+    },
+    "s057": {
+      "effective": "scenes/shots/05_insomnia.js",
+      "js": [
+        "scenes/shots/05_insomnia.js"
+      ],
+      "dsl": []
+    },
+    "s032": {
+      "effective": "scenes/shots/06_cafeteria.js",
+      "js": [
+        "scenes/shots/06_cafeteria.js"
+      ],
+      "dsl": []
+    },
+    "s033": {
+      "effective": "scenes/shots/06_cafeteria.js",
+      "js": [
+        "scenes/shots/06_cafeteria.js"
+      ],
+      "dsl": []
+    },
+    "s052": {
+      "effective": "scenes/shots/07_bedroom.js",
+      "js": [
+        "scenes/shots/07_bedroom.js"
+      ],
+      "dsl": []
+    },
+    "s053": {
+      "effective": "scenes/shots/07_bedroom.js",
+      "js": [
+        "scenes/shots/07_bedroom.js"
+      ],
+      "dsl": []
+    },
+    "s058": {
+      "effective": "scenes/shots/08_blueprint.js",
+      "js": [
+        "scenes/shots/08_blueprint.js"
+      ],
+      "dsl": []
+    },
+    "s059": {
+      "effective": "scenes/shots/08_blueprint.js",
+      "js": [
+        "scenes/shots/08_blueprint.js"
+      ],
+      "dsl": []
+    },
+    "s060": {
+      "effective": "scenes/shots/09_mia.js",
+      "js": [
+        "scenes/shots/09_mia.js"
+      ],
+      "dsl": []
+    },
+    "s061": {
+      "effective": "scenes/shots/09_mia.js",
+      "js": [
+        "scenes/shots/09_mia.js"
+      ],
+      "dsl": []
+    },
+    "s062": {
+      "effective": "scenes/shots/09_mia.js",
+      "js": [
+        "scenes/shots/09_mia.js"
+      ],
+      "dsl": []
+    },
+    "s063": {
+      "effective": "scenes/shots/09_mia.js",
+      "js": [
+        "scenes/shots/09_mia.js"
+      ],
+      "dsl": []
+    },
+    "s064": {
+      "effective": "scenes/shots/09_mia.js",
+      "js": [
+        "scenes/shots/09_mia.js"
+      ],
+      "dsl": []
+    },
+    "s065": {
+      "effective": "scenes/shots/09_mia.js",
+      "js": [
+        "scenes/shots/09_mia.js"
+      ],
+      "dsl": []
+    },
+    "s066": {
+      "effective": "scenes/shots/09_mia.js",
+      "js": [
+        "scenes/shots/09_mia.js"
+      ],
+      "dsl": []
+    },
+    "s067": {
+      "effective": "scenes/shots/09_mia.js",
+      "js": [
+        "scenes/shots/09_mia.js"
+      ],
+      "dsl": []
+    },
+    "s068": {
+      "effective": "scenes/shots/09_mia.js",
+      "js": [
+        "scenes/shots/09_mia.js"
+      ],
+      "dsl": []
+    },
+    "s069": {
+      "effective": "scenes/shots/09_mia.js",
+      "js": [
+        "scenes/shots/09_mia.js"
+      ],
+      "dsl": []
+    },
+    "s070": {
+      "effective": "scenes/shots/09_mia.js",
+      "js": [
+        "scenes/shots/09_mia.js"
+      ],
+      "dsl": []
+    },
+    "s071": {
+      "effective": "scenes/shots/09_mia.js",
+      "js": [
+        "scenes/shots/09_mia.js"
+      ],
+      "dsl": []
+    },
+    "s072": {
+      "effective": "scenes/shots/09_mia.js",
+      "js": [
+        "scenes/shots/09_mia.js"
+      ],
+      "dsl": []
+    },
+    "s043": {
+      "effective": "scenes/shots/10_systems.js",
+      "js": [
+        "scenes/shots/10_systems.js"
+      ],
+      "dsl": []
+    },
+    "s044": {
+      "effective": "scenes/shots/10_systems.js",
+      "js": [
+        "scenes/shots/10_systems.js"
+      ],
+      "dsl": []
+    },
+    "s045": {
+      "effective": "scenes/shots/10_systems.js",
+      "js": [
+        "scenes/shots/10_systems.js"
+      ],
+      "dsl": []
+    },
+    "s046": {
+      "effective": "scenes/shots/10_systems.js",
+      "js": [
+        "scenes/shots/10_systems.js"
+      ],
+      "dsl": []
+    },
+    "s047": {
+      "effective": "scenes/shots/10_systems.js",
+      "js": [
+        "scenes/shots/10_systems.js"
+      ],
+      "dsl": []
+    },
+    "s048": {
+      "effective": "scenes/shots/10_systems.js",
+      "js": [
+        "scenes/shots/10_systems.js"
+      ],
+      "dsl": []
+    },
+    "s049": {
+      "effective": "scenes/shots/10_systems.js",
+      "js": [
+        "scenes/shots/10_systems.js"
+      ],
+      "dsl": []
+    },
+    "s050": {
+      "effective": "scenes/shots/10_systems.js",
+      "js": [
+        "scenes/shots/10_systems.js"
+      ],
+      "dsl": []
+    },
+    "s051": {
+      "effective": "scenes/shots/10_systems.js",
+      "js": [
+        "scenes/shots/10_systems.js"
+      ],
+      "dsl": []
+    },
+    "s073": {
+      "effective": "scenes/shots/11_leo.js",
+      "js": [
+        "scenes/shots/11_leo.js"
+      ],
+      "dsl": []
+    },
+    "s074": {
+      "effective": "scenes/shots/11_leo.js",
+      "js": [
+        "scenes/shots/11_leo.js"
+      ],
+      "dsl": []
+    },
+    "s075": {
+      "effective": "scenes/shots/11_leo.js",
+      "js": [
+        "scenes/shots/11_leo.js"
+      ],
+      "dsl": []
+    },
+    "s076": {
+      "effective": "scenes/shots/11_leo.js",
+      "js": [
+        "scenes/shots/11_leo.js"
+      ],
+      "dsl": []
+    },
+    "s077": {
+      "effective": "scenes/shots/11_leo.js",
+      "js": [
+        "scenes/shots/11_leo.js"
+      ],
+      "dsl": []
+    },
+    "s078": {
+      "effective": "scenes/shots/11_leo.js",
+      "js": [
+        "scenes/shots/11_leo.js"
+      ],
+      "dsl": []
+    },
+    "s079": {
+      "effective": "scenes/shots/11_leo.js",
+      "js": [
+        "scenes/shots/11_leo.js"
+      ],
+      "dsl": []
+    },
+    "s080": {
+      "effective": "scenes/shots/11_leo.js",
+      "js": [
+        "scenes/shots/11_leo.js"
+      ],
+      "dsl": []
+    },
+    "s081": {
+      "effective": "scenes/shots/11_leo.js",
+      "js": [
+        "scenes/shots/11_leo.js"
+      ],
+      "dsl": []
+    },
+    "s082": {
+      "effective": "scenes/shots/11_leo.js",
+      "js": [
+        "scenes/shots/11_leo.js"
+      ],
+      "dsl": []
+    },
+    "s083": {
+      "effective": "scenes/shots/11_leo.js",
+      "js": [
+        "scenes/shots/11_leo.js"
+      ],
+      "dsl": []
+    },
+    "s084": {
+      "effective": "scenes/shots/12_mrblack.js",
+      "js": [
+        "scenes/shots/12_mrblack.js"
+      ],
+      "dsl": []
+    },
+    "s085": {
+      "effective": "scenes/shots/12_mrblack.js",
+      "js": [
+        "scenes/shots/12_mrblack.js"
+      ],
+      "dsl": []
+    },
+    "s086": {
+      "effective": "scenes/shots/12_mrblack.js",
+      "js": [
+        "scenes/shots/12_mrblack.js"
+      ],
+      "dsl": []
+    },
+    "s087": {
+      "effective": "scenes/shots/12_mrblack.js",
+      "js": [
+        "scenes/shots/12_mrblack.js"
+      ],
+      "dsl": []
+    },
+    "s088": {
+      "effective": "scenes/shots/12_mrblack.js",
+      "js": [
+        "scenes/shots/12_mrblack.js"
+      ],
+      "dsl": []
+    },
+    "s089": {
+      "effective": "scenes/shots/12_mrblack.js",
+      "js": [
+        "scenes/shots/12_mrblack.js"
+      ],
+      "dsl": []
+    },
+    "s090": {
+      "effective": "scenes/shots/12_mrblack.js",
+      "js": [
+        "scenes/shots/12_mrblack.js"
+      ],
+      "dsl": []
+    },
+    "s091": {
+      "effective": "scenes/shots/12_mrblack.js",
+      "js": [
+        "scenes/shots/12_mrblack.js"
+      ],
+      "dsl": []
+    },
+    "s092": {
+      "effective": "scenes/shots/12_mrblack.js",
+      "js": [
+        "scenes/shots/12_mrblack.js"
+      ],
+      "dsl": []
+    },
+    "s093": {
+      "effective": "scenes/shots/12_mrblack.js",
+      "js": [
+        "scenes/shots/12_mrblack.js"
+      ],
+      "dsl": []
+    },
+    "s094": {
+      "effective": "scenes/shots/12_mrblack.js",
+      "js": [
+        "scenes/shots/12_mrblack.js"
+      ],
+      "dsl": []
+    },
+    "s095": {
+      "effective": "scenes/shots/12_mrblack.js",
+      "js": [
+        "scenes/shots/12_mrblack.js"
+      ],
+      "dsl": []
+    },
+    "s096": {
+      "effective": "scenes/shots/12_mrblack.js",
+      "js": [
+        "scenes/shots/12_mrblack.js"
+      ],
+      "dsl": []
+    },
+    "s097": {
+      "effective": "scenes/shots/13_fire.js",
+      "js": [
+        "scenes/shots/13_fire.js"
+      ],
+      "dsl": []
+    },
+    "s098": {
+      "effective": "scenes/shots/13_fire.js",
+      "js": [
+        "scenes/shots/13_fire.js"
+      ],
+      "dsl": []
+    },
+    "s099": {
+      "effective": "scenes/shots/13_fire.js",
+      "js": [
+        "scenes/shots/13_fire.js"
+      ],
+      "dsl": []
+    },
+    "s100": {
+      "effective": "scenes/shots/13_fire.js",
+      "js": [
+        "scenes/shots/13_fire.js"
+      ],
+      "dsl": []
+    },
+    "s101": {
+      "effective": "scenes/shots/13_fire.js",
+      "js": [
+        "scenes/shots/13_fire.js"
+      ],
+      "dsl": []
+    },
+    "s102": {
+      "effective": "scenes/shots/13_fire.js",
+      "js": [
+        "scenes/shots/13_fire.js"
+      ],
+      "dsl": []
+    },
+    "s103": {
+      "effective": "scenes/shots/13_fire.js",
+      "js": [
+        "scenes/shots/13_fire.js"
+      ],
+      "dsl": []
+    },
+    "s104": {
+      "effective": "scenes/shots/13_fire.js",
+      "js": [
+        "scenes/shots/13_fire.js"
+      ],
+      "dsl": []
+    },
+    "s105": {
+      "effective": "scenes/shots/13_fire.js",
+      "js": [
+        "scenes/shots/13_fire.js"
+      ],
+      "dsl": []
+    },
+    "s106": {
+      "effective": "scenes/shots/13_fire.js",
+      "js": [
+        "scenes/shots/13_fire.js"
+      ],
+      "dsl": []
+    },
+    "s107": {
+      "effective": "scenes/shots/13_fire.js",
+      "js": [
+        "scenes/shots/13_fire.js"
+      ],
+      "dsl": []
+    },
+    "s108": {
+      "effective": "scenes/shots/13_fire.js",
+      "js": [
+        "scenes/shots/13_fire.js"
+      ],
+      "dsl": []
+    },
+    "s109": {
+      "effective": "scenes/shots/13_fire.js",
+      "js": [
+        "scenes/shots/13_fire.js"
+      ],
+      "dsl": []
+    },
+    "s110": {
+      "effective": "scenes/shots/13_fire.js",
+      "js": [
+        "scenes/shots/13_fire.js"
+      ],
+      "dsl": []
+    },
+    "s111": {
+      "effective": "scenes/shots/13_fire.js",
+      "js": [
+        "scenes/shots/13_fire.js"
+      ],
+      "dsl": []
+    },
+    "s112": {
+      "effective": "scenes/shots/13_fire.js",
+      "js": [
+        "scenes/shots/13_fire.js"
+      ],
+      "dsl": []
+    },
+    "s113": {
+      "effective": "scenes/shots/13_fire.js",
+      "js": [
+        "scenes/shots/13_fire.js"
+      ],
+      "dsl": []
+    },
+    "s114": {
+      "effective": "scenes/shots/13_fire.js",
+      "js": [
+        "scenes/shots/13_fire.js"
+      ],
+      "dsl": []
+    },
+    "s115": {
+      "effective": "scenes/shots/14_choice.js",
+      "js": [
+        "scenes/shots/14_choice.js"
+      ],
+      "dsl": []
+    },
+    "s116": {
+      "effective": "scenes/shots/14_choice.js",
+      "js": [
+        "scenes/shots/14_choice.js"
+      ],
+      "dsl": []
+    },
+    "s117": {
+      "effective": "scenes/shots/14_choice.js",
+      "js": [
+        "scenes/shots/14_choice.js"
+      ],
+      "dsl": []
+    },
+    "s118": {
+      "effective": "scenes/shots/14_choice.js",
+      "js": [
+        "scenes/shots/14_choice.js"
+      ],
+      "dsl": []
+    },
+    "s119": {
+      "effective": "scenes/shots/14_choice.js",
+      "js": [
+        "scenes/shots/14_choice.js"
+      ],
+      "dsl": []
+    },
+    "s120": {
+      "effective": "scenes/shots/14_choice.js",
+      "js": [
+        "scenes/shots/14_choice.js"
+      ],
+      "dsl": []
+    },
+    "s121": {
+      "effective": "scenes/shots/14_choice.js",
+      "js": [
+        "scenes/shots/14_choice.js"
+      ],
+      "dsl": []
+    },
+    "s129": {
+      "effective": "scenes/shots/16_hook_end.js",
+      "js": [
+        "scenes/shots/16_hook_end.js"
+      ],
+      "dsl": []
+    },
+    "s130": {
+      "effective": "scenes/shots/16_hook_end.js",
+      "js": [
+        "scenes/shots/16_hook_end.js"
+      ],
+      "dsl": []
+    },
+    "s131": {
+      "effective": "scenes/shots/16_hook_end.js",
+      "js": [
+        "scenes/shots/16_hook_end.js"
+      ],
+      "dsl": []
+    },
+    "s132": {
+      "effective": "scenes/shots/16_hook_end.js",
+      "js": [
+        "scenes/shots/16_hook_end.js"
+      ],
+      "dsl": []
+    },
+    "s133": {
+      "effective": "scenes/shots/16_hook_end.js",
+      "js": [
+        "scenes/shots/16_hook_end.js"
+      ],
+      "dsl": []
+    },
+    "s134": {
+      "effective": "scenes/shots/16_hook_end.js",
+      "js": [
+        "scenes/shots/16_hook_end.js"
+      ],
+      "dsl": []
+    },
+    "s135": {
+      "effective": "scenes/shots/16_hook_end.js",
+      "js": [
+        "scenes/shots/16_hook_end.js"
+      ],
+      "dsl": []
+    },
+    "s136": {
+      "effective": "scenes/shots/16_hook_end.js",
+      "js": [
+        "scenes/shots/16_hook_end.js"
+      ],
+      "dsl": []
+    }
+  },
+  "include_existing": false,
+  "batch_size": 10,
+  "max_concurrency": 3,
+  "batch_count": 1,
+  "execution_contract": {
+    "only_selected_missing_or_explicitly_included_shots_are_scheduled": true,
+    "parallelize_only_disjoint_batch_write_scopes": true,
+    "shared_assets_must_be_frozen_before_shot_batches": true,
+    "validate_each_batch_before_accepting": true,
+    "retry_only_failed_or_expired_batches": true,
+    "workers_must_heartbeat_their_leases": true,
+    "do_not_run_rendered_qa_per_shot": true
+  },
+  "batches": [
+    {
+      "id": "batch-001",
+      "shot_ids": [
+        "s122",
+        "s123",
+        "s124",
+        "s125",
+        "s126",
+        "s127",
+        "s128"
+      ],
+      "start": 275.23,
+      "end": 304.29,
+      "shot_count": 7,
+      "write_scope": [
+        "one unique shot module or DSL file for s122",
+        "one unique shot module or DSL file for s123",
+        "one unique shot module or DSL file for s124",
+        "one unique shot module or DSL file for s125",
+        "one unique shot module or DSL file for s126",
+        "one unique shot module or DSL file for s127",
+        "one unique shot module or DSL file for s128"
+      ]
+    }
+  ]
+}

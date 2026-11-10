@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "max_concurrency": 3,
+  "created_at": 1794267138.8083067,
+  "batches": [
+    {
+      "id": "batch-001",
+      "shot_ids": [
+        "s122",
+        "s123",
+        "s124",
+        "s125",
+        "s126",
+        "s127",
+        "s128"
+      ],
+      "start": 275.23,
+      "end": 304.29,
+      "shot_count": 7,
+      "write_scope": [
+        "one unique shot module or DSL file for s122",
+        "one unique shot module or DSL file for s123",
+        "one unique shot module or DSL file for s124",
+        "one unique shot module or DSL file for s125",
+        "one unique shot module or DSL file for s126",
+        "one unique shot module or DSL file for s127",
+        "one unique shot module or DSL file for s128"
+      ],
+      "status": "completed",
+      "worker": null,
+      "token": null,
+      "lease_expires_at": null,
+      "attempts": 1,
+      "expired_attempts": 0,
+      "note": "implemented s122-s128 in scenes/shots/15_realization.js; static QA 136 scenes, 0 errors"
+    }
+  ]
+}
