@@ -1,0 +1,4 @@
+file 'C:/Users/jehad/Desktop/projects/aitrends-2d-studio/.claude/skills/make-2d-video/kit/examples/reaction-time/build/parts/part_000.mp4'
+file 'C:/Users/jehad/Desktop/projects/aitrends-2d-studio/.claude/skills/make-2d-video/kit/examples/reaction-time/build/parts/part_001.mp4'
+file 'C:/Users/jehad/Desktop/projects/aitrends-2d-studio/.claude/skills/make-2d-video/kit/examples/reaction-time/build/parts/part_002.mp4'
+file 'C:/Users/jehad/Desktop/projects/aitrends-2d-studio/.claude/skills/make-2d-video/kit/examples/reaction-time/build/parts/part_003.mp4'

@@ -1,0 +1,10 @@
+Visual QA: PASSED
+Project: composition-lab
+Scenes: 11 | Errors: 0 | Warnings: 0 | Info: 0 | Frames checked: 33
+Checks: static, geometry, rendered
+
+No findings.
+
+Contact sheets:
+  build/qa/frames/contact-sheet-01.png
+  build/qa/frames/contact-sheet-02.png

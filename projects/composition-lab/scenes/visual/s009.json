@@ -1,0 +1,74 @@
+{
+  "version": 2,
+  "id": "s009",
+  "camera": {
+    "zoom": 1
+  },
+  "entities": [
+    {
+      "id": "hero",
+      "type": "hero",
+      "pose": "reach",
+      "transform": {
+        "position": {
+          "x": -18,
+          "y": 40
+        },
+        "scale": 3.1
+      },
+      "facing": 1,
+      "assetId": "character.hero"
+    },
+    {
+      "id": "cup",
+      "type": "cup",
+      "transform": {
+        "position": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      "assetId": "prop.cup"
+    },
+    {
+      "id": "table",
+      "type": "surface",
+      "transform": {
+        "position": {
+          "x": 8,
+          "y": 35,
+          "z": -1
+        }
+      },
+      "assetId": "prop.table"
+    }
+  ],
+  "relationships": [
+    {
+      "type": "held_by",
+      "subject": "cup",
+      "target": "hero",
+      "subjectAnchor": "grip",
+      "targetAnchor": "hand.near",
+      "priority": 100
+    },
+    {
+      "type": "inside_frame",
+      "subject": "hero",
+      "priority": 90
+    },
+    {
+      "type": "inside_frame",
+      "subject": "cup",
+      "priority": 90
+    },
+    {
+      "type": "behind",
+      "subject": "table",
+      "target": "hero",
+      "priority": 50
+    }
+  ],
+  "environment": "environment.bedroom",
+  "lighting": "lighting.warm-interior"
+}

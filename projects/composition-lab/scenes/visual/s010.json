@@ -1,0 +1,65 @@
+{
+  "version": 2,
+  "id": "s010",
+  "camera": {
+    "zoom": 1
+  },
+  "entities": [
+    {
+      "id": "table",
+      "type": "surface",
+      "geometry": {
+        "width": 64,
+        "height": 5
+      },
+      "transform": {
+        "position": {
+          "x": 8,
+          "y": 24,
+          "z": -1
+        }
+      },
+      "assetId": "prop.table"
+    },
+    {
+      "id": "cup",
+      "type": "cup",
+      "transform": {
+        "position": {
+          "x": 8,
+          "y": -5,
+          "z": 1
+        }
+      },
+      "assetId": "prop.cup"
+    }
+  ],
+  "relationships": [
+    {
+      "type": "on_surface",
+      "subject": "cup",
+      "target": "table",
+      "subjectAnchor": "bottom",
+      "targetAnchor": "top",
+      "priority": 100
+    },
+    {
+      "type": "inside_frame",
+      "subject": "table"
+    },
+    {
+      "type": "inside_frame",
+      "subject": "cup"
+    }
+  ],
+  "composition": {
+    "template": "insert",
+    "roles": {
+      "objects": [
+        "cup"
+      ]
+    }
+  },
+  "environment": "environment.office",
+  "lighting": "lighting.cool-interior"
+}

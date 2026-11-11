@@ -3,7 +3,8 @@
 import { E, V, setStyle, getShot, clamp, ease, prog, alpha, text, FONTS } from './core.js';
 import { STYLES } from './styles.js';
 import { captions } from './ui2d.js';
-import { registerVisualShot } from './visual-dsl.js';
+import { registerHybridScenes } from './hybrid-scene-loader.js';
+import { registerAssets } from './assets/index.js';
 
 const q = new URLSearchParams(location.search);
 const PROJ = '/project';
@@ -22,6 +23,11 @@ async function boot() {
   const cfg = await (await fetch(`${PROJ}/config.json`)).json();
   const story = await (await fetch(`${PROJ}/story/shots.json`)).json();
   let words = []; try { const r = await fetch(`${PROJ}/timeline/words.json`); if (r.ok) words = await r.json(); } catch {}
+  try {
+    const assetResponse = await fetch(`${PROJ}/assets.json`);
+    if (assetResponse.ok) registerAssets(await assetResponse.json());
+    else if (assetResponse.status !== 404) throw new Error(`HTTP ${assetResponse.status}`);
+  } catch (error) { errors.push(`project assets: ${error.message}`); throw error; }
   const vertical = (cfg.aspect || '16:9') === '9:16';
   const short = RES[cfg.resolution || '1080p'] || 1080, long = Math.round((short * 16) / 9 / 2) * 2;
   const scale = +(q.get('scale') || 1);
@@ -41,12 +47,16 @@ async function boot() {
   const gw = Math.ceil(outW / 2), gh = Math.ceil(outH / 2);
   for (let k = 0; k < 4; k++) { const c = mk(gw, gh), x = c.getContext('2d'), id = x.createImageData(gw, gh); let s = 1234 + k * 999; for (let i = 0; i < id.data.length; i += 4) { s = (s * 1664525 + 1013904223) >>> 0; const v = s >>> 24; id.data[i] = id.data[i + 1] = id.data[i + 2] = v; id.data[i + 3] = 255; } x.putImageData(id, 0, 0); grainTiles.push(c); }
   const list = await (await fetch(`/__manifest`)).json();
-  for (const f of list) { try { await import(f); } catch (e) { errors.push(`import ${f}: ${e.message}`); console.log('IMPORT ERROR', f, e.message); } }
   const visualFiles = await (await fetch('/__visual_manifest')).json();
-  for (const f of visualFiles) {
-    try { const r = await fetch(f); if (!r.ok) throw new Error('HTTP ' + r.status); registerVisualShot(await r.json()); }
-    catch (e) { errors.push('visual ' + f + ': ' + e.message); console.log('VISUAL DSL ERROR', f, e.message); }
-  }
+  await registerHybridScenes({
+    scriptFiles: list,
+    visualFiles,
+    onError: ({ kind, file, message }) => {
+      const label = kind === 'script' ? 'IMPORT ERROR' : 'VISUAL DSL ERROR';
+      errors.push(`${kind === 'script' ? 'import' : 'visual'} ${file}: ${message}`);
+      console.log(label, file, message);
+    },
+  });
   if (E.shots.some(s => getShot(s.id)?.kind === '3d')) { three = await import('./three-kit.js'); glCanvas = mk(outW, outH); three.getRenderer(glCanvas); }
   const dur = story.duration || E.shots[E.shots.length - 1].end;
   window.DURATION = dur; window.TOTAL_FRAMES = Math.ceil(dur * E.fps); window.OUT = [outW, outH];

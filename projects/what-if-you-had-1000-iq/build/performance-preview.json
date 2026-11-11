@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "output": "build/preview.mp4",
+  "renderedFrames": 720,
+  "renderedSeconds": 30,
+  "elapsedSeconds": 14.944,
+  "averageFramesPerSecond": 48.18,
+  "workers": 8,
+  "fps": 24,
+  "resolution": "1080p",
+  "format": "mp4",
+  "preview": true
+}

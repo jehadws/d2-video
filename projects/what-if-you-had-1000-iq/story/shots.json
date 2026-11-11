@@ -1,0 +1,3494 @@
+{
+  "title": "What If You Had 1000 IQ?",
+  "duration": 328.66,
+  "shots": [
+    {
+      "id": "s001",
+      "start": 0,
+      "end": 2.85,
+      "line": "What If You Had 1000 IQ?",
+      "scene": "Title card: glowing caps question over the chess hall at dusk, long table, one lit window, the hero a small silhouette at the far end.",
+      "set": "chess",
+      "framing": "wide",
+      "bars": "scope",
+      "in": {
+        "type": "fade"
+      },
+      "sfx": [
+        {
+          "at": 0.15,
+          "name": "riser",
+          "gain": -10,
+          "dur": 1.8
+        },
+        {
+          "at": 2.0,
+          "name": "stinger",
+          "gain": -8
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s002",
+      "start": 2.85,
+      "end": 4.89,
+      "line": "You glance at the chessboard once.",
+      "scene": "Insert: chessboard from above, pieces in endgame layout, thin gold grid beginning to glow on the squares.",
+      "set": "chess",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "shimmer",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s003",
+      "start": 4.89,
+      "end": 7.73,
+      "line": "You already see the next forty moves.",
+      "scene": "Reveal: forty ghost future-moves fan out over the board in gold line-art while the hero sits motionless, slow push-in.",
+      "set": "chess",
+      "framing": "reveal",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.5,
+          "name": "whoosh",
+          "gain": -11
+        },
+        {
+          "at": 1.0,
+          "name": "shimmer",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s004",
+      "start": 7.73,
+      "end": 10.79,
+      "line": "Your teacher writes a six digit multiplication on the board.",
+      "scene": "Establishing wide: morning classroom, teacher writing six digits on the chalkboard, hero at a desk in the third row, dust in the window light.",
+      "set": "class",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "blip",
+          "gain": -15
+        }
+      ],
+      "amb": {
+        "name": "murmur",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s005",
+      "start": 10.79,
+      "end": 11.9,
+      "line": "You answer before she drops the chalk.",
+      "scene": "Medium single: hero raises one hand without looking up, gold answer digits floating above the desk.",
+      "set": "class",
+      "framing": "medium",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "pop",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "murmur",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s006",
+      "start": 11.9,
+      "end": 13.25,
+      "line": "You answer before she drops the chalk.",
+      "scene": "Insert: the teacher’s chalk still touching the board, her hand frozen mid-stroke, 451,608 glowing under it.",
+      "set": "class",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.2,
+          "name": "freeze",
+          "gain": -10
+        },
+        {
+          "at": 0.5,
+          "name": "counter",
+          "gain": -15
+        }
+      ],
+      "amb": {
+        "name": "murmur",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s007",
+      "start": 13.25,
+      "end": 15.99,
+      "line": "Your friend Leo hands you a tangled charger cable.",
+      "scene": "Medium two-shot: school hallway at the lockers, Leo on the left holding out a knotted charger cable, hero reaching for it.",
+      "set": "hall",
+      "framing": "two_shot",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "murmur",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s008",
+      "start": 15.99,
+      "end": 17.89,
+      "line": "You hand it back... untangled...",
+      "scene": "Interaction: the hero takes the tangled cable in both hands, the knot outlined in red; on \"untangled\" it comes loose in a blur of speed lines with a 2.00 s readout stamping in.",
+      "set": "hall",
+      "framing": "interaction",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "swish",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "murmur",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s009",
+      "start": 17.89,
+      "end": 19.33,
+      "line": "in two seconds.",
+      "scene": "Two-shot: the neat coil lands back in Leo’s open hands, Leo’s jaw dropped, hero shrugging.",
+      "set": "hall",
+      "framing": "two_shot",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "pop",
+          "gain": -15
+        }
+      ],
+      "amb": {
+        "name": "murmur",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s010",
+      "start": 19.33,
+      "end": 21,
+      "line": "The bus timetable, the weather, the crossword, the crowd’s exact head count.",
+      "scene": "Insert: bus timetable board at a shelter, departure rows lighting up one by one.",
+      "set": "city",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "blip",
+          "gain": -15
+        },
+        {
+          "at": 0.9,
+          "name": "blip",
+          "gain": -15
+        }
+      ],
+      "amb": {
+        "name": "city",
+        "gain": -24
+      },
+      "notes": ""
+    },
+    {
+      "id": "s011",
+      "start": 21,
+      "end": 22.4,
+      "line": "The bus timetable, the weather, the crossword, the crowd’s exact head count.",
+      "scene": "Insert: a weather map with pressure numbers and a rain percentage counting up.",
+      "set": "void",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "counter",
+          "gain": -14
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s012",
+      "start": 22.4,
+      "end": 23.8,
+      "line": "The bus timetable, the weather, the crossword, the crowd’s exact head count.",
+      "scene": "Insert: newspaper crossword grid, letters dropping into the squares.",
+      "set": "kitchen",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "blip",
+          "gain": -15
+        },
+        {
+          "at": 0.9,
+          "name": "blip",
+          "gain": -15
+        },
+        {
+          "at": 1.4,
+          "name": "pop",
+          "gain": -15
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s013",
+      "start": 23.8,
+      "end": 24.85,
+      "line": "The bus timetable, the weather, the crossword, the crowd’s exact head count.",
+      "scene": "Top-down wide: a crowd at the crossroads, small ink figures, an exact head count ticking in gold.",
+      "set": "city",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "counter",
+          "gain": -14
+        }
+      ],
+      "amb": {
+        "name": "city",
+        "gain": -24
+      },
+      "notes": ""
+    },
+    {
+      "id": "s014",
+      "start": 24.85,
+      "end": 26.91,
+      "line": "Done. Done. Done. Done.",
+      "scene": "Stamp montage on one board: four DONE badges slam in sequence, one per spoken \"Done\", each on its own task card.",
+      "set": "city",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.2,
+          "name": "hit",
+          "gain": -8
+        },
+        {
+          "at": 0.7,
+          "name": "hit",
+          "gain": -8
+        },
+        {
+          "at": 1.2,
+          "name": "hit",
+          "gain": -8
+        },
+        {
+          "at": 1.7,
+          "name": "hit",
+          "gain": -7
+        }
+      ],
+      "amb": {
+        "name": "city",
+        "gain": -24
+      },
+      "notes": ""
+    },
+    {
+      "id": "s015",
+      "start": 26.91,
+      "end": 27.65,
+      "line": "And your toast...",
+      "scene": "Medium single: hero at the kitchen counter staring into nothing, morning light, toaster behind him.",
+      "set": "kitchen",
+      "framing": "medium",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s016",
+      "start": 27.65,
+      "end": 29.85,
+      "line": "is still in the toaster.",
+      "scene": "Insert: the toaster with two slices still upright inside, one amber NOT DONE badge over it.",
+      "set": "kitchen",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.6,
+          "name": "buzz",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s017",
+      "start": 29.85,
+      "end": 36.37,
+      "line": "The average human scores around one hundred on an IQ test. The smartest people ever measured hover near two hundred.",
+      "scene": "Blueprint data card: the IQ bell curve drawing itself with markers at 100 AVERAGE and 200 HIGHEST RECORDED.",
+      "set": "void",
+      "framing": "insert",
+      "bars": "none",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.5,
+          "name": "swish",
+          "gain": -13
+        },
+        {
+          "at": 1.4,
+          "name": "blip",
+          "gain": -15
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s018",
+      "start": 36.37,
+      "end": 38.35,
+      "line": "You? One thousand.",
+      "scene": "Giant close-up: the hero’s face fills the frame while a gold counter rolls from 0 to 1000 beside the head.",
+      "set": "void",
+      "framing": "close_up",
+      "bars": "scope",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.2,
+          "name": "counter",
+          "gain": -12
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s019",
+      "start": 38.35,
+      "end": 40.55,
+      "line": "Five times past the edge of the chart.",
+      "scene": "Reveal: the chart axis snaps and the gold bar shoots off the top of the frame, the scale shattering like glass.",
+      "set": "void",
+      "framing": "reveal",
+      "bars": "none",
+      "in": {
+        "type": "flash"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "riser",
+          "gain": -8,
+          "dur": 1.4
+        },
+        {
+          "at": 1.7,
+          "name": "impact",
+          "gain": -5
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s020",
+      "start": 40.55,
+      "end": 41.81,
+      "line": "But here’s the rule.",
+      "scene": "Medium single in the void: the hero standing in one rim light, camera slow push, THE RULE line above him.",
+      "set": "void",
+      "framing": "medium",
+      "bars": null,
+      "in": {
+        "type": "dip"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s021",
+      "start": 41.81,
+      "end": 43.29,
+      "line": "Your brain got faster.",
+      "scene": "Blueprint: a head in profile with the brain lighting up, speed arcs and clock hands spinning inside it.",
+      "set": "void",
+      "framing": "insert",
+      "bars": "none",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "powerup",
+          "gain": -11
+        },
+        {
+          "at": 1.0,
+          "name": "shimmer",
+          "gain": -14
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s022",
+      "start": 43.29,
+      "end": 44.53,
+      "line": "Your body didn’t.",
+      "scene": "Medium single: the same hero’s body slumped and slow in the desk chair, one arm dangling, comic stillness.",
+      "set": "class",
+      "framing": "medium",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "murmur",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s023",
+      "start": 44.53,
+      "end": 47.6,
+      "line": "You can calculate a falling glass perfectly...",
+      "scene": "Freeze frame: a glass slipping off a counter hangs mid-air with a dotted fall path and timing math around it.",
+      "set": "kitchen",
+      "framing": "reveal",
+      "bars": "scope",
+      "in": {
+        "type": "flash"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "slowmo",
+          "gain": -8
+        },
+        {
+          "at": 1.2,
+          "name": "freeze",
+          "gain": -6
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s024",
+      "start": 47.6,
+      "end": 48.7,
+      "line": "You can calculate a falling glass perfectly... and still be half a second too slow to catch it.",
+      "scene": "Interaction: the hero’s hand closes on empty air a half-second late, frozen droplets hanging around the fingers.",
+      "set": "kitchen",
+      "framing": "interaction",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.5,
+          "name": "swish",
+          "gain": -11
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s025",
+      "start": 48.7,
+      "end": 49.93,
+      "line": "and still be half a second too slow to catch it.",
+      "scene": "Wide: kitchen floor, glass shattered in a wet arc, the hero standing over it looking at his own hand.",
+      "set": "kitchen",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "impact",
+          "gain": -6
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s026",
+      "start": 49.93,
+      "end": 52.13,
+      "line": "So what if you had one thousand IQ?",
+      "scene": "Chapter line SO WHAT IF YOU HAD 1000 IQ? over a wide classroom, camera drifting sideways.",
+      "set": "class",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.2,
+          "name": "whoosh",
+          "gain": -11
+        }
+      ],
+      "amb": {
+        "name": "murmur",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s027",
+      "start": 52.13,
+      "end": 56.57,
+      "line": "At school, you finish a two hour exam in four minutes.",
+      "scene": "Insert: the capped pen on a full answer sheet, 4:00 readout against a 2:00:00 normal time.",
+      "set": "class",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "blip",
+          "gain": -15
+        }
+      ],
+      "amb": {
+        "name": "murmur",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s028",
+      "start": 56.57,
+      "end": 59.05,
+      "line": "Leo stares at your blank extra time.",
+      "scene": "Two-shot: Leo at the next desk staring at his own blank paper while the hero leans back relaxed.",
+      "set": "class",
+      "framing": "two_shot",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "murmur",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s029",
+      "start": 59.05,
+      "end": 60.87,
+      "line": "Dude. You just sat there.",
+      "scene": "Giant close-up: Leo talking to camera, Dude. You just sat there., edge of blank paper in frame.",
+      "set": "class",
+      "framing": "close_up",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "murmur",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s030",
+      "start": 60.87,
+      "end": 63.41,
+      "line": "I was proving it three more ways, you say.",
+      "scene": "Medium single: hero at his desk with three small blueprint proofs floating around his head.",
+      "set": "class",
+      "framing": "medium",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "pop",
+          "gain": -14
+        },
+        {
+          "at": 0.8,
+          "name": "pop",
+          "gain": -14
+        },
+        {
+          "at": 1.3,
+          "name": "pop",
+          "gain": -14
+        }
+      ],
+      "amb": {
+        "name": "murmur",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s031",
+      "start": 63.41,
+      "end": 64.37,
+      "line": "For fun.",
+      "scene": "Giant close-up: the hero’s smirk landing on For fun.",
+      "set": "class",
+      "framing": "close_up",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "murmur",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s032",
+      "start": 64.37,
+      "end": 67.59,
+      "line": "Plus: you learn a new language over one lunch period.",
+      "scene": "Two-shot: cafeteria table, hero and Leo with trays, foreign word cards floating between them.",
+      "set": "cafeteria",
+      "framing": "two_shot",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "murmur",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s033",
+      "start": 67.59,
+      "end": 70.73,
+      "line": "Grammar, verbs, slang, done by dessert.",
+      "scene": "Insert: a dessert plate with a stack of grammar cards balanced on it and a DONE stamp.",
+      "set": "cafeteria",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "swish",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "murmur",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s034",
+      "start": 70.73,
+      "end": 75.67,
+      "line": "Minus: you also notice every tiny lie people tell without meaning to.",
+      "scene": "Establishing wide: evening kitchen, mom at the stove, hero in the doorway, warm window over the sink.",
+      "set": "kitchen",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s035",
+      "start": 75.67,
+      "end": 77.49,
+      "line": "Your mom says dinner’s almost ready.",
+      "scene": "Medium single: mom turns with a smile, a speech bubble forming and a red tag starting to open above it.",
+      "set": "kitchen",
+      "framing": "medium",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.5,
+          "name": "pop",
+          "gain": -15
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s036",
+      "start": 77.49,
+      "end": 79.15,
+      "line": "It is not almost ready.",
+      "scene": "Giant close-up: the hero flat and knowing, a red NOT READY tag glowing beside the face.",
+      "set": "kitchen",
+      "framing": "close_up",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "buzz",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s037",
+      "start": 79.15,
+      "end": 81.09,
+      "line": "You know this from the pan sounds.",
+      "scene": "Insert: an empty pan on the burner with two drops of oil, a waveform readout pinned at zero.",
+      "set": "kitchen",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "counter",
+          "gain": -15
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s038",
+      "start": 81.09,
+      "end": 84.65,
+      "line": "In chess club, you beat the state champion in nine moves.",
+      "scene": "Establishing wide: chess club room, long tables, hero facing the state champion, chess clock between them.",
+      "set": "chess",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s039",
+      "start": 84.65,
+      "end": 86.73,
+      "line": "He stares at the board.",
+      "scene": "Insert: the board from above, nine ghost moves replaying as gold arcs, a 9 badge in the corner.",
+      "set": "chess",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "whoosh",
+          "gain": -12
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s040",
+      "start": 86.73,
+      "end": 88.37,
+      "line": "How... how did you do that?",
+      "scene": "Giant close-up: the champion staring at the board, How... how did you do that? lip-synced.",
+      "set": "chess",
+      "framing": "close_up",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s041",
+      "start": 88.37,
+      "end": 89.73,
+      "line": "I didn’t, you say.",
+      "scene": "Medium single: the hero shrugging, I didn’t, hands open.",
+      "set": "chess",
+      "framing": "medium",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s042",
+      "start": 89.73,
+      "end": 91.71,
+      "line": "The board did. I just read it.",
+      "scene": "Insert: the empty board alone, its grid lines glowing and reading themselves out in blueprint light.",
+      "set": "chess",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "shimmer",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s043",
+      "start": 91.71,
+      "end": 93.15,
+      "line": "But where it gets really crazy...",
+      "scene": "Chapter line BUT WHERE IT GETS REALLY CRAZY over a wide dusk city, traffic moving below.",
+      "set": "city",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.2,
+          "name": "whoosh",
+          "gain": -11
+        }
+      ],
+      "amb": {
+        "name": "city",
+        "gain": -24
+      },
+      "notes": ""
+    },
+    {
+      "id": "s044",
+      "start": 93.15,
+      "end": 94.89,
+      "line": "is the systems.",
+      "scene": "Reveal: wireframe overlays boot up across the whole street as the hero walks, camera pulling out and up.",
+      "set": "city",
+      "framing": "reveal",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "powerup",
+          "gain": -10
+        },
+        {
+          "at": 1.1,
+          "name": "glitch",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "city",
+        "gain": -24
+      },
+      "notes": ""
+    },
+    {
+      "id": "s045",
+      "start": 94.89,
+      "end": 97.2,
+      "line": "You glance at a stock chart once and see the crash three days early.",
+      "scene": "Insert: a phone screen stock chart, a dashed line drawing the crash three days ahead of the real curve.",
+      "set": "kitchen",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "swish",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s046",
+      "start": 97.2,
+      "end": 98.61,
+      "line": "You glance at a stock chart once and see the crash three days early.",
+      "scene": "Data card: CRASH PREDICTED -3 DAYS with the red curve falling on cue.",
+      "set": "void",
+      "framing": "insert",
+      "bars": "none",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "stinger",
+          "gain": -8
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s047",
+      "start": 98.61,
+      "end": 101.4,
+      "line": "You look at your city’s traffic lights and redesign the timing in your head, cutting the morning jam in half.",
+      "scene": "3D orbit: city intersection at dawn, cars queued, traffic light poles and timing lines.",
+      "set": "city",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.2,
+          "name": "whoosh",
+          "gain": -11
+        }
+      ],
+      "amb": {
+        "name": "city",
+        "gain": -24
+      },
+      "notes": "3D shot"
+    },
+    {
+      "id": "s048",
+      "start": 101.4,
+      "end": 103.2,
+      "line": "You look at your city’s traffic lights and redesign the timing in your head, cutting the morning jam in half.",
+      "scene": "Top-down diagram: the signal timing grid rewriting itself as green waves flow through the junction.",
+      "set": "city",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "blip",
+          "gain": -14
+        },
+        {
+          "at": 1.1,
+          "name": "counter",
+          "gain": -14
+        }
+      ],
+      "amb": {
+        "name": "city",
+        "gain": -24
+      },
+      "notes": ""
+    },
+    {
+      "id": "s049",
+      "start": 103.2,
+      "end": 103.97,
+      "line": "You look at your city’s traffic lights and redesign the timing in your head, cutting the morning jam in half.",
+      "scene": "Compare bars: MORNING JAM before and after, the second bar halving in place.",
+      "set": "void",
+      "framing": "insert",
+      "bars": "none",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "counter",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s050",
+      "start": 103.97,
+      "end": 106.91,
+      "line": "A real engineer would need a team, and months.",
+      "scene": "Blueprint: a team of engineer figures under a months-long timeline, above one small figure holding a lamp.",
+      "set": "void",
+      "framing": "insert",
+      "bars": "none",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "blip",
+          "gain": -15
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s051",
+      "start": 106.91,
+      "end": 108.09,
+      "line": "You needed a red light.",
+      "scene": "Medium single: the hero at a red traffic light at dawn, one finger on the pole, small private smile.",
+      "set": "city",
+      "framing": "medium",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.5,
+          "name": "tick",
+          "gain": -15
+        }
+      ],
+      "amb": {
+        "name": "city",
+        "gain": -24
+      },
+      "notes": ""
+    },
+    {
+      "id": "s052",
+      "start": 108.09,
+      "end": 111.07,
+      "line": "And there’s a cost nobody warns you about.",
+      "scene": "Wide: bedroom at 2 AM, hero lying awake in moonlight, blue numbers streaming across the ceiling.",
+      "set": "bedroom",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "dip"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "glitch",
+          "gain": -14
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s053",
+      "start": 111.07,
+      "end": 113.25,
+      "line": "You can’t turn it off. Ever.",
+      "scene": "Giant close-up: the hero’s eyes wide open, data streams reflecting across the face, Ever landing hard.",
+      "set": "bedroom",
+      "framing": "close_up",
+      "bars": "scope",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "counter",
+          "gain": -15
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s054",
+      "start": 113.25,
+      "end": 116.87,
+      "line": "The fridge hum becomes a frequency you calculate instead of ignore.",
+      "scene": "Insert: a fridge glowing in the dark kitchen, its hum drawn as a waveform with a 59.7 Hz readout.",
+      "set": "kitchen",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "hum",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s055",
+      "start": 116.87,
+      "end": 120.15,
+      "line": "The ceiling fan becomes a geometry problem at two in the morning.",
+      "scene": "Top-down insert: the ceiling fan with geometry arcs over the blades and a 2:00 badge in the corner.",
+      "set": "bedroom",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.5,
+          "name": "swish",
+          "gain": -14
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s056",
+      "start": 120.15,
+      "end": 123.13,
+      "line": "You lie there... running numbers you never asked for...",
+      "scene": "Medium single: the hero on his back, numbers running across his face, camera slow push toward the bed.",
+      "set": "bedroom",
+      "framing": "medium",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s057",
+      "start": 123.13,
+      "end": 125.07,
+      "line": "while the whole street sleeps.",
+      "scene": "Wide pull-out through the window: the sleeping street below, one lit window left in the whole row.",
+      "set": "city",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "city",
+        "gain": -24
+      },
+      "notes": ""
+    },
+    {
+      "id": "s058",
+      "start": 125.07,
+      "end": 128.91,
+      "line": "A normal brain filters out ninety nine percent of what it senses.",
+      "scene": "Blueprint: a normal brain funnel discarding ninety-nine percent of the signals pouring in.",
+      "set": "void",
+      "framing": "insert",
+      "bars": "none",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.5,
+          "name": "whoosh",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s059",
+      "start": 128.91,
+      "end": 131.41,
+      "line": "Yours filters out almost nothing.",
+      "scene": "Blueprint: the hero’s funnel standing wide open, every signal passing straight through.",
+      "set": "void",
+      "framing": "insert",
+      "bars": "none",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "riser",
+          "gain": -11,
+          "dur": 1.6
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s060",
+      "start": 131.41,
+      "end": 133.11,
+      "line": "Mia, your lab partner, taps your shoulder.",
+      "scene": "Two-shot: school lab, Mia tapping the hero’s shoulder while he faces the wall.",
+      "set": "lab",
+      "framing": "two_shot",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "hit",
+          "gain": -15
+        }
+      ],
+      "amb": {
+        "name": "hum",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s061",
+      "start": 133.11,
+      "end": 135.83,
+      "line": "You’ve been staring at that wall for an hour.",
+      "scene": "Medium single: the hero still facing the wall, Mia’s blurred shoulder in the foreground.",
+      "set": "lab",
+      "framing": "medium",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "hum",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s062",
+      "start": 135.83,
+      "end": 137.75,
+      "line": "I was mapping the crack pattern, you say.",
+      "scene": "Insert: the wall crack spreading into a branching blueprint pattern with measured angles.",
+      "set": "lab",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "glitch",
+          "gain": -12
+        },
+        {
+          "at": 1.1,
+          "name": "shimmer",
+          "gain": -14
+        }
+      ],
+      "amb": {
+        "name": "hum",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s063",
+      "start": 137.75,
+      "end": 139.41,
+      "line": "It’s actually kind of beautiful.",
+      "scene": "Giant close-up: the hero soft and honest, It’s actually kind of beautiful.",
+      "set": "lab",
+      "framing": "close_up",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "hum",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s064",
+      "start": 139.41,
+      "end": 141.75,
+      "line": "That’s the real price.",
+      "scene": "Wide in the void: the hero small under the line THAT’S THE REAL PRICE.",
+      "set": "void",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "dip"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "stinger",
+          "gain": -8
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s065",
+      "start": 141.75,
+      "end": 145.77,
+      "line": "Dopamine, the brain’s little reward spark, fires hardest for surprises.",
+      "scene": "Blueprint: a brain with one dopamine spark firing bright over a SURPRISE label.",
+      "set": "void",
+      "framing": "insert",
+      "bars": "none",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.6,
+          "name": "ding",
+          "gain": -10
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s066",
+      "start": 145.77,
+      "end": 147.45,
+      "line": "For things you didn’t see coming.",
+      "scene": "Blueprint: the reward meter only filling when an unknown arrives at the gate.",
+      "set": "void",
+      "framing": "insert",
+      "bars": "none",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.5,
+          "name": "blip",
+          "gain": -14
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s067",
+      "start": 147.45,
+      "end": 149.43,
+      "line": "But you always see it coming.",
+      "scene": "Giant close-up: the hero’s flat face next to an empty reward meter.",
+      "set": "void",
+      "framing": "close_up",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s068",
+      "start": 149.43,
+      "end": 150.55,
+      "line": "The movie twist.",
+      "scene": "Insert: a movie poster with the twist typed straight across it and a SPOILER stamp.",
+      "set": "void",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "pop",
+          "gain": -14
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s069",
+      "start": 150.55,
+      "end": 151.53,
+      "line": "The pop quiz.",
+      "scene": "Insert: a pop quiz paper already filled in before the bell has finished ringing.",
+      "set": "class",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.2,
+          "name": "swish",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "murmur",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s070",
+      "start": 151.53,
+      "end": 152.67,
+      "line": "The surprise party.",
+      "scene": "Wide: a surprise party frozen mid-cheer, the hero standing in the middle under a crossed-out banner.",
+      "set": "cafeteria",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.2,
+          "name": "freeze",
+          "gain": -7
+        }
+      ],
+      "amb": {
+        "name": "murmur",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s071",
+      "start": 152.67,
+      "end": 154.41,
+      "line": "All solved in advance.",
+      "scene": "Three SOLVED stamps land in a row over the poster, the quiz and the party.",
+      "set": "void",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.2,
+          "name": "hit",
+          "gain": -9
+        },
+        {
+          "at": 0.6,
+          "name": "hit",
+          "gain": -9
+        },
+        {
+          "at": 1.0,
+          "name": "hit",
+          "gain": -8
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s072",
+      "start": 154.41,
+      "end": 156.81,
+      "line": "Nothing left... to feel surprised by.",
+      "scene": "Wide: the hero alone in a dark room, the reward meter dim and empty beside him.",
+      "set": "bedroom",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s073",
+      "start": 156.81,
+      "end": 159.05,
+      "line": "And Leo notices before anyone else does.",
+      "scene": "Two-shot: cafeteria, Leo watching the hero from across the table, tray untouched.",
+      "set": "cafeteria",
+      "framing": "two_shot",
+      "bars": null,
+      "in": {
+        "type": "dip"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "murmur",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s074",
+      "start": 159.05,
+      "end": 161.39,
+      "line": "He’s known you since you were seven.",
+      "scene": "Warm flashback wide: two seven-year-olds at the same table, same yellow cap and navy hoodie.",
+      "set": "cafeteria",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "fade"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "murmur",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s075",
+      "start": 161.39,
+      "end": 163.83,
+      "line": "Same table, every lunch, for years.",
+      "scene": "Top-down match: the same table across the years, two pairs of trays stacked above each other.",
+      "set": "cafeteria",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "murmur",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s076",
+      "start": 163.83,
+      "end": 166.51,
+      "line": "Same dumb knock on your door...",
+      "scene": "Insert: a closed door with three knock rings spreading across it, then one.",
+      "set": "bedroom",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "hit",
+          "gain": -8
+        },
+        {
+          "at": 0.6,
+          "name": "hit",
+          "gain": -8
+        },
+        {
+          "at": 0.9,
+          "name": "hit",
+          "gain": -8
+        },
+        {
+          "at": 1.6,
+          "name": "kick",
+          "gain": -7
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s077",
+      "start": 166.51,
+      "end": 168.27,
+      "line": "three taps, then one.",
+      "scene": "Medium single: the hero at his desk turning round as the knock pattern reads out 3 + 1.",
+      "set": "bedroom",
+      "framing": "medium",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "hit",
+          "gain": -9
+        },
+        {
+          "at": 0.55,
+          "name": "hit",
+          "gain": -9
+        },
+        {
+          "at": 0.8,
+          "name": "hit",
+          "gain": -9
+        },
+        {
+          "at": 1.4,
+          "name": "kick",
+          "gain": -8
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s078",
+      "start": 168.27,
+      "end": 170.37,
+      "line": "He still does it, even now.",
+      "scene": "Two-shot: Leo in the bright doorway, the hero at the desk, the held beat between them.",
+      "set": "bedroom",
+      "framing": "two_shot",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s079",
+      "start": 170.37,
+      "end": 173.35,
+      "line": "One afternoon he finds you just sitting in the dark.",
+      "scene": "Wide: the hero sitting on the floor in the dark, Leo a bright shape in the open door.",
+      "set": "bedroom",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s080",
+      "start": 173.35,
+      "end": 176.85,
+      "line": "You used to laugh at my terrible jokes, he says quietly.",
+      "scene": "Medium single: Leo on the floor beside him, talking quietly, knees up.",
+      "set": "bedroom",
+      "framing": "medium",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s081",
+      "start": 176.85,
+      "end": 179.73,
+      "line": "Now you just... solve them before I finish.",
+      "scene": "Giant close-up: the hero hearing a joke he already finished, Leo’s voice off-screen.",
+      "set": "bedroom",
+      "framing": "close_up",
+      "bars": "scope",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s082",
+      "start": 179.73,
+      "end": 181.37,
+      "line": "I miss confusing you.",
+      "scene": "Giant close-up: Leo’s face, I miss confusing you.",
+      "set": "bedroom",
+      "framing": "close_up",
+      "bars": "scope",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s083",
+      "start": 181.37,
+      "end": 183.81,
+      "line": "That hits harder than any equation.",
+      "scene": "Wide: the hero alone again, the equations on his wall dimming out one by one.",
+      "set": "bedroom",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.6,
+          "name": "shimmer",
+          "gain": -15
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s084",
+      "start": 183.81,
+      "end": 186.11,
+      "line": "Then an organization shows up.",
+      "scene": "Wide: night street, a black car at the curb under a lamp, the hero small and approaching.",
+      "set": "city",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "dip"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "carpass",
+          "gain": -9
+        }
+      ],
+      "amb": {
+        "name": "rain",
+        "gain": -24
+      },
+      "notes": ""
+    },
+    {
+      "id": "s085",
+      "start": 186.11,
+      "end": 187.01,
+      "line": "Sharp suits.",
+      "scene": "Insert: three pairs of shoes and suit hems on wet pavement, no faces in frame.",
+      "set": "city",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "rain",
+        "gain": -24
+      },
+      "notes": ""
+    },
+    {
+      "id": "s086",
+      "start": 187.01,
+      "end": 188.15,
+      "line": "Soft voices.",
+      "scene": "Medium single: Mr Black half in shadow at the head of the table, fedora, hands folded.",
+      "set": "boardroom",
+      "framing": "medium",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "stinger",
+          "gain": -10
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s087",
+      "start": 188.15,
+      "end": 192.09,
+      "line": "A man named Mr. Black offers you a lab, a salary, a future.",
+      "scene": "Two-shot: boardroom table, Mr Black offering across it, the hero seated with arms crossed.",
+      "set": "boardroom",
+      "framing": "two_shot",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s088",
+      "start": 192.09,
+      "end": 195.13,
+      "line": "Just solve our market models, he says.",
+      "scene": "Blueprint: market models as rotating grids and curves with a SOLVE label over them.",
+      "set": "void",
+      "framing": "insert",
+      "bars": "none",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "glitch",
+          "gain": -14
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s089",
+      "start": 195.13,
+      "end": 197.45,
+      "line": "Nothing illegal. Just... profitable.",
+      "scene": "Giant close-up: Mr Black behind dark sunglasses, Nothing illegal. Just... profitable.",
+      "set": "boardroom",
+      "framing": "close_up",
+      "bars": "scope",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s090",
+      "start": 197.45,
+      "end": 200.29,
+      "line": "You could predict every trade on Earth by lunch.",
+      "scene": "Data card: a world map with trade arcs lighting up and a counter running.",
+      "set": "void",
+      "framing": "insert",
+      "bars": "none",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "counter",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s091",
+      "start": 200.29,
+      "end": 202.13,
+      "line": "You could be rich by Friday.",
+      "scene": "Reveal: gold stacking into a tower beside a calendar flipping to Friday.",
+      "set": "void",
+      "framing": "reveal",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "shimmer",
+          "gain": -12
+        },
+        {
+          "at": 1.3,
+          "name": "pop",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s092",
+      "start": 202.13,
+      "end": 203.07,
+      "line": "The catch?",
+      "scene": "Giant close-up: the hero’s eyes narrowing on The catch?",
+      "set": "boardroom",
+      "framing": "close_up",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s093",
+      "start": 203.07,
+      "end": 204.59,
+      "line": "Their numbers don’t add up.",
+      "scene": "Insert: a ledger column of numbers with one row in red and the sum mismatched.",
+      "set": "boardroom",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.5,
+          "name": "buzz",
+          "gain": -12
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s094",
+      "start": 204.59,
+      "end": 205.87,
+      "line": "You run them twice.",
+      "scene": "Split insert: the same calculation run twice side by side, the same red row both times.",
+      "set": "boardroom",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "buzz",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s095",
+      "start": 205.87,
+      "end": 209.07,
+      "line": "Real people lose their savings so the firm wins.",
+      "scene": "Wide: a city of tiny figures as coins fall away from their hands toward a dark tower.",
+      "set": "city",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "whoosh",
+          "gain": -12
+        }
+      ],
+      "amb": {
+        "name": "city",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s096",
+      "start": 209.07,
+      "end": 214.45,
+      "line": "Written across one folder, in someone’s shaky hand: Pension. Last savings.",
+      "scene": "Insert: an open folder, shaky handwriting reading Pension. Last savings.",
+      "set": "boardroom",
+      "framing": "insert",
+      "bars": "scope",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s097",
+      "start": 214.45,
+      "end": 215.93,
+      "line": "Then the emergency comes.",
+      "scene": "Medium single: the hero’s head snapping up off the pillow toward the window.",
+      "set": "bedroom",
+      "framing": "medium",
+      "bars": null,
+      "in": {
+        "type": "dip"
+      },
+      "sfx": [
+        {
+          "at": 0.2,
+          "name": "hit",
+          "gain": -10
+        },
+        {
+          "at": 0.8,
+          "name": "riser",
+          "gain": -12,
+          "dur": 1.2
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s098",
+      "start": 215.93,
+      "end": 218.8,
+      "line": "Leo’s apartment building, old wiring, and a spark catches in a stairwell at midnight.",
+      "scene": "3D establishing: an old apartment block at midnight, one stairwell window glowing orange.",
+      "set": "apartment",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.5,
+          "name": "riser",
+          "gain": -10,
+          "dur": 1.6
+        },
+        {
+          "at": 2.0,
+          "name": "flash",
+          "gain": -9
+        }
+      ],
+      "amb": {
+        "name": "wind",
+        "gain": -22
+      },
+      "notes": "3D shot"
+    },
+    {
+      "id": "s099",
+      "start": 218.8,
+      "end": 220.77,
+      "line": "Leo’s apartment building, old wiring, and a spark catches in a stairwell at midnight.",
+      "scene": "Insert: a worn outlet sparking in the stairwell, first flame climbing the wall paper.",
+      "set": "stairwell",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "buzz",
+          "gain": -9
+        },
+        {
+          "at": 0.9,
+          "name": "whoosh",
+          "gain": -9
+        }
+      ],
+      "amb": {
+        "name": "wind",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s100",
+      "start": 220.77,
+      "end": 222.73,
+      "line": "You’re three streets away.",
+      "scene": "Wide: the hero running down an empty street, a map line showing three streets between him and the fire.",
+      "set": "city",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.2,
+          "name": "footstep",
+          "gain": -10
+        },
+        {
+          "at": 1.0,
+          "name": "footstep",
+          "gain": -10
+        },
+        {
+          "at": 1.8,
+          "name": "footstep",
+          "gain": -10
+        }
+      ],
+      "amb": {
+        "name": "city",
+        "gain": -24
+      },
+      "notes": ""
+    },
+    {
+      "id": "s101",
+      "start": 222.73,
+      "end": 225.13,
+      "line": "You calculate the fire’s spread rate instantly...",
+      "scene": "Blueprint: the stairwell drawn in section with a fire front spreading and math beside it.",
+      "set": "void",
+      "framing": "insert",
+      "bars": "none",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "glitch",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s102",
+      "start": 225.13,
+      "end": 229.23,
+      "line": "two meters every eight seconds... the exits closing in under two minutes.",
+      "scene": "Diagram: dimension arrows down the stair flight reading 2 m / 8 s while exit routes close one by one.",
+      "set": "stairwell",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.5,
+          "name": "blip",
+          "gain": -14
+        },
+        {
+          "at": 1.3,
+          "name": "counter",
+          "gain": -14
+        }
+      ],
+      "amb": {
+        "name": "wind",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s103",
+      "start": 229.23,
+      "end": 230.51,
+      "line": "You could run the model.",
+      "scene": "Insert: the running fire model clean and blue in the hero’s point of view.",
+      "set": "stairwell",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "wind",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s104",
+      "start": 230.51,
+      "end": 231.95,
+      "line": "Or you could run.",
+      "scene": "Medium single: the model dissolving as the hero turns toward the door.",
+      "set": "stairwell",
+      "framing": "medium",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "wind",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s105",
+      "start": 231.95,
+      "end": 234.35,
+      "line": "The genius thing... or the right thing.",
+      "scene": "Two-shot on the street: the glowing model panel on one side, the burning doorway on the other.",
+      "set": "city",
+      "framing": "two_shot",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "city",
+        "gain": -24
+      },
+      "notes": ""
+    },
+    {
+      "id": "s106",
+      "start": 234.35,
+      "end": 235.25,
+      "line": "You run.",
+      "scene": "Flash: the hero sprinting through the door into the smoke, speed lines and camera shake.",
+      "set": "stairwell",
+      "framing": "reveal",
+      "bars": null,
+      "in": {
+        "type": "flash"
+      },
+      "sfx": [
+        {
+          "at": 0.2,
+          "name": "kick",
+          "gain": -7
+        },
+        {
+          "at": 0.45,
+          "name": "whoosh",
+          "gain": -8
+        }
+      ],
+      "amb": {
+        "name": "wind",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s107",
+      "start": 235.25,
+      "end": 238.2,
+      "line": "You take the stairs two at a time, dragging a confused family past the smoke, finding Leo by the one window still clear, hauling him out seconds before the hallway folds in on itself.",
+      "scene": "Action wide: the hero taking stairs two at a time through smoke, fire light rimming every edge.",
+      "set": "stairwell",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "footstep",
+          "gain": -9
+        },
+        {
+          "at": 0.9,
+          "name": "footstep",
+          "gain": -9
+        },
+        {
+          "at": 1.5,
+          "name": "footstep",
+          "gain": -9
+        }
+      ],
+      "amb": {
+        "name": "wind",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s108",
+      "start": 238.2,
+      "end": 240.8,
+      "line": "You take the stairs two at a time, dragging a confused family past the smoke, finding Leo by the one window still clear, hauling him out seconds before the hallway folds in on itself.",
+      "scene": "Interaction: the hero pulling a confused family of three along past a wall of smoke.",
+      "set": "stairwell",
+      "framing": "interaction",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "hit",
+          "gain": -11
+        }
+      ],
+      "amb": {
+        "name": "wind",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s109",
+      "start": 240.8,
+      "end": 243.2,
+      "line": "You take the stairs two at a time, dragging a confused family past the smoke, finding Leo by the one window still clear, hauling him out seconds before the hallway folds in on itself.",
+      "scene": "Medium single: Leo behind the one clear window, the hero reaching up toward him.",
+      "set": "stairwell",
+      "framing": "medium",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.5,
+          "name": "riser",
+          "gain": -9,
+          "dur": 1.8
+        }
+      ],
+      "amb": {
+        "name": "wind",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s110",
+      "start": 243.2,
+      "end": 245.35,
+      "line": "You take the stairs two at a time, dragging a confused family past the smoke, finding Leo by the one window still clear, hauling him out seconds before the hallway folds in on itself.",
+      "scene": "Reveal: the hallway folding in behind them in a flash of debris as the hero hauls Leo out.",
+      "set": "stairwell",
+      "framing": "reveal",
+      "bars": "scope",
+      "in": {
+        "type": "flash"
+      },
+      "sfx": [
+        {
+          "at": 0.6,
+          "name": "impact",
+          "gain": -4
+        },
+        {
+          "at": 0.85,
+          "name": "kick",
+          "gain": -6
+        }
+      ],
+      "amb": {
+        "name": "wind",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s111",
+      "start": 245.35,
+      "end": 248.91,
+      "line": "Outside, soot on your face, Leo coughs out a laugh.",
+      "scene": "Wide: the street outside, fire glow on wet pavement, soot-faced hero and Leo coughing into the night.",
+      "set": "apartment",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "wind",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s112",
+      "start": 248.91,
+      "end": 250.57,
+      "line": "Still think I’m not surprising?",
+      "scene": "Giant close-up: Leo, Still think I’m not surprising?",
+      "set": "apartment",
+      "framing": "close_up",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s113",
+      "start": 250.57,
+      "end": 252.37,
+      "line": "You actually grin.",
+      "scene": "Giant close-up: the hero’s grin arriving before he can stop it.",
+      "set": "apartment",
+      "framing": "close_up",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s114",
+      "start": 252.37,
+      "end": 254.73,
+      "line": "That one... I didn’t see coming.",
+      "scene": "Freeze frame: the grin held, ash particles hanging in the air, an UNPREDICTED badge in the corner.",
+      "set": "apartment",
+      "framing": "close_up",
+      "bars": "scope",
+      "in": {
+        "type": "flash"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "freeze",
+          "gain": -6
+        },
+        {
+          "at": 0.9,
+          "name": "powerup",
+          "gain": -9
+        },
+        {
+          "at": 1.1,
+          "name": "ding",
+          "gain": -8
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s115",
+      "start": 254.73,
+      "end": 258.11,
+      "line": "You hand Mr. Black’s folder to a reporter instead of his lab.",
+      "scene": "Two-shot: daylight pavement, the hero handing the folder to a reporter holding a recorder.",
+      "set": "city",
+      "framing": "two_shot",
+      "bars": null,
+      "in": {
+        "type": "dip"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "swish",
+          "gain": -12
+        }
+      ],
+      "amb": {
+        "name": "city",
+        "gain": -24
+      },
+      "notes": ""
+    },
+    {
+      "id": "s116",
+      "start": 258.11,
+      "end": 261.59,
+      "line": "The firm collapses within a week. The savings get returned.",
+      "scene": "Void insert: a data card with the firm’s curve collapsing straight down, then envelopes and coins streaming back out of it into waiting hands.",
+      "set": "void",
+      "framing": "insert",
+      "bars": "none",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "whoosh",
+          "gain": -10
+        },
+        {
+          "at": 1.3,
+          "name": "impact",
+          "gain": -7
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s117",
+      "start": 261.59,
+      "end": 264.21,
+      "line": "You could have been richer than anyone alive.",
+      "scene": "Wide in the void: a gold tower on one side of the frame, the hero standing small on the other.",
+      "set": "void",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s118",
+      "start": 264.21,
+      "end": 268.51,
+      "line": "Instead, you’re just... Leo’s friend again, three knocks and all.",
+      "scene": "Two-shot: cafeteria, hero and Leo shoulder to shoulder, three knock rings tapped on the table.",
+      "set": "cafeteria",
+      "framing": "two_shot",
+      "bars": null,
+      "in": {
+        "type": "fade"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "hit",
+          "gain": -9
+        },
+        {
+          "at": 0.7,
+          "name": "hit",
+          "gain": -9
+        },
+        {
+          "at": 1.0,
+          "name": "hit",
+          "gain": -9
+        },
+        {
+          "at": 1.7,
+          "name": "kick",
+          "gain": -8
+        }
+      ],
+      "amb": {
+        "name": "murmur",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s119",
+      "start": 268.51,
+      "end": 272.2,
+      "line": "And for the first time in months, his terrible joke actually catches you off guard.",
+      "scene": "Medium two-shot: Leo starting a joke, the hero already smiling on schedule, then stopping.",
+      "set": "cafeteria",
+      "framing": "medium",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "murmur",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s120",
+      "start": 272.2,
+      "end": 273.05,
+      "line": "And for the first time in months, his terrible joke actually catches you off guard.",
+      "scene": "Giant close-up: genuine surprise breaking across the hero’s face, the reward meter spiking.",
+      "set": "cafeteria",
+      "framing": "close_up",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "shimmer",
+          "gain": -11
+        },
+        {
+          "at": 0.9,
+          "name": "ding",
+          "gain": -10
+        }
+      ],
+      "amb": {
+        "name": "murmur",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s121",
+      "start": 273.05,
+      "end": 275.23,
+      "line": "You laugh, right on time.",
+      "scene": "Wide: both of them laughing in warm afternoon light, trays forgotten.",
+      "set": "cafeteria",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "murmur",
+        "gain": -22
+      },
+      "notes": ""
+    },
+    {
+      "id": "s122",
+      "start": 275.23,
+      "end": 276.75,
+      "line": "Is any of this real?",
+      "scene": "Chapter line IS ANY OF THIS REAL? over the blueprint void.",
+      "set": "void",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "dip"
+      },
+      "sfx": [
+        {
+          "at": 0.2,
+          "name": "whoosh",
+          "gain": -12
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s123",
+      "start": 276.75,
+      "end": 280.95,
+      "line": "Nobody has ever scored anywhere near one thousand on an IQ test...",
+      "scene": "Blueprint: the IQ scale drawn only to 300, a dashed line pointing far past its edge.",
+      "set": "void",
+      "framing": "insert",
+      "bars": "none",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "swish",
+          "gain": -13
+        },
+        {
+          "at": 1.6,
+          "name": "blip",
+          "gain": -15
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s124",
+      "start": 280.95,
+      "end": 283.65,
+      "line": "the scale basically stops making sense that high.",
+      "scene": "Blueprint: the scale snapping in the middle with question marks in the gap.",
+      "set": "void",
+      "framing": "insert",
+      "bars": "none",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.5,
+          "name": "impact",
+          "gain": -6
+        },
+        {
+          "at": 1.3,
+          "name": "glitch",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s125",
+      "start": 283.65,
+      "end": 287.87,
+      "line": "The highest ever recorded, by most estimates, sits closer to two hundred.",
+      "scene": "Data card: HIGHEST RECORDED settling near 200.",
+      "set": "void",
+      "framing": "insert",
+      "bars": "none",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.5,
+          "name": "counter",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s126",
+      "start": 287.87,
+      "end": 294.07,
+      "line": "And real intelligence was never just raw calculation. It’s judgment. It’s knowing what matters.",
+      "scene": "Blueprint: a brain on one pan of a balance, judgment and what matters loading the other pan down.",
+      "set": "void",
+      "framing": "insert",
+      "bars": "none",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 1.3,
+          "name": "tick",
+          "gain": -14
+        },
+        {
+          "at": 2.9,
+          "name": "hit",
+          "gain": -8
+        },
+        {
+          "at": 4.6,
+          "name": "hit",
+          "gain": -7
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s127",
+      "start": 294.07,
+      "end": 299.83,
+      "line": "Scientists still argue over what IQ even measures, and whether any number could capture a mind completely.",
+      "scene": "Wide: three scientists in lab coats arguing around a number line, a question cloud overhead.",
+      "set": "lab",
+      "framing": "wide",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "murmur",
+          "gain": -13
+        }
+      ],
+      "amb": {
+        "name": "hum",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s128",
+      "start": 299.83,
+      "end": 304.29,
+      "line": "So could a mind really get that fast... and still stay kind?",
+      "scene": "Giant close-up: the hero soft and warm-rimmed, reading the question to himself.",
+      "set": "bedroom",
+      "framing": "close_up",
+      "bars": "scope",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s129",
+      "start": 304.29,
+      "end": 306.49,
+      "line": "That night, your phone buzzes.",
+      "scene": "Insert: a phone buzzing face-up on a dark desk, screen lighting the room.",
+      "set": "bedroom",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "dip"
+      },
+      "sfx": [
+        {
+          "at": 0.2,
+          "name": "phonebuzz",
+          "gain": -7
+        },
+        {
+          "at": 1.4,
+          "name": "phonebuzz",
+          "gain": -7
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s130",
+      "start": 306.49,
+      "end": 308.29,
+      "line": "Unknown number. One line.",
+      "scene": "Tight insert: the screen reading Unknown number as one line types itself out.",
+      "set": "bedroom",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "blip",
+          "gain": -14
+        },
+        {
+          "at": 1.0,
+          "name": "tick",
+          "gain": -15
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s131",
+      "start": 308.29,
+      "end": 311.35,
+      "line": "We know what you did. We have a proposal.",
+      "scene": "Giant close-up: the hero’s face lit from below by the screen, the message glowing in his eyes.",
+      "set": "bedroom",
+      "framing": "close_up",
+      "bars": "scope",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "stinger",
+          "gain": -6
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s132",
+      "start": 311.35,
+      "end": 313.79,
+      "line": "You stare at it a long time...",
+      "scene": "Medium single: the hero staring at the phone a long time, thumb unmoving.",
+      "set": "bedroom",
+      "framing": "medium",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s133",
+      "start": 313.79,
+      "end": 315.33,
+      "line": "then set it face down.",
+      "scene": "Insert: the phone set face-down on the desk, light bleeding out from under it.",
+      "set": "bedroom",
+      "framing": "insert",
+      "bars": null,
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.4,
+          "name": "hit",
+          "gain": -9
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -26
+      },
+      "notes": ""
+    },
+    {
+      "id": "s134",
+      "start": 315.33,
+      "end": 318.83,
+      "line": "So what would you actually solve first with a mind like that?",
+      "scene": "End screen: the question line over the whole cast lined up against a warm gradient.",
+      "set": "void",
+      "framing": "wide",
+      "bars": "none",
+      "in": {
+        "type": "fade"
+      },
+      "sfx": [
+        {
+          "at": 0.3,
+          "name": "whoosh",
+          "gain": -12
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s135",
+      "start": 318.83,
+      "end": 321.55,
+      "line": "Tell us the one problem you’d fix by lunchtime.",
+      "scene": "End screen: comment bubble and the ask, cast still lined up below.",
+      "set": "void",
+      "framing": "wide",
+      "bars": "none",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    },
+    {
+      "id": "s136",
+      "start": 321.55,
+      "end": 328.66,
+      "line": "And if Leo’s three knock code got you right in the feels... hit like, and subscribe for more What Ifs.",
+      "scene": "End screen: three knock rings then one over the subscribe pill, the whole cast.",
+      "set": "void",
+      "framing": "wide",
+      "bars": "none",
+      "in": {
+        "type": "cut"
+      },
+      "sfx": [
+        {
+          "at": 0.6,
+          "name": "hit",
+          "gain": -8
+        },
+        {
+          "at": 0.9,
+          "name": "hit",
+          "gain": -8
+        },
+        {
+          "at": 1.2,
+          "name": "hit",
+          "gain": -8
+        },
+        {
+          "at": 2.0,
+          "name": "kick",
+          "gain": -6
+        }
+      ],
+      "amb": {
+        "name": "roomtone",
+        "gain": -28
+      },
+      "notes": ""
+    }
+  ],
+  "music": [
+    {
+      "start": 0.0,
+      "end": 36.37,
+      "mood": "wonder",
+      "intensity": 0.45
+    },
+    {
+      "start": 36.37,
+      "end": 49.93,
+      "mood": "hopeful",
+      "intensity": 0.6
+    },
+    {
+      "start": 49.93,
+      "end": 91.71,
+      "mood": "hopeful",
+      "intensity": 0.5
+    },
+    {
+      "start": 91.71,
+      "end": 108.09,
+      "mood": "action",
+      "intensity": 0.65
+    },
+    {
+      "start": 108.09,
+      "end": 131.41,
+      "mood": "tension",
+      "intensity": 0.55
+    },
+    {
+      "start": 131.41,
+      "end": 156.81,
+      "mood": "sad",
+      "intensity": 0.4
+    },
+    {
+      "start": 156.81,
+      "end": 183.81,
+      "mood": "calm",
+      "intensity": 0.35
+    },
+    {
+      "start": 183.81,
+      "end": 214.45,
+      "mood": "dark",
+      "intensity": 0.5
+    },
+    {
+      "start": 214.45,
+      "end": 243.2,
+      "mood": "action",
+      "intensity": 0.85
+    },
+    {
+      "start": 243.2,
+      "end": 254.73,
+      "mood": "triumph",
+      "intensity": 0.7
+    },
+    {
+      "start": 254.73,
+      "end": 275.23,
+      "mood": "hopeful",
+      "intensity": 0.55
+    },
+    {
+      "start": 275.23,
+      "end": 304.29,
+      "mood": "mystery",
+      "intensity": 0.35
+    },
+    {
+      "start": 304.29,
+      "end": 328.66,
+      "mood": "tension",
+      "intensity": 0.6
+    }
+  ],
+  "sfx": []
+}

@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "id": "s004",
+  "framing": "interaction",
+  "background": {
+    "color": "#202734"
+  },
+  "camera": {
+    "x": [
+      {
+        "at": 0,
+        "value": -15
+      },
+      {
+        "at": 3,
+        "value": 20,
+        "ease": "inOut"
+      }
+    ],
+    "zoom": [
+      {
+        "at": 0,
+        "value": 1.12
+      },
+      {
+        "at": 3,
+        "value": 1.16,
+        "ease": "inOut"
+      }
+    ],
+    "y": [
+      {
+        "at": 0,
+        "value": 48
+      },
+      {
+        "at": 3,
+        "value": 62,
+        "ease": "inOut"
+      }
+    ]
+  },
+  "layers": [
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 0,
+      "w": 1920,
+      "h": 760,
+      "fill": "#303747"
+    },
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 760,
+      "w": 1920,
+      "h": 320,
+      "fill": "#282C36"
+    },
+    {
+      "type": "line",
+      "x": 0,
+      "y": 930,
+      "x2": 1920,
+      "y2": 930,
+      "width": 4,
+      "color": "#8D8290"
+    },
+    {
+      "type": "hero",
+      "x": 700,
+      "y": 990,
+      "scale": 3,
+      "pose": "reachBall",
+      "expression": "determined",
+      "contact": { "hand": "F", "from": 1.5, "to": 3 },
+      "prop": {
+        "type": "ball",
+        "style": "orange",
+        "radius": 29,
+        "color": "#C9794D",
+        "offsetX": 159,
+        "offsetY": -93,
+        "animate": {
+          "offsetX": [
+            {
+              "at": 0,
+              "value": 159
+            },
+            {
+              "at": 1.5,
+              "value": 8,
+              "ease": "inOut"
+            },
+            {
+              "at": 3,
+              "value": -4
+            }
+          ],
+          "offsetY": [
+            {
+              "at": 0,
+              "value": -93
+            },
+            {
+              "at": 1.5,
+              "value": 6,
+              "ease": "inOut"
+            },
+            {
+              "at": 3,
+              "value": 0
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "version": 2,
+  "id": "s011",
+  "camera": {
+    "zoom": 1
+  },
+  "entities": [
+    {
+      "id": "heroA",
+      "type": "hero",
+      "pose": "stand",
+      "facing": 1,
+      "transform": {
+        "position": {
+          "x": -24,
+          "y": 38
+        },
+        "scale": 2.6
+      },
+      "assetId": "character.hero"
+    },
+    {
+      "id": "heroB",
+      "type": "figure",
+      "pose": "stand",
+      "facing": -1,
+      "transform": {
+        "position": {
+          "x": 24,
+          "y": 38
+        },
+        "scale": 2.6
+      },
+      "assetId": "character.companion"
+    }
+  ],
+  "relationships": [
+    {
+      "type": "left_of",
+      "subject": "heroA",
+      "target": "heroB",
+      "gap": 4,
+      "priority": 100
+    },
+    {
+      "type": "inside_frame",
+      "subject": "heroA"
+    },
+    {
+      "type": "inside_frame",
+      "subject": "heroB"
+    }
+  ],
+  "composition": {
+    "template": "two-shot",
+    "roles": {
+      "primary": "heroA",
+      "secondary": [
+        "heroB"
+      ]
+    }
+  },
+  "environment": "environment.street",
+  "lighting": "lighting.dusk"
+}

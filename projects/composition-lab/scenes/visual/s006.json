@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "id": "s006",
+  "framing": "interaction",
+  "background": {
+    "color": "#252B37"
+  },
+  "camera": {
+    "x": [
+      {
+        "at": 0,
+        "value": 20
+      },
+      {
+        "at": 3,
+        "value": -10,
+        "ease": "inOut"
+      }
+    ],
+    "zoom": [
+      {
+        "at": 0,
+        "value": 1.1
+      },
+      {
+        "at": 3,
+        "value": 1.14,
+        "ease": "inOut"
+      }
+    ],
+    "y": [
+      {
+        "at": 0,
+        "value": 61
+      },
+      {
+        "at": 3,
+        "value": 75,
+        "ease": "inOut"
+      }
+    ]
+  },
+  "layers": [
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 0,
+      "w": 1920,
+      "h": 760,
+      "fill": "#343C4A"
+    },
+    {
+      "type": "rect",
+      "x": 0,
+      "y": 760,
+      "w": 1920,
+      "h": 320,
+      "fill": "#333744"
+    },
+    {
+      "type": "rect",
+      "x": 340,
+      "y": 730,
+      "w": 1180,
+      "h": 34,
+      "fill": "#6F5549",
+      "radius": 8
+    },
+    {
+      "type": "rect",
+      "x": 340,
+      "y": 700,
+      "w": 1180,
+      "h": 34,
+      "fill": "#8B6D59",
+      "radius": 8
+    },
+    {
+      "type": "cup",
+      "role": "story_object",
+      "x": 962,
+      "y": 650,
+      "w": 70,
+      "h": 100,
+      "fill": "#D9D0C5",
+      "handle": "#D9D0C5",
+      "animate": {
+        "x": [
+          {
+            "at": 0,
+            "value": 1502
+          },
+          {
+            "at": 1.2,
+            "value": 962,
+            "ease": "inOut"
+          },
+          {
+            "at": 3,
+            "value": 927
+          }
+        ],
+        "y": [
+          {
+            "at": 0,
+            "value": 120
+          },
+          {
+            "at": 1.2,
+            "value": 650,
+            "ease": "inOut"
+          },
+          {
+            "at": 3,
+            "value": 650
+          }
+        ]
+      }
+    },
+    {
+      "type": "hero",
+      "x": 700,
+      "y": 1010,
+      "scale": 3,
+      "pose": "reachDown",
+      "expression": "neutral",
+      "contact": {
+        "hand": "F",
+        "from": 1.2,
+        "to": 3,
+        "target": 4
+      }
+    }
+  ]
+}

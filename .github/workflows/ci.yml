@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/visual-composition-system
+      - feat/production-orchestration
+  pull_request:
+    branches:
+      - main
+      - feat/visual-composition-system
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Node and Python checks
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Check JavaScript syntax
+        run: |
+          node --check render.mjs
+          node --check qa.mjs
+          node --check lint-visual.mjs
+
+      - name: Run Node test suite
+        run: npm test
+
+      - name: Run audio validation tests
+        run: python -m unittest discover -s tests -p "test_*.py"
+
+      - name: Run production orchestration tests
+        working-directory: .claude/skills/make-2d-video/kit
+        run: python -m unittest discover -s tests -p "test_production.py"
+
+      - name: Install Chromium for rendered production QA
+        run: npx playwright install --with-deps chromium
+
+      - name: Render production visual QA evidence
+        run: node render.mjs --project projects/what-if-you-had-1000-iq --qa-rendered --scale 0.5
+
+      - name: Upload rendered production QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: what-if-you-had-1000-iq-rendered-qa
+          path: projects/what-if-you-had-1000-iq/build/qa/
+          if-no-files-found: warn
