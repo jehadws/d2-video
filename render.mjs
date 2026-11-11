@@ -4,6 +4,7 @@
 //   node render.mjs --project P --sheet                               one still per shot -> build/sheets/*.png
 //   node render.mjs --project P --stills 3.5,12,40                    stills at times -> build/stills
 //   node render.mjs --project P --styles dusk,midnight,golden,neon --at 3.5,12,40   style comparison grid
+//   node render.mjs --project P --skip-preflight ...   render stills/style grids while shots are still unbuilt
 //   node render.mjs --project P --qa-rendered --scale 0.5                 rendered QA samples + evidence
 // Visual DSL lint runs before every render; errors always abort, warnings are non-blocking.
 // Options: --workers N  --scale K  --style ID  --debug  --format png|jpeg  --crf 18  --gl auto|gpu|swiftshader  --out FILE
@@ -40,7 +41,7 @@ const LAUNCH = { args: ['--ignore-gpu-blocklist', '--enable-unsafe-swiftshader',
 const FORMAT = args.format === 'jpeg' ? 'jpeg' : 'png';
 const CFG = JSON.parse(fs.readFileSync(path.join(PROJECT, 'config.json'), 'utf8'));
 const FPS = CFG.fps || 24;
-{ const preflight = runQA(PROJECT, { checks: args.production ? ['static', 'geometry', 'production'] : ['static', 'geometry'] }); console.log(formatReport(preflight.report)); if (preflight.report.status === 'failed') { console.error('Aborting: production preflight found critical errors. Fix the timeline, assets, scenes, or geometry before rendering.'); process.exit(1); } }
+{ if (!args['skip-preflight']) { const preflight = runQA(PROJECT, { checks: args.production ? ['static', 'geometry', 'production'] : ['static', 'geometry'] }); console.log(formatReport(preflight.report)); if (preflight.report.status === 'failed') { console.error('Aborting: production preflight found critical errors. Fix the timeline, assets, scenes, or geometry before rendering.'); process.exit(1); } } }
 
 async function openPlayer(browser, style) {
   const qs = new URLSearchParams(); if (args.scale) qs.set('scale', args.scale); if (style || args.style) qs.set('style', style || args.style); if (args.debug) qs.set('debug', '1');

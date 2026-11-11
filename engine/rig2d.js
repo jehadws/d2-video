@@ -171,10 +171,17 @@ function torsoWear(g, o, p, pass) {
   switch (o.top) {
     case 'hoodie': case 'tracksuit': case 'jersey': case 'tshirt': case 'suit': case 'dress': {
       const col = o.top === 'suit' ? (sil ? o._sil : o.color || '#2a2833') : c;
-      const top = sy - 7, bot = hy + (o.top === 'jersey' || o.top === 'tshirt' ? 4 : 12);
-      g.fillStyle = col; g.beginPath(); g.moveTo(sx - 15, top + 6); g.quadraticCurveTo(sx, top - 4, sx + 15, top + 6); g.lineTo(hx + 15, bot); g.lineTo(hx - 15, bot); g.closePath(); g.fill();
+      // quad is built along the sh->hip axis so sloped torsos (plank, sit, kneel) stay covered
+      const hem = o.top === 'jersey' || o.top === 'tshirt' ? 4 : 12;
+      const dxT = hx - sx, dyT = hy - sy, dlT = Math.hypot(dxT, dyT) || 1;
+      const ux = dxT / dlT, uy = dyT / dlT, qx = -uy, qy = ux;
+      const nx = sx - ux * 7, ny = sy - uy * 7, mx = hx + ux * hem, my = hy + uy * hem;
+      g.fillStyle = col; g.beginPath();
+      g.moveTo(nx + qx * 15 + ux * 6, ny + qy * 15 + uy * 6);
+      g.quadraticCurveTo(nx - ux * 4, ny - uy * 4, nx - qx * 15 + ux * 6, ny - qy * 15 + uy * 6);
+      g.lineTo(mx - qx * 15, my - qy * 15); g.lineTo(mx + qx * 15, my + qy * 15); g.closePath(); g.fill();
       if (o.top === 'dress') poly(g, [[hx - 14, hy - 8], [hx + 14, hy - 8], [hx + 34, hy + 50], [hx - 34, hy + 50]], col);
-      if (!sil && o.top === 'hoodie') { g.fillStyle = d; g.fillRect(hx - 15, bot - 7, 30, 7); seg(g, [[sx + 6, sy - 2], [sx + 7, sy + 18]], 2, shade(c, 0.4)); }
+      if (!sil && o.top === 'hoodie') { g.fillStyle = d; g.beginPath(); g.moveTo(mx + qx * 15, my + qy * 15); g.lineTo(mx - qx * 15, my - qy * 15); g.lineTo(mx - qx * 15 - ux * 7, my - qy * 15 - uy * 7); g.lineTo(mx + qx * 15 - ux * 7, my + qy * 15 - uy * 7); g.closePath(); g.fill(); seg(g, [[sx + 6, sy - 2], [sx + 7, sy + 18]], 2, shade(c, 0.4)); }
       if (!sil && o.top === 'suit') { poly(g, [[sx - 1, sy - 4], [sx + 4, sy - 4], [sx + 5, sy + 40], [sx + 1, sy + 46]], o.color2 || '#c0392b'); }
       if (!sil && o.top === 'jersey' && o.number) { g.fillStyle = o.color2 || '#fff'; g.font = '700 24px Nunito'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(o.number, (sx + hx) / 2 + 2, (sy + hy) / 2); }
       if (!sil && o.top === 'tracksuit') seg(g, [[sx + 12, sy + 2], [hx + 12, hy]], 3, o.color2 || '#ffffff');
